@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../main.dart';
 import 'login.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -16,7 +17,40 @@ class _LoginPageState extends State<SignupPage> {
 
   final confEmailController = TextEditingController();
   final confMDPController = TextEditingController();
-  final confPseudoController = TextEditingController();
+  final confNomController = TextEditingController();
+  final confPrenomController = TextEditingController();
+
+  String _response = 'No response yet';
+  Future<void> sendPostRequest() async {
+    final url = Uri.parse('https://domestik.onrender.com/api/members/');
+    final response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'nom': confNomController.text,
+        'prenom': confPrenomController.text,
+        'email': confEmailController.text,
+        'mot_de_passe': confMDPController.text,
+      }),
+    );
+    setState(() {
+      confNomController.text = '';
+      confPrenomController.text = '';
+      confEmailController.text = '';
+      confMDPController.text = '';
+    });
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      setState(() {
+        _response = 'Success: ${response.body}';
+      });
+    } else {
+      setState(() {
+        _response = 'Failed: ${response.body}';
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -24,95 +58,10 @@ class _LoginPageState extends State<SignupPage> {
 
     confEmailController.dispose();
     confMDPController.dispose();
-    confPseudoController.dispose();
+    confNomController.dispose();
+    confPrenomController.dispose();
   }
 
-/*  Future<void> Login() async {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return Center(
-              child: CircularProgressIndicator()
-          );
-        }
-    );
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: confEmailController.text,
-          password: confMDPController.text
-      );
-      Navigator.of(context).pop();
-    } on FirebaseException catch (e) {
-      Navigator.of(context).pop();
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text(e.code.toString()),
-            );
-          }
-      );
-    }
-
-  }
-  Future signUp() async {
-    if (_formkey.currentState!.validate()) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return Center(
-                child: CircularProgressIndicator()
-            );
-          }
-      );
-      try {
-
-        // Créer l'utilisateur
-        UserCredential? userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: confEmailController.text,
-          password: confMDPController.text,
-        );
-
-        // Enregistrer dans firestore
-        await registerFirestore(userCredential);
-
-        Navigator.of(context).pop();
-        
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MyApp()),
-        );
-
-
-      } on FirebaseException catch (e) {
-        Navigator.of(context).pop();
-        // Gérer les erreurs (par exemple, e-mail en double, mot de passe faible, etc.)
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Text(e.message.toString()),
-              );
-            }
-        );
-      }
-    }
-  }
-
-  // Enregistrer dans cloud firestore
-  Future registerFirestore(UserCredential? userCredential) async{
-    if(userCredential != null &&  userCredential.user != null){
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userCredential.user!.uid)
-          .set({
-            "email": userCredential.user!.email,
-            "pseudo": confPseudoController.text.trim(),
-          });
-    }
-
-
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +71,7 @@ class _LoginPageState extends State<SignupPage> {
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/auth.png'), // Remplacez par le chemin de votre image
+              image: AssetImage('assets/images/auth.png'),
               fit: BoxFit.cover,
             ),
           ),
@@ -161,8 +110,8 @@ class _LoginPageState extends State<SignupPage> {
                               margin: EdgeInsets.only(bottom: 15),
                               child: TextFormField(
                                 decoration: InputDecoration(
-                                  labelText: 'Pseudo',
-                                  hintText: 'Votre pseudo',
+                                  labelText: 'Nom',
+                                  hintText: 'Votre nom',
                                   hintStyle: const TextStyle(
                                     color: Colors.black26,
                                   ),
@@ -185,7 +134,38 @@ class _LoginPageState extends State<SignupPage> {
                                   }
                                   return null;
                                 },
-                                controller: confPseudoController,
+                                controller: confNomController,
+                              )
+                          ),
+                          Container(
+                              margin: EdgeInsets.only(bottom: 15),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Prenom',
+                                  hintText: 'Votre prenom',
+                                  hintStyle: const TextStyle(
+                                    color: Colors.black26,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Colors.grey, // Nouvelle couleur du bord
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Colors.grey, // Nouvelle couleur du bord
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                validator: (value){
+                                  if(value == null || value.isEmpty ){
+                                    return "Invalide";
+                                  }
+                                  return null;
+                                },
+                                controller: confPrenomController,
                               )
                           ),
                           Container(
@@ -260,7 +240,7 @@ class _LoginPageState extends State<SignupPage> {
                                     padding: MaterialStatePropertyAll(EdgeInsets.all(12)),
                                     backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 66, 101, 224))
                                 ),
-                                onPressed: () {},
+                                onPressed: sendPostRequest,
                                 child: Text(
                                     "Sign up",
                                     style: TextStyle(
