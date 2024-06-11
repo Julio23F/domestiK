@@ -21,7 +21,7 @@ class _LoginPageState extends State<SignupPage> {
   final confPrenomController = TextEditingController();
 
   String _response = 'No response yet';
-  Future<void> sendPostRequest() async {
+  Future<void> register(nom, prenom, email, mdp) async {
     final url = Uri.parse('https://domestik.onrender.com/api/members/');
     final response = await http.post(
       url,
@@ -29,10 +29,10 @@ class _LoginPageState extends State<SignupPage> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        'nom': confNomController.text,
-        'prenom': confPrenomController.text,
-        'email': confEmailController.text,
-        'mot_de_passe': confMDPController.text,
+        'nom': nom,
+        'prenom': prenom,
+        'email': email,
+        'mot_de_passe': mdp,
       }),
     );
     setState(() {
@@ -43,6 +43,7 @@ class _LoginPageState extends State<SignupPage> {
     });
     if (response.statusCode == 200 || response.statusCode == 201) {
       setState(() {
+        print(response);
         _response = 'Success: ${response.body}';
       });
     } else {
@@ -240,7 +241,9 @@ class _LoginPageState extends State<SignupPage> {
                                     padding: MaterialStatePropertyAll(EdgeInsets.all(12)),
                                     backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 66, 101, 224))
                                 ),
-                                onPressed: sendPostRequest,
+                                onPressed: () {
+                                  register(confNomController.text, confPrenomController.text, confEmailController.text, confMDPController.text);
+                                },
                                 child: Text(
                                     "Sign up",
                                     style: TextStyle(
