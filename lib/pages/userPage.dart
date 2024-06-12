@@ -16,7 +16,18 @@ class _UserpageState extends State<Userpage> {
 
     return Scaffold(
       body: Container(
-        color: Color(0xffF4FCFC),
+        // color: Color(0xffF4FCFC),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xff9771F4),
+              Color(0xff74ABED),
+              Color(0xff8463BE),
+            ],
+          ),
+        ),
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.only(top: 25),
         child: SafeArea(
@@ -49,7 +60,7 @@ class _UserpageState extends State<Userpage> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey,
+                            color: Color(0xffcdcded),
                           ),
                         ),
                       ],
@@ -64,7 +75,7 @@ class _UserpageState extends State<Userpage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Taches",
+                      "Données",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
@@ -76,10 +87,15 @@ class _UserpageState extends State<Userpage> {
                       height: 100,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
-                        separatorBuilder: (context, index) => SizedBox(width: 20),
+                        separatorBuilder: (context, index) => SizedBox(width: 15),
                         itemCount: 4,
                         itemBuilder: (context, index) => Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          margin: EdgeInsets.symmetric(horizontal: 7),
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(15)
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -95,7 +111,7 @@ class _UserpageState extends State<Userpage> {
                                 "Tache à faire",
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.grey,
+                                  color: Color(0xfff2f2f1),
                                 ),
                               ),
                             ],
@@ -111,7 +127,7 @@ class _UserpageState extends State<Userpage> {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 22, horizontal: 17),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color(0xfffcfdf5),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
@@ -164,24 +180,39 @@ class _UserpageState extends State<Userpage> {
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
-                                for(var i = 0; i < 15; i++)
+                                for(var i = 1; i < 15; i++)
                                   Container(
-                                      margin: EdgeInsets.only(bottom: 15),
+                                      margin: EdgeInsets.only(bottom: 10),
                                       width: MediaQuery.of(context).size.width,
-                                      padding: EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+                                      padding: EdgeInsets.symmetric(vertical: 25, horizontal: 7),
                                       decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(10),
                                           border: Border(bottom: BorderSide(color: Color(0xff3cadfc).withOpacity(0.3), width: 1))
                                       ),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                            "Douche",
-                                            style: TextStyle(
-                                              color: textColor,
-                                              fontSize: 16,
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "${i}",
+                                                style: TextStyle(
+                                                  color: textColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              SizedBox(width: 20,),
+                                              Text(
+                                                "Douche",
+                                                style: TextStyle(
+                                                  color: textColor,
+                                                  fontSize: 16,
 
-                                            ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                           Container(
                                             margin: EdgeInsets.only(right: 7),
