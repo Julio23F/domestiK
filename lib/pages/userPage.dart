@@ -17,17 +17,8 @@ class _UserpageState extends State<Userpage> {
     return Scaffold(
       body: Container(
         // color: Color(0xffF4FCFC),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xff9771F4),
-              Color(0xff74ABED),
-              Color(0xff8463BE),
-            ],
-          ),
-        ),
+        color: Color(0xfffafafa),
+
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.only(top: 25),
         child: SafeArea(
@@ -93,7 +84,7 @@ class _UserpageState extends State<Userpage> {
                           margin: EdgeInsets.symmetric(horizontal: 7),
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1),
+                              color: Color(0xfff7f7f7),
                               borderRadius: BorderRadius.circular(15)
                           ),
                           child: Column(
@@ -108,10 +99,10 @@ class _UserpageState extends State<Userpage> {
                                 ),
                               ),
                               Text(
-                                "Tache à faire",
+                                "Salle info",
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Color(0xfff2f2f1),
+                                  color: textColor.withOpacity(0.5),
                                 ),
                               ),
                             ],

@@ -1,5 +1,8 @@
+import 'package:domestik/pages/auth/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../services/user_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,7 +22,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       body: Container(
-        color: Color(0xffF4FCFC),
+        color: Color(0xfffafafa),
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.only(top: 25, left: 17, right: 17),
         child: SafeArea(
@@ -66,12 +69,18 @@ class _HomePageState extends State<HomePage> {
                               borderRadius: BorderRadius.circular(5)
                           ),
                           padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                          child: Text(
-                            "Admin",
-                            style: TextStyle(
-                              color: textColor,
+                          child: GestureDetector(
+                            onTap: () {
+                              logout();
+                              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>LoginPage()), (route) => false);
+                            },
+                            child: Text(
+                              "Admin",
+                              style: TextStyle(
+                                color: textColor,
+                              ),
                             ),
-                          ),
+                          )
 
                         )
                       ],
@@ -94,7 +103,6 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.bold
                       ),
                     ),
-
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
@@ -120,7 +128,17 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-
+              Center(
+                child: Container(
+                  height: 5,
+                  width: 70,
+                  margin: EdgeInsets.only(bottom: 5),
+                  decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(15)
+                  ),
+                ),
+              ),
               //Tache à faire
               Container(
                 child: Expanded(

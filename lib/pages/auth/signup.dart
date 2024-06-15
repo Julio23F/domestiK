@@ -1,8 +1,13 @@
+import 'package:domestik/pages/loadingPage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../models/api_response.dart';
+import '../../models/user.dart';
+import '../../services/user_service.dart';
+import '../home.dart';
 import 'login.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -18,39 +23,29 @@ class _LoginPageState extends State<SignupPage> {
   final confEmailController = TextEditingController();
   final confMDPController = TextEditingController();
   final confNomController = TextEditingController();
-  final confPrenomController = TextEditingController();
-
-  String _response = 'No response yet';
-  Future<void> register(nom, prenom, email, mdp) async {
-    final url = Uri.parse('https://domestik.onrender.com/api/members/');
-    final response = await http.post(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'nom': nom,
-        'prenom': prenom,
-        'email': email,
-        'mot_de_passe': mdp,
-      }),
-    );
-    setState(() {
-      confNomController.text = '';
-      confPrenomController.text = '';
-      confEmailController.text = '';
-      confMDPController.text = '';
-    });
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      setState(() {
-        print(response);
-        _response = 'Success: ${response.body}';
-      });
-    } else {
-      setState(() {
-        _response = 'Failed: ${response.body}';
-      });
+  final confMDP2Controller = TextEditingController();
+  bool loading = false;
+  void _registerUser () async {
+    ApiResponse response = await register(confNomController.text, confEmailController.text, confMDPController.text);
+    if(response.error == null) {
+      _saveAndRedirectToHome(response.data as User);
     }
+    else {
+      setState(() {
+        loading = !loading;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('${response.error}')
+      ));
+    }
+  }
+
+  // Save and redirect to home
+  void _saveAndRedirectToHome(User user) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString('token', user.token ?? '');
+    await pref.setInt('userId', user.id ?? 0);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>LoadingPage()), (route) => false);
   }
 
   @override
@@ -60,7 +55,7 @@ class _LoginPageState extends State<SignupPage> {
     confEmailController.dispose();
     confMDPController.dispose();
     confNomController.dispose();
-    confPrenomController.dispose();
+    confMDP2Controller.dispose();
   }
 
 
@@ -138,37 +133,7 @@ class _LoginPageState extends State<SignupPage> {
                                 controller: confNomController,
                               )
                           ),
-                          Container(
-                              margin: EdgeInsets.only(bottom: 15),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  labelText: 'Prenom',
-                                  hintText: 'Votre prenom',
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black26,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.grey, // Nouvelle couleur du bord
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.grey, // Nouvelle couleur du bord
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                validator: (value){
-                                  if(value == null || value.isEmpty ){
-                                    return "Invalide";
-                                  }
-                                  return null;
-                                },
-                                controller: confPrenomController,
-                              )
-                          ),
+
                           Container(
                               margin: EdgeInsets.only(bottom: 15),
                               child: TextFormField(
@@ -234,6 +199,39 @@ class _LoginPageState extends State<SignupPage> {
                               )
                           ),
                           Container(
+                              margin: EdgeInsets.only(bottom: 15),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Confirmation mdp',
+                                  hintText: 'Confirmation mdp',
+                                  hintStyle: const TextStyle(
+                                    color: Colors.black26,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Colors.grey, // Nouvelle couleur du bord
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Colors.grey, // Nouvelle couleur du bord
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                validator: (value){
+                                  if(value != confMDPController.text ){
+                                    print(value);
+                                    print(confMDPController.text);
+                                    return "La confirmation du mdp est incorrect";
+                                  }
+                                  return null;
+                                },
+                                controller: confMDP2Controller,
+                              )
+                          ),
+                          Container(
                             margin: EdgeInsets.only(top: 35),
                             width: double.infinity,
                             child: ElevatedButton(
@@ -242,9 +240,15 @@ class _LoginPageState extends State<SignupPage> {
                                     backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 66, 101, 224))
                                 ),
                                 onPressed: () {
-                                  register(confNomController.text, confPrenomController.text, confEmailController.text, confMDPController.text);
+                                  if(_formkey.currentState!.validate()){
+                                    setState(() {
+                                      loading = !loading;
+                                      _registerUser();
+                                    });
+                                  }
                                 },
-                                child: Text(
+                                child: loading? CircularProgressIndicator(color: Colors.white,)
+                                :Text(
                                     "Sign up",
                                     style: TextStyle(
                                         color: Colors.white,

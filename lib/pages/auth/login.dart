@@ -1,6 +1,13 @@
 import 'package:domestik/pages/auth/signup.dart';
 import 'package:domestik/pages/auth/widgets/remember.dart';
+import 'package:domestik/pages/loadingPage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../models/api_response.dart';
+import '../../models/user.dart';
+import '../../services/user_service.dart';
+import '../home.dart';
 
 
 
@@ -17,6 +24,31 @@ class _LoginPageState extends State<LoginPage> {
   final confEmailController = TextEditingController();
   final confMDPController = TextEditingController();
 
+  bool loading = false;
+
+  void _loginUser() async {
+    ApiResponse response = await login(confEmailController.text, confMDPController.text);
+    final data = response.data as User;
+    print(data.name);
+    if (response.error == null){
+      _saveAndRedirectToHome(response.data as User);
+    }
+    else {
+      setState(() {
+        loading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('${response.error}')
+      ));
+    }
+  }
+
+  void _saveAndRedirectToHome(User user) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString('token', user.token ?? '');
+    await pref.setInt('userId', user.id ?? 0);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>LoadingPage()), (route) => false);
+  }
   @override
   void dispose() {
     super.dispose();
@@ -144,8 +176,16 @@ class _LoginPageState extends State<LoginPage> {
                                         EdgeInsets.all(12)),
                                     backgroundColor: MaterialStatePropertyAll(
                                         Color.fromARGB(255, 66, 101, 224))),
-                                onPressed: () {},
-                                child: Text("Connexion",
+                                onPressed: () {
+                                  if (_formkey.currentState!.validate()){
+                                    setState(() {
+                                      loading = true;
+                                      _loginUser();
+                                    });
+                                  }
+                                },
+                                child: loading? CircularProgressIndicator(color: Colors.white)
+                                    :Text("Connexion",
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 18))),
                           ),
