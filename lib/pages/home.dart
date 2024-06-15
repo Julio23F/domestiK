@@ -1,3 +1,4 @@
+import 'package:domestik/pages/addPage.dart';
 import 'package:domestik/pages/auth/historiquePage.dart';
 import 'package:domestik/pages/homePage.dart';
 import 'package:domestik/pages/userPage.dart';
@@ -24,7 +25,7 @@ class _HomeState extends State<Home> {
         Expanded(
           child: [
             HomePage(),
-            HistoriquePage(),
+            AddPage(),
             Userpage(),
           ][currentIndex],
         ),
@@ -39,7 +40,7 @@ class _HomeState extends State<Home> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.history_rounded),
-              label: 'Histrique',
+              label: 'Add',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),

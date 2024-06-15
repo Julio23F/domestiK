@@ -131,7 +131,7 @@ class _InfoPageState extends State<InfoPage> {
                   SizedBox(height: 50,),
                   Image.asset(
                     "assets/images/logo.png",
-                    width: MediaQuery.of(context).size.width * 3 / 5,
+                    width: MediaQuery.of(context).size.width * 4 / 7,
                   ),
                   SizedBox(height: 25,),
                   Text(
