@@ -66,7 +66,7 @@ class _UserpageState extends State<Userpage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Données",
+                      "Outils",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
@@ -74,15 +74,12 @@ class _UserpageState extends State<Userpage> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    SizedBox(
-                      height: 100,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        separatorBuilder: (context, index) => SizedBox(width: 15),
-                        itemCount: 4,
-                        itemBuilder: (context, index) => Container(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
                           margin: EdgeInsets.symmetric(horizontal: 7),
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(15),
                           decoration: BoxDecoration(
                               color: Color(0xfff7f7f7),
                               borderRadius: BorderRadius.circular(15)
@@ -90,16 +87,13 @@ class _UserpageState extends State<Userpage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                "1,285",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: textColor,
-                                ),
+                              Icon(
+                                Icons.logout,
+                                size: 30,
+
                               ),
                               Text(
-                                "Salle info",
+                                "Logout",
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: textColor.withOpacity(0.5),
@@ -108,8 +102,58 @@ class _UserpageState extends State<Userpage> {
                             ],
                           ),
                         ),
-                      ),
-                    ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 7),
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                              color: Color(0xfff7f7f7),
+                              borderRadius: BorderRadius.circular(15)
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.logout,
+                                size: 30,
+
+                              ),
+                              Text(
+                                "Logout",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: textColor.withOpacity(0.5),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 7),
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                              color: Color(0xfff7f7f7),
+                              borderRadius: BorderRadius.circular(15)
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                  Icons.logout,
+                                  size: 30,
+
+                              ),
+                              Text(
+                                "Logout",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: textColor.withOpacity(0.5),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),

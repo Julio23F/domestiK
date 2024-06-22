@@ -14,6 +14,10 @@ const createFoyerURL = baseURL + '/foyer';
 const updateFoyerURL = baseURL + '/foyer';
 const deleteFoyerURL = baseURL + '/foyer';
 
+// Tache
+const getAllUserTache = baseURL + '/foyer';
+
+
 // ----- Errors -----
 const serverError = 'Server error';
 const unauthorized = 'Unauthorized';

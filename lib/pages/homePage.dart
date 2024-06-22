@@ -1,4 +1,7 @@
+import 'package:domestik/models/api_response.dart';
 import 'package:domestik/pages/auth/login.dart';
+import 'package:domestik/services/foyer_service.dart';
+import 'package:domestik/services/tache_service.dart';
 import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +16,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String foyerName = '';
+
+  void _getFoyerData() async {
+    todoTache('2');
+
+    ApiResponse response = await getFoyerData();
+    if (response.data != null && response.data is Map<String, dynamic>) {
+      setState(() {
+        foyerName = (response.data as Map<String, dynamic>)['name'] ?? ''; // Récupérer le nom du foyer
+      });
+    }
+  }
 
   String? selectedValue; // Variable pour stocker la valeur sélectionnée
   final List<String> options = ['Option 1', 'Option 2', 'Option 3'];
+
+  @override
+  void initState() {
+    _getFoyerData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,40 +47,61 @@ class _HomePageState extends State<HomePage> {
         child: DraggableHome(
           // leading: const Icon(Icons.arrow_back_ios),
           title: Container(
-              padding: EdgeInsets.only(top: 25),
-              child: Text("Analamahitsy", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),)
+            padding: EdgeInsets.only(top: 25),
+            child: Text(
+              foyerName,
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
           ),
           // actions: [
           //   IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
           // ],
           headerWidget: SafeArea(
             child: Container(
-              padding: EdgeInsets.all(25),
+              padding: EdgeInsets.symmetric(vertical: 25, horizontal: 15),
               margin: EdgeInsets.only(top: 15),
-              decoration: BoxDecoration(
-                  // color: Colors.grey.withOpacity(0.2),
-            
-                  borderRadius: BorderRadius.circular(10)
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(height: 90,),
-                  Container(
-                    margin: EdgeInsets.only(top: 25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "FARALAHY Julio",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: textColor,
+              child: Container(
+                margin: EdgeInsets.only(bottom: 50),
+                height: 140,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xffd7d6fe),
+                      Color(0xfff4ebff).withOpacity(0.4),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SizedBox(height: 90,),
+                    Container(
+                      margin: EdgeInsets.only(top: 25),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "FARALAHY Julio",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 8,),
-                        Container(
+                          SizedBox(height: 8,),
+                          Text(
+                            foyerName, // Afficher le nom du foyer ici
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: textColor,
+                            ),
+                          ),
+                          SizedBox(height: 8,),
+                          Container(
                             margin: EdgeInsets.only(right: 7),
                             decoration: BoxDecoration(
                                 color: Color(0xffFB9F06),
@@ -77,12 +119,13 @@ class _HomePageState extends State<HomePage> {
                                   color: textColor,
                                 ),
                               ),
-                            )
-                        )
-                      ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -126,7 +169,7 @@ class _HomePageState extends State<HomePage> {
           ),
           body: [
             for(var i=0; i<10; i++)
-            Container(
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.symmetric(vertical: 25, horizontal: 20),
@@ -170,13 +213,13 @@ class _HomePageState extends State<HomePage> {
                                     fontSize: 8,
                                   ),
                                 ),
-                              )
+                              ),
                           ],
                         )
-                    )
+                    ),
                   ],
-                )
-            ),
+                ),
+              ),
           ],
           fullyStretchable: true,
           backgroundColor: Color(0xfffafafa),

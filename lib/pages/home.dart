@@ -12,6 +12,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+
+
   int currentIndex = 0;
   setCurrentIndex(int index) {
     setState(() {
@@ -39,7 +42,7 @@ class _HomeState extends State<Home> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.history_rounded),
+              icon: Icon(Icons.add),
               label: 'Add',
             ),
             BottomNavigationBarItem(
