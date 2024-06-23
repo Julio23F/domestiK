@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../services/user_service.dart';
+import 'auth/login.dart';
+
 class Userpage extends StatefulWidget {
   const Userpage({super.key});
 
@@ -74,86 +77,37 @@ class _UserpageState extends State<Userpage> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 7),
-                          padding: EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                              color: Color(0xfff7f7f7),
-                              borderRadius: BorderRadius.circular(15)
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.logout,
-                                size: 30,
-
-                              ),
-                              Text(
-                                "Logout",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: textColor.withOpacity(0.5),
-                                ),
-                              ),
-                            ],
-                          ),
+                    InkWell(
+                      onTap: () {
+                        logout();
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>LoginPage()), (route) => false);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 7),
+                        padding: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            color: Color(0xfff7f7f7),
+                            borderRadius: BorderRadius.circular(15)
                         ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 7),
-                          padding: EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                              color: Color(0xfff7f7f7),
-                              borderRadius: BorderRadius.circular(15)
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.logout,
-                                size: 30,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.logout,
+                              size: 30,
 
+                            ),
+                            Text(
+                              "Logout",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: textColor.withOpacity(0.5),
                               ),
-                              Text(
-                                "Logout",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: textColor.withOpacity(0.5),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 7),
-                          padding: EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                              color: Color(0xfff7f7f7),
-                              borderRadius: BorderRadius.circular(15)
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                  Icons.logout,
-                                  size: 30,
-
-                              ),
-                              Text(
-                                "Logout",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: textColor.withOpacity(0.5),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
+                      ),
+                    ),
                   ],
                 ),
               ),

@@ -5,6 +5,7 @@ import 'package:domestik/services/user_service.dart';
 
 import '../constant.dart';
 import '../models/api_response.dart';
+import '../models/tache.dart';
 import '../models/user.dart';
 import 'package:http/http.dart' as http;
 
