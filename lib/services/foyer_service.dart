@@ -20,11 +20,9 @@ Future<ApiResponse> createFoyer (String name) async {
         },
         body: {'name': name}
     );
-    print(response.statusCode);
     switch(response.statusCode){
       case 200:
         apiResponse.data = jsonDecode(response.body)["message"];
-        print(apiResponse.data);
         break;
     // Si un champ n'est pas rempli
       case 422:

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:domestik/pages/auth/login.dart';
 import 'package:domestik/pages/home.dart';
 import 'package:domestik/pages/infoPage.dart';
@@ -30,12 +32,12 @@ class _LoadingPageState extends State<LoadingPage> {
     }
     else {
       ApiResponse response = await getUserDetail();
-      final userDetail = response.data as User;
+      final userDetail = jsonEncode(response.data);
       print("Foyer_id");
-      print(userDetail.foyer_id);
+      print(jsonDecode(userDetail)["foyer_id"]);
 
       if (response.error == null){
-        if(userDetail.foyer_id == 0) {
+        if(jsonDecode(userDetail)["foyer_id"] == 0) {
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>InfoPage()), (route) => false);
         }
         else{

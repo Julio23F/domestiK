@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:domestik/models/api_response.dart';
 import 'package:flutter/material.dart';
+
+import '../services/user_service.dart';
 
 class AllUser extends StatefulWidget {
   const AllUser({super.key});
@@ -8,31 +13,14 @@ class AllUser extends StatefulWidget {
 }
 
 class _AllUserState extends State<AllUser> {
-  final List<User> users = [
-    User(name: 'FARALAHY', username: 'Julio', isSelected: false),
-    User(name: 'ZAFISOA', username: 'Madeleine', isSelected: false),
-    User(name: 'Jhon', username: 'Doe', isSelected: false),    User(name: 'FARALAHY', username: 'Julio', isSelected: false),
-    User(name: 'ZAFISOA', username: 'Madeleine', isSelected: false),
-    User(name: 'Jhon', username: 'Doe', isSelected: false),    User(name: 'FARALAHY', username: 'Julio', isSelected: false),
-    User(name: 'ZAFISOA', username: 'Madeleine', isSelected: false),
-    User(name: 'Jhon', username: 'Doe', isSelected: false),    User(name: 'FARALAHY', username: 'Julio', isSelected: false),
-    User(name: 'ZAFISOA', username: 'Madeleine', isSelected: false),
-    User(name: 'Jhon', username: 'Doe', isSelected: false),    User(name: 'FARALAHY', username: 'Julio', isSelected: false),
-    User(name: 'ZAFISOA', username: 'Madeleine', isSelected: false),
-    User(name: 'Jhon', username: 'Doe', isSelected: false),    User(name: 'FARALAHY', username: 'Julio', isSelected: false),
-    User(name: 'ZAFISOA', username: 'Madeleine', isSelected: false),
-    User(name: 'Jhon', username: 'Doe', isSelected: false),    User(name: 'FARALAHY', username: 'Julio', isSelected: false),
-    User(name: 'ZAFISOA', username: 'Madeleine', isSelected: false),
-    User(name: 'Jhon', username: 'Doe', isSelected: false),    User(name: 'FARALAHY', username: 'Julio', isSelected: false),
-    User(name: 'ZAFISOA', username: 'Madeleine', isSelected: false),
-    User(name: 'Jhon', username: 'Doe', isSelected: false),    User(name: 'FARALAHY', username: 'Julio', isSelected: false),
-    User(name: 'ZAFISOA', username: 'Madeleine', isSelected: false),
-    User(name: 'Jhon', username: 'Doe', isSelected: false),    User(name: 'FARALAHY', username: 'Julio', isSelected: false),
-    User(name: 'ZAFISOA', username: 'Madeleine', isSelected: false),
-    User(name: 'Jhon', username: 'Doe', isSelected: false),
 
-  ];
+  Future<void> _getAllUser() async {
 
+    ApiResponse response = await getAllUser();
+    final allUser = jsonEncode(response.data);
+    print(jsonDecode(allUser)["users"][0]["name"]);
+
+  }
   @override
   Widget build(BuildContext context) {
     final textColor = Color(0xff192b54);
@@ -65,31 +53,31 @@ class _AllUserState extends State<AllUser> {
             padding: EdgeInsets.only(top: 35),
             child: SingleChildScrollView(
               child: Column(
-                children: users.map((user) {
-                  int index = users.indexOf(user);
-                  return Card(
+                children: [
+                  for(int i=0; i<20; i++)
+                  Card(
                     elevation: 0.5,
                     margin: EdgeInsets.symmetric(vertical: 6.0),
                     child: ListTile(
                       leading: CircleAvatar(
                         backgroundColor: Colors.blue,
                         child: Text(
-                          user.name,
+                          "user.name",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      title: Text("${user.name} ${user.username}"),
+                      title: Text("username"),
                       trailing: Checkbox(
-                        value: user.isSelected,
+                        value: true,
                         onChanged: (bool? value) {
                           setState(() {
-                            users[index].isSelected = value!;
+
                           });
                         },
                       ),
                     ),
-                  );
-                }).toList(),
+                  )
+                ]
               ),
             ),
           ),
@@ -127,20 +115,25 @@ class _AllUserState extends State<AllUser> {
                         ),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
-                      child: Container(
-                          alignment: Alignment.center,
-                          constraints: BoxConstraints(
-                            maxWidth: double.infinity,
-                            minHeight: 50.0,
-                          ),
-                          child: Text(
-                            'Ajouter au foyer',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
+                      child: InkWell(
+                        onTap: () {
+                          _getAllUser();
+                        },
+                        child: Container(
+                            alignment: Alignment.center,
+                            constraints: BoxConstraints(
+                              maxWidth: double.infinity,
+                              minHeight: 50.0,
+                            ),
+                            child: Text(
+                              'Ajouter au foyer',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        ),
+                      ),
                       ),
                     ),
                   ),
@@ -153,10 +146,3 @@ class _AllUserState extends State<AllUser> {
   }
 }
 
-class User {
-  String name;
-  String username;
-  bool isSelected;
-
-  User({required this.name, required this.username, required this.isSelected});
-}

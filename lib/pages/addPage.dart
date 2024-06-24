@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:domestik/pages/widgets/addUser.dart';
 
+import '../models/api_response.dart';
+import '../services/tache_service.dart';
 import 'allUser.dart';
 
 class AddPage extends StatefulWidget {
@@ -13,7 +15,7 @@ class AddPage extends StatefulWidget {
 class _AddPageState extends State<AddPage> {
 
   final foyerController = TextEditingController();
-
+  bool isLoading = false;
   void _showFlexibleBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -70,14 +72,6 @@ class _AddPageState extends State<AddPage> {
                   ),
                 ),
               ),
-              // ListTile(
-              //   onTap: () {
-              //     // Action pour l'ajout de tâche
-              //   },
-              //   leading: Icon(Icons.assignment, color: Colors.grey),
-              //   title: Text('Ajouter une Tache'),
-              // ),
-              // Ajoutez d'autres éléments ici si nécessaire
             ],
           ),
         );
@@ -107,7 +101,7 @@ class _AddPageState extends State<AddPage> {
           ),
           TextButton(
               onPressed: () async{
-
+                _addTache(foyerController.text);
                 Navigator.of(context).pop();
 
               },
@@ -116,6 +110,35 @@ class _AddPageState extends State<AddPage> {
         ],
       )
   );
+
+  Future<void> _addTache(String name) async {
+
+
+    ApiResponse response = await addTache(name);
+    setState(() {
+      isLoading = false;
+    });
+
+    if(response.error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${response.error}'),
+      ));
+    }
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Text('${response.message}'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   void dispose() {
@@ -163,6 +186,7 @@ class _AddPageState extends State<AddPage> {
             ],
           ),
         ),
+
         body: TabBarView(
           children: [
             AddUser(),

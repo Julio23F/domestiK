@@ -94,7 +94,7 @@ Future<ApiResponse> getUserDetail() async {
     switch(response.statusCode){
 
       case 200:
-        apiResponse.data = User.fromJson(jsonDecode(response.body));
+        apiResponse.data = jsonDecode(response.body);
         break;
       case 401:
         apiResponse.error = unauthorized;
@@ -103,7 +103,40 @@ Future<ApiResponse> getUserDetail() async {
         apiResponse.error = somethingWentWrong;
         break;
     }
-    // print(apiResponse.data);
+
+  }
+  catch(e) {
+    apiResponse.error = serverError;
+    debugPrint(e.toString());
+
+  }
+  return apiResponse;
+}
+
+//Obtenir tous les utilisateurs qui ne sont pas encore dans un foyer
+Future<ApiResponse> getAllUser() async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    String token = await getToken();
+    final response = await http.get(
+        Uri.parse(allUser),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        });
+    switch(response.statusCode){
+
+      case 200:
+        apiResponse.data = jsonDecode(response.body);
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
 
   }
   catch(e) {

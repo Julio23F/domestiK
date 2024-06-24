@@ -8,6 +8,9 @@ const registerURL = baseURL + '/register';
 const logoutURL = baseURL + '/logout';
 const userURL = baseURL + '/user';
 
+//Tous les utilisateurs qui ne sont pas encore dans un foyer
+const allUser = baseURL + '/allUser';
+
 // Foyer
 const getFoyerURL = baseURL + '/foyer';
 const createFoyerURL = baseURL + '/foyer';
@@ -15,7 +18,8 @@ const updateFoyerURL = baseURL + '/foyer';
 const deleteFoyerURL = baseURL + '/foyer';
 
 // Tache
-const getAllUserTache = baseURL + '/foyer';
+const urlAllUserTache = baseURL + '/foyer';
+const tache = baseURL + '/foyer';
 
 
 // ----- Errors -----

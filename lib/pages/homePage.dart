@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:draggable_home/draggable_home.dart';
 import 'package:domestik/pages/auth/login.dart';
@@ -17,15 +16,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String foyerName = '';
+  String data = '';
   var tacheTodo;
   bool isLoading = true;
+  String userName = '';
+  String foyerName = '';
 
-  void _getFoyerData() async {
-    ApiResponse response = await getFoyerData();
-    if (response.data != null && response.data is Map<String, dynamic>) {
+  void _getUserDetail() async {
+    ApiResponse response = await getUserDetail();
+    if (response.data != null) {
       setState(() {
-        foyerName = (response.data as Map<String, dynamic>)['name'] ?? '';
+        data = jsonEncode(response.data);
+        userName = jsonDecode(data)["user"]["name"];
+        foyerName = jsonDecode(data)["user"]["foyer"]["name"];
       });
     }
   }
@@ -59,28 +62,23 @@ class _HomePageState extends State<HomePage> {
   void _showDate() {
     showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2024, 1, 1), // Corrected firstDate
-      lastDate: DateTime(2025, 12, 31), // Corrected lastDate
+      initialDate: _dateTime,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2025, 12, 31),
     ).then((DateTime? value) {
       if (value != null) {
         setState(() {
           _dateTime = value;
         });
         _getTacheTodo(_dateTime.day);
-
       }
     });
   }
 
-
-
-
-
   @override
   void initState() {
     super.initState();
-    _getFoyerData();
+    _getUserDetail();
     _getTacheTodo(_dateTime.day);
   }
 
@@ -136,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "FARALAHY Julio",
+                            userName,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -157,17 +155,20 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             height: 8,
                           ),
-                          Container(
-                            margin: EdgeInsets.only(right: 7),
-                            decoration: BoxDecoration(
-                                color: Color(0xffFB9F06),
-                                borderRadius: BorderRadius.circular(5)),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 4, horizontal: 8),
-                            child: Text(
-                              "Admin",
-                              style: TextStyle(
-                                color: textColor,
+                          InkWell(
+                            onTap: _getUserDetail,
+                            child: Container(
+                              margin: EdgeInsets.only(right: 7),
+                              decoration: BoxDecoration(
+                                  color: Color(0xffFB9F06),
+                                  borderRadius: BorderRadius.circular(5)),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 4, horizontal: 8),
+                              child: Text(
+                                "Admin",
+                                style: TextStyle(
+                                  color: textColor,
+                                ),
                               ),
                             ),
                           ),
@@ -202,16 +203,15 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(7),
                     ),
                     child: Text(
-                        "${_dateTime.day.toString()}/${_dateTime.month.toString()}/${_dateTime.year.toString()}",
-                        style: TextStyle(
+                      "${_dateTime.day.toString()}/${_dateTime.month.toString()}/${_dateTime.year.toString()}",
+                      style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.w400
-                        ),
+                      ),
                     ),
                   ),
                 )
-
               ],
             ),
           ),
