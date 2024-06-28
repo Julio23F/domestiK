@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:draggable_home/draggable_home.dart';
 import 'package:domestik/pages/auth/login.dart';
@@ -21,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   bool isLoading = true;
   String userName = '';
   String foyerName = '';
+  int? userId;
 
   void _getUserDetail() async {
     ApiResponse response = await getUserDetail();
@@ -29,6 +31,7 @@ class _HomePageState extends State<HomePage> {
         data = jsonEncode(response.data);
         userName = jsonDecode(data)["user"]["name"];
         foyerName = jsonDecode(data)["user"]["foyer"]["name"];
+        userId = jsonDecode(data)["user"]["id"];
       });
     }
   }
@@ -86,13 +89,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final textColor = Color(0xff192b54);
     final nbrTache = tacheTodo != null ? jsonDecode(tacheTodo).length : 0;
-    final List<Color> colors = [
-      Color(0xffa1c4fd),
-      Color(0xffffc2e1),
-      Color(0xffc3f8ff),
-      Color(0xffffe1a8),
-      Color(0xffd4f8e8),
-    ];
 
     return Scaffold(
       body: Container(
@@ -101,11 +97,12 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.only(top: 25),
             child: Text(
               foyerName,
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+              style: TextStyle(color: textColor, fontWeight: FontWeight.w500),
             ),
           ),
           headerWidget: SafeArea(
             child: Container(
+              color: Colors.white,
               padding: EdgeInsets.symmetric(vertical: 25, horizontal: 15),
               margin: EdgeInsets.only(top: 15),
               child: Container(
@@ -115,7 +112,8 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(15),
                   gradient: LinearGradient(
                     colors: [
-                      Color(0xffd7d6fe),
+                      // Color(0xff8463BE),
+                      Color(0xfff4ebff),
                       Color(0xfff4ebff).withOpacity(0.4),
                     ],
                     begin: Alignment.topLeft,
@@ -199,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 15),
                     decoration: BoxDecoration(
-                      color: Color(0xff8463BE),
+                      color: Colors.grey,
                       borderRadius: BorderRadius.circular(7),
                     ),
                     child: Text(
@@ -220,55 +218,150 @@ class _HomePageState extends State<HomePage> {
                 ? Center(
                 child: CircularProgressIndicator())
                 : ListView.builder(
-              itemCount: nbrTache,
-              itemBuilder: (context, index) {
+                itemCount: nbrTache,
+                itemBuilder: (context, index) {
                 final tache = jsonDecode(tacheTodo)[index];
 
                 return Container(
-                  margin: EdgeInsets.symmetric(vertical: 7, horizontal: 7),
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 7),
                   width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+                  padding: EdgeInsets.symmetric(vertical: 23, horizontal: 20),
                   decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    color: (tache["user"]["id"] == userId)?Color(0xff8463BE):Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Colors.purple.withOpacity(0.1),
+                      width: 0.5, // très fine
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 0.2,
+                        blurRadius: 5,
+                        offset: Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        tache["user"].toString(),
-                        style: TextStyle(
-                          color: textColor,
-                          fontSize: 16,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            tache["user"]["name"].toString(),
+                            style: TextStyle(
+                              color: (tache["user"]["id"] == userId)?Colors.white:textColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500
+                            ),
+                          ),
+                          Text(
+                            tache["user"]["name"].toString(),
+                            style: TextStyle(
+                              color: (tache["user"]["id"] == userId)?Colors.white70:textColor,
+                              fontSize: 8,
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(right: 7),
+                                  padding: EdgeInsets.all(4), // Space around the icon
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.cleaning_services_rounded,
+                                    size: 11,
+                                    color: Color(0xff8463BE),
+                                  ),
+                                ),
+                                Wrap(
+                                  children: List.generate(tache["tache"].length, (i) {
+                                    return Container(
+                                      margin: EdgeInsets.only(right: 7),
+                                      decoration: BoxDecoration(
+                                          color: (tache["user"]["id"] == userId)?Colors.white.withOpacity(0.1):Color(int.parse(tache["tache"][i].split('-')[1])).withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(5)),
+                                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                                      child: Text(
+                                        tache["tache"][i].split('-')[0].toString(),
+                                        style: TextStyle(
+                                          color: (tache["user"]["id"] == userId)?Colors.white:textColor,
+                                          fontSize: 9,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        "juliofaralahy23@gmail.com",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 8,
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 10),
-                        child: Row(
-                          children: List.generate(tache["tache"].length, (i) {
-                            return Container(
-                              margin: EdgeInsets.only(right: 7),
-                              decoration: BoxDecoration(
-                                  color: colors[index  % colors.length],
-                                  borderRadius: BorderRadius.circular(5)),
-                              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-                              child: Text(
-                                tache["tache"][i].toString(),
-                                style: TextStyle(
-                                  color: textColor,
-                                  fontSize: 9,
+                      (tache["user"]["id"] == userId)?
+                        Container(
+                          padding: EdgeInsets.only(left: 20),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              left: BorderSide(
+                                color: Colors.grey.withOpacity(0.6),
+                                width: 1.0,
+                              ),
+                            ),
+                          ),
+                          child: Container(
+                            height: 70,
+                            width: 35,
+                            decoration: BoxDecoration(
+                              color: Color(0xff8463BE),
+                              borderRadius: BorderRadius.circular(7),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.3),
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: RotatedBox(
+                              quarterTurns: 3,
+                              child: Center(
+                                child: Text(
+                                  'Confirmer',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            );
-                          }),
+                            ),
+                          ),
+                        )
+                      :Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0xff8463BE),
+                            boxShadow: [
+                              BoxShadow(
+                              color: Colors.grey.withOpacity(0.9),
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              offset: Offset(0, 1),
+                            ),
+                            ]
                         ),
-                      ),
+                      )
+
                     ],
                   ),
                 );
@@ -278,8 +371,9 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
           fullyStretchable: true,
-          backgroundColor: Color(0xfffafafa),
-          appBarColor: Color(0xff8463BE),
+          backgroundColor: Colors.white,
+          appBarColor: Colors.white,
+
         ),
       ),
     );

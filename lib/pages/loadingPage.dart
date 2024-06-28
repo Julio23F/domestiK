@@ -20,24 +20,24 @@ class LoadingPage extends StatefulWidget {
 
 class _LoadingPageState extends State<LoadingPage> {
 
-  void _loadUserInfo() async {
+  void loadUserInfo() async {
     String token = await getToken();
     int id = await getUserId();
-    print("Token");
-    print(token);
-    print("Id");
-    print(id);
+    // print("Token");
+    // print(token);
+    // print("Id");
+    // print(id);
     if(token == ''){
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>LoginPage()), (route) => false);
     }
     else {
       ApiResponse response = await getUserDetail();
       final userDetail = jsonEncode(response.data);
-      print("Foyer_id");
-      print(jsonDecode(userDetail)["foyer_id"]);
+      // print("Foyer_id");
+      print(jsonDecode(userDetail)["user"]["foyer_id"]);
 
       if (response.error == null){
-        if(jsonDecode(userDetail)["foyer_id"] == 0) {
+        if(jsonDecode(userDetail)["user"]["foyer_id"] == null) {
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>InfoPage()), (route) => false);
         }
         else{
@@ -57,7 +57,7 @@ class _LoadingPageState extends State<LoadingPage> {
   }
   @override
   void initState() {
-    _loadUserInfo();
+    loadUserInfo();
     super.initState();
   }
 

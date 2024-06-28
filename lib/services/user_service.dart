@@ -147,7 +147,72 @@ Future<ApiResponse> getAllUser() async {
   return apiResponse;
 }
 
-// get token
+
+//Ajouter des utilisateurs dans un foyer
+Future<void> addUser(List<int> userIds) async {
+  String token = await getToken();
+  ApiResponse data = await getUserDetail();
+  final userDetail = jsonEncode(data.data);
+  int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
+
+  final String url = '${addUsers}/$foyer_id/addUser';
+
+  final response = await http.post(
+    Uri.parse(url),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    },
+    body: jsonEncode(userIds),
+  );
+
+  if (response.statusCode == 200) {
+    print('Utilisateurs ajoutés avec succès');
+  } else {
+    print('Erreur: ${response.statusCode}');
+    print('Message: ${response.body}');
+  }
+}
+
+//Obtenir tous les utilisateurs qui sont dans le foyer
+Future<ApiResponse> getMembre() async {
+  ApiResponse apiResponse = ApiResponse();
+  ApiResponse data = await getUserDetail();
+  final userDetail = jsonEncode(data.data);
+  int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
+  try {
+    String token = await getToken();
+    final String url = '${allMembre}/${foyer_id}/allMembre';
+    final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        });
+    print(response.statusCode);
+    switch(response.statusCode){
+
+      case 200:
+        apiResponse.data = jsonDecode(response.body);
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+
+  }
+  catch(e) {
+    apiResponse.error = serverError;
+    debugPrint(e.toString());
+
+  }
+  return apiResponse;
+}
+
+
 Future<String> getToken() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   return pref.getString('token') ?? '';

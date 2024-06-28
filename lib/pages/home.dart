@@ -30,6 +30,7 @@ class _HomeState extends State<Home> {
             HomePage(),
             AddPage(),
             Userpage(),
+            Userpage(),
           ][currentIndex],
         ),
         BottomNavigationBar(

@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import '../../models/api_response.dart';
+import '../../services/user_service.dart';
 import '../allUser.dart';
 
 class AddUser extends StatefulWidget {
@@ -11,53 +13,78 @@ class AddUser extends StatefulWidget {
 }
 
 class _AddUserState extends State<AddUser> {
+  List<dynamic> allUser = [];
+  Set<int> selectedUserIds = {};
+  bool isLoading = false;
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+
+  Future<void> _getAllUser() async {
+    ApiResponse response = await getMembre();
+    if (response.data != null) {
+      final data = jsonEncode(response.data);
+      final users = jsonDecode(data)["users"];
+      for (var user in users) {
+        _addUser(user);
+      }
+    }
+  }
+
+  void _addUser(dynamic user) {
+    final int index = allUser.length;
+    allUser.add(user);
+    _listKey.currentState?.insertItem(index);
+  }
+
+  @override
+  void initState() {
+    _getAllUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.all(10),
-      children: [
-        Container(
-          decoration: BoxDecoration(
-              color: Color(0xfffafafa),
-              borderRadius: BorderRadius.circular(15)
-          ),
-          margin: EdgeInsets.symmetric(vertical: 8),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('FARALAHY Julio', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 8),
-                      Text('juliofaralahy23@gmail.com', style: TextStyle(color: Colors.grey)),
-                      SizedBox(height: 8),
-                      Row(
-                        children: List.generate(3, (index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 4.0),
-                            child: CircleAvatar(
-                              radius: 12,
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.more_vert),
-                  onPressed: () {
+    return AnimatedList(
+      key: _listKey,
+      initialItemCount: allUser.length,
+      itemBuilder: (BuildContext context, int index, Animation<double> animation) {
+        final user = allUser[index];
+        return _buildItem(user, animation);
+      },
+    );
+  }
 
-                  },
-                ),
-              ],
+  Widget _buildItem(dynamic user, Animation<double> animation) {
+    return SizeTransition(
+      sizeFactor: animation,
+      axis: Axis.vertical,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xfffafafa),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Colors.grey[400],
+            child: Icon(
+              Icons.person_outline_outlined,
+              color: Colors.white,
             ),
           ),
-        )
-      ],
+          title: Text(
+            '${user["name"]}',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          subtitle: Text('${user["email"]}'),
+          trailing: IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: () {},
+          ),
+          onTap: () {},
+        ),
+      ),
     );
   }
 }

@@ -42,6 +42,9 @@ dependencies:
   flutter_spinkit: ^5.2.1
   draggable_home: ^1.0.5
   bottom_sheet: ^4.0.4
+  flutter_material_color_picker: ^1.2.0
+  flutter_colorpicker: ^1.1.0
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:

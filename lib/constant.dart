@@ -10,6 +10,9 @@ const userURL = baseURL + '/user';
 
 //Tous les utilisateurs qui ne sont pas encore dans un foyer
 const allUser = baseURL + '/allUser';
+//Les membres qui sont déja dans le foyer
+const allMembre = baseURL + '/foyer';
+const addUsers = baseURL + '/foyer';
 
 // Foyer
 const getFoyerURL = baseURL + '/foyer';

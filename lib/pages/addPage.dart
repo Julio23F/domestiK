@@ -1,5 +1,9 @@
+import 'package:domestik/pages/widgets/addTache.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:domestik/pages/widgets/addUser.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 
 import '../models/api_response.dart';
 import '../services/tache_service.dart';
@@ -13,9 +17,10 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-
   final foyerController = TextEditingController();
   bool isLoading = false;
+  Color pickerColor = const Color(0xff2196f3);
+
   void _showFlexibleBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -36,14 +41,17 @@ class _AddPageState extends State<AddPage> {
               InkWell(
                 onTap: () {
                   print("Utilisateur");
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>AllUser()));
-
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => AllUser()));
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                   child: Row(
                     children: [
-                      Icon(Icons.person_add, color: Colors.grey,),
+                      Icon(
+                        Icons.person_add,
+                        color: Colors.grey,
+                      ),
                       SizedBox(width: 10),
                       Text(
                         'Ajouter un Utilisateur',
@@ -63,7 +71,10 @@ class _AddPageState extends State<AddPage> {
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                   child: Row(
                     children: [
-                      Icon(Icons.assignment, color: Colors.grey,),
+                      Icon(
+                        Icons.assignment,
+                        color: Colors.grey,
+                      ),
                       SizedBox(width: 10),
                       Text(
                         'Ajouter une tache',
@@ -87,57 +98,87 @@ class _AddPageState extends State<AddPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Tache"),
-        content: TextField(
-          autofocus: true,
-          decoration: InputDecoration(hintText: "Entrer le nom de la tache"),
-          controller: foyerController,
+        content: Container(
+          height: 210,
+          child: Column(
+            children: [
+              TextField(
+                autofocus: true,
+                decoration:
+                InputDecoration(hintText: "Entrer le nom de la tache"),
+                controller: foyerController,
+              ),
+              SizedBox(height: 20),
+              Expanded(
+                child: BlockPicker(
+                  pickerColor: pickerColor,
+                  onColorChanged: changeColor,
+                  availableColors: [
+                    Color(0xffef4749),
+                    Colors.green,
+                    Color(0xff1877f2),
+                    Colors.yellow,
+                    Colors.orange,
+                    Colors.purple,
+                    Colors.brown,
+                    Color(0xff51bca8),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Annuler")
-          ),
+              child: Text("Annuler")),
           TextButton(
-              onPressed: () async{
+              onPressed: () async {
                 _addTache(foyerController.text);
+                setState(() {
+                  foyerController.text = '';
+                });
                 Navigator.of(context).pop();
-
               },
-              child: Text("Save")
-          ),
+              child: Text("Save")),
         ],
       )
   );
 
   Future<void> _addTache(String name) async {
-
-
-    ApiResponse response = await addTache(name);
+    ApiResponse response = await addTache(name, pickerColor.value.toString());
     setState(() {
       isLoading = false;
     });
 
-    if(response.error != null) {
+    if (response.error != null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('${response.error}'),
       ));
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: Text('${response.message}'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: Text('${response.message}'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
+  }
+
+  void changeColor(Color color) {
+    setState(() {
+      pickerColor = color;
+    });
   }
 
   @override
@@ -186,11 +227,10 @@ class _AddPageState extends State<AddPage> {
             ],
           ),
         ),
-
         body: TabBarView(
           children: [
             AddUser(),
-            AddUser(),
+            AddTache(),
           ],
         ),
       ),

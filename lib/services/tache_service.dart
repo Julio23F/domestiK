@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:domestik/services/user_service.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../constant.dart';
 import '../models/api_response.dart';
@@ -13,8 +14,12 @@ Future<ApiResponse> todoTache (date) async {
   ApiResponse apiResponse = ApiResponse();
   try{
     String token = await getToken();
-    ApiResponse foyer = await getFoyerId();
-    final uri = '$urlAllUserTache/${foyer.data}/todoTache';
+    // ApiResponse foyer = await getFoyerId();
+    ApiResponse data = await getUserDetail();
+    final userDetail = jsonEncode(data.data);
+    int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
+    print(foyer_id);
+    final uri = '$urlAllUserTache/${foyer_id}/todoTache';
     final response = await http.post(
         Uri.parse(uri),
         headers: {
@@ -53,12 +58,13 @@ Future<ApiResponse> todoTache (date) async {
 
 
 //Add tache
-Future<ApiResponse> addTache(String name) async {
+Future<ApiResponse> addTache(String name, String color) async {
   String token = await getToken();
   ApiResponse apiResponse = ApiResponse();
   try {
-
-    int foyer_id = 8;
+    ApiResponse data = await getUserDetail();
+    final userDetail = jsonEncode(data.data);
+    int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
     final uri = '${tache}/${foyer_id}/tache';
     final response = await http.post(
         Uri.parse(uri),
@@ -68,6 +74,7 @@ Future<ApiResponse> addTache(String name) async {
         },
         body: {
           'name': name,
+          'color': color
         });
     print(response.statusCode);
 
@@ -93,5 +100,43 @@ Future<ApiResponse> addTache(String name) async {
   }
   print(apiResponse.error);
 
+  return apiResponse;
+}
+
+//Obtenir tous les utilisateurs qui sont dans le foyer
+Future<ApiResponse> getTache() async {
+  ApiResponse apiResponse = ApiResponse();
+  ApiResponse data = await getUserDetail();
+  final userDetail = jsonEncode(data.data);
+  int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
+  try {
+    String token = await getToken();
+    final String url = '${allMembre}/${foyer_id}/tache';
+    final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        });
+    print(response.statusCode);
+    switch(response.statusCode){
+
+      case 200:
+        apiResponse.data = jsonDecode(response.body);
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+
+  }
+  catch(e) {
+    apiResponse.error = serverError;
+    debugPrint(e.toString());
+
+  }
   return apiResponse;
 }
