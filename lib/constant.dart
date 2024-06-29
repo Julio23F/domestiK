@@ -24,6 +24,7 @@ const deleteFoyerURL = baseURL + '/foyer';
 const urlAllUserTache = baseURL + '/foyer';
 const tache = baseURL + '/foyer';
 
+const historique = baseURL + '/historique';
 
 // ----- Errors -----
 const serverError = 'Server error';

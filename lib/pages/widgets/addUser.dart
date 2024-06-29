@@ -59,8 +59,20 @@ class _AddUserState extends State<AddUser> {
       axis: Axis.vertical,
       child: Container(
         decoration: BoxDecoration(
-          color: Color(0xfffafafa),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: Colors.purple.withOpacity(0.1),
+            width: 0.5, // très fine
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 0.2,
+              blurRadius: 5,
+              offset: Offset(0, 1),
+            ),
+          ],
         ),
         margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         child: ListTile(
