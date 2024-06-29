@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
         padding: EdgeInsets.symmetric(horizontal: 8),
         child: ListView(
           children: [
-            SizedBox(height: 5,),
+            SizedBox(height: 15,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -266,7 +266,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Container(
                                   margin: EdgeInsets.only(right: 7),
-                                  padding: EdgeInsets.all(4), // Space around the icon
+                                  padding: EdgeInsets.all(4),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     shape: BoxShape.circle,

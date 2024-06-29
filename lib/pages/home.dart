@@ -1,5 +1,6 @@
 import 'package:domestik/pages/addPage.dart';
 import 'package:domestik/pages/auth/historiquePage.dart';
+import 'package:domestik/pages/confirmationPage.dart';
 import 'package:domestik/pages/homePage.dart';
 import 'package:domestik/pages/userPage.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,8 @@ class _HomeState extends State<Home> {
         Expanded(
           child: [
             HomePage(),
+            ConfirmationPage(),
             AddPage(),
-            Userpage(),
             Userpage(),
           ][currentIndex],
         ),
@@ -41,6 +42,10 @@ class _HomeState extends State<Home> {
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.access_time_outlined),
+              label: 'Conf',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.add),
