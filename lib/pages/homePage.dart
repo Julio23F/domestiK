@@ -108,109 +108,125 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 8),
+
         child: ListView(
           children: [
-            SizedBox(height: 15,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                    "Androibé",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 28,
-                    ),                ),
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          userName,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          'Admin',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          ),
-
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 7,),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        shape: BoxShape.circle,
-
-                      ),
-                      child: Image.asset("assets/images/avatar.png", width: 30,),
-                    )
-                  ],
-                )
-              ],
-            ),
-            SizedBox(height: 35),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "29 juin, 2024",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                      ),
-                    ),
-                    Text(
-                      'Today',
+            //Partie 1
+            Container(
+              padding: EdgeInsets.only(top: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      "Androibé",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 25,
+                        fontSize: 28,
+                      ),                ),
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            userName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          Text(
+                            'Admin',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                            ),
+
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 7,),
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          shape: BoxShape.circle,
+
+                        ),
+                        child: Image.asset("assets/images/avatar.png", width: 30,),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+
+            //Partie 2
+            Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(top: 35),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "29 juin, 2024",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Text(
+                            'Today',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Icon(
+                          Icons.calendar_month_outlined,
+                          color: Colors.grey,
+                          size: 25,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Icon(
-                    Icons.calendar_month_outlined,
-                    color: Colors.grey,
-                    size: 25,
+                  height: 90,
+                  margin: EdgeInsets.only(bottom: 25, top: 10),
+                  padding: EdgeInsets.only( left: 10, right: 10),
+
+                  child: Expanded(
+                    child: DatePicker(
+                      DateTime.now(),
+                      initialSelectedDate: DateTime.now(),
+                      selectionColor: Color(0xff21304f),
+                      selectedTextColor: Colors.white,
+                      onDateChange: (date) {
+                        setState(() {
+                          selectedValue = date;
+                          _getTacheTodo(selectedValue.day);
+                        });
+                      },
+                    ),
                   ),
                 ),
               ],
             ),
-            Container(
-              height: 90,
-              margin: EdgeInsets.only(bottom: 25),
-              child: Expanded(
-                child: DatePicker(
-                  DateTime.now(),
-                  initialSelectedDate: DateTime.now(),
-                  selectionColor: Color(0xff21304f),
-                  selectedTextColor: Colors.white,
-                  onDateChange: (date) {
-                    setState(() {
-                      selectedValue = date;
-                      _getTacheTodo(selectedValue.day);
-                    });
-                  },
-                ),
-              ),
-            ),
+
+            //Partie 3
             isLoading
                 ? Center(
                 child: CircularProgressIndicator())
