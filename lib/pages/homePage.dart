@@ -89,7 +89,8 @@ class _HomePageState extends State<HomePage> {
 
   }
 
-
+  bool animation = false;
+  double width = 0;
 
 
   @override
@@ -98,6 +99,14 @@ class _HomePageState extends State<HomePage> {
     _getUserDetail();
     _getTacheTodo(_dateTime.day);
     _showDate();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        animation = true;
+      });
+    });
+
+
   }
 
   @override
@@ -105,6 +114,7 @@ class _HomePageState extends State<HomePage> {
     final textColor = Color(0xff192b54);
     final nbrTache = tacheTodo != null ? jsonDecode(tacheTodo).length : 0;
     var selectedValue;
+    width = MediaQuery.of(context).size.width;
     return Scaffold(
       // body: Container(
       //   padding: EdgeInsets.symmetric(horizontal: 8),
@@ -394,147 +404,318 @@ class _HomePageState extends State<HomePage> {
       //     ],
       //   ),
       // ),
-      body: CustomScrollView(
-        slivers: [
-          SliverPersistentHeader(
-            pinned: false,
-            floating: true,
-            delegate: SliverAppBarDelegate(
-              minHeight: 100.0,
-              maxHeight: 110.0,
-              child: Container(
-                padding: EdgeInsets.only(top: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Androibé",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 28,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              userName,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Text(
-                              'Admin',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16,
-                              ),
-
-                            ),
-                          ],
+        body: CustomScrollView(
+          slivers: [
+            SliverPersistentHeader(
+              pinned: false,
+              floating: true,
+              delegate: SliverAppBarDelegate(
+                minHeight: 100.0,
+                maxHeight: 100.0,
+                child: Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.only(top: 35, left: 10, right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Androibé",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28,
                         ),
-                        SizedBox(width: 7,),
-                        Container(
-                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            shape: BoxShape.circle,
+                      ),
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                userName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text(
+                                'Admin',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
 
+                              ),
+                            ],
                           ),
-                          child: Image.asset("assets/images/avatar.png", width: 30,),
-                        )
-                      ],
-                    )
-                  ],
+                          SizedBox(width: 7,),
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              shape: BoxShape.circle,
+
+                            ),
+                            child: Image.asset("assets/images/avatar.png", width: 30,),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          SliverPersistentHeader(
-            pinned: true,
-            floating: false,
-            delegate: SliverAppBarDelegate(
-              minHeight: 250.0,
-              maxHeight: 250.0,
-              child: ListView(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(top: 35),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            SliverPersistentHeader(
+              pinned: true,
+              floating: false,
+              delegate: SliverAppBarDelegate(
+                minHeight: 190.0,
+                maxHeight: 190.0,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 2,
+                        offset: Offset(0, 0.5),
+                      ),
+                    ],
+                  ),
+                  child: ListView(
+                    children: [
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "29 juin, 2024",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "29 juin, 2024",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Text(
+                                  'Today',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 25,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              'Today',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25,
+                            Container(
+                              padding: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Icon(
+                                Icons.calendar_month_outlined,
+                                color: Colors.grey,
+                                size: 25,
                               ),
                             ),
                           ],
                         ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Icon(
-                            Icons.calendar_month_outlined,
-                            color: Colors.grey,
-                            size: 25,
+                      ),
+                      Container(
+                        height: 90,
+                        margin: EdgeInsets.only( top: 5),
+                        padding: EdgeInsets.only( left: 10, right: 10),
+
+                        child: Expanded(
+                          child: DatePicker(
+                            DateTime.now(),
+                            initialSelectedDate: DateTime.now(),
+                            selectionColor: Color(0xff21304f),
+                            selectedTextColor: Colors.white,
+                            onDateChange: (date) {
+                              setState(() {
+                                selectedValue = date;
+                                _getTacheTodo(selectedValue.day);
+                              });
+                            },
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    height: 90,
-                    margin: EdgeInsets.only(bottom: 25, top: 10),
-                    padding: EdgeInsets.only( left: 10, right: 10),
-
-                    child: Expanded(
-                      child: DatePicker(
-                        DateTime.now(),
-                        initialSelectedDate: DateTime.now(),
-                        selectionColor: Color(0xff21304f),
-                        selectedTextColor: Colors.white,
-                        onDateChange: (date) {
-                          setState(() {
-                            selectedValue = date;
-                            _getTacheTodo(selectedValue.day);
-                          });
-                        },
+                ),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                  final tache = jsonDecode(tacheTodo)[index];
+                  return AnimatedContainer(
+                    duration: Duration(milliseconds: 400 + (index * 250)),
+                    curve: Curves.easeIn,
+                    transform: Matrix4.translationValues(animation ?0:width, 0, 0),
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 7),
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: (tache["user"]["id"] == userId) ? Color(0xff21304f) : Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.purple.withOpacity(0.1),
+                          width: 0.5, // très fine
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 0.2,
+                            blurRadius: 5,
+                            offset: Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                tache["user"]["name"].toString(),
+                                style: TextStyle(
+                                  color: (tache["user"]["id"] == userId) ? Colors.white : textColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                "Admin",
+                                style: TextStyle(
+                                  color: (tache["user"]["id"] == userId) ? Colors.white70 : textColor,
+                                  fontSize: 8,
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 10),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(right: 7),
+                                      padding: EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        Icons.cleaning_services_rounded,
+                                        size: 11,
+                                        color: Color(0xff8463BE),
+                                      ),
+                                    ),
+                                    Wrap(
+                                      children: List.generate(tache["tache"].length, (i) {
+                                        return Container(
+                                          margin: EdgeInsets.only(right: 7),
+                                          decoration: BoxDecoration(
+                                            color: (tache["user"]["id"] == userId)
+                                                ? Colors.white.withOpacity(0.1)
+                                                : Color(int.parse(tache["tache"][i].split('-')[2])).withOpacity(0.1),
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                                          child: Text(
+                                            tache["tache"][i].split('-')[1].toString(),
+                                            style: TextStyle(
+                                              color: (tache["user"]["id"] == userId) ? Colors.white : textColor,
+                                              fontSize: 9,
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          (tache["user"]["id"] == userId)
+                              ? Container(
+                            padding: EdgeInsets.only(left: 20),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                left: BorderSide(
+                                  color: Colors.grey.withOpacity(0.6),
+                                  width: 1.0,
+                                ),
+                              ),
+                            ),
+                            child: load
+                                ? CircularProgressIndicator(
+                              color: Colors.grey.shade400,
+                            )
+                                : InkWell(
+                              onTap: () {
+                                _addHistorique(convert(tache["tache"]));
+                              },
+                              child: Container(
+                                height: 70,
+                                width: 35,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff8463BE),
+                                  borderRadius: BorderRadius.circular(7),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 1,
+                                      offset: Offset(0, 1),
+                                    ),
+                                  ],
+                                ),
+                                child: RotatedBox(
+                                  quarterTurns: 3,
+                                  child: Center(
+                                    child: Text(
+                                      'Confirmer',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                              : Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color(0xff8463BE),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.9),
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(0, 1),
+                                  ),
+                                ]),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                  );
+                },
+                childCount: nbrTache,
               ),
             ),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-                  (context, index) => ListTile(
-                title: Text('Item #$index'),
-              ),
-              childCount: 50,
-            ),
-          ),
-        ],
-      )
+          ],
+        )
     );
   }
 }
