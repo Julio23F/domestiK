@@ -1,26 +1,25 @@
 class User {
-   int? id;
-   String? name;
-   String? email;
-   int? foyer_id;
-   String? token;
+  int? id;
+  String? name;
+  String? email;
+  int? foyerId;
+  String? token;
 
-  User ({
-     this.id,
-     this.name,
-     this.email,
-    this.foyer_id,
-    this.token
+  User({
+    this.id,
+    this.name,
+    this.email,
+    this.foyerId,
+    this.token,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-        id: json['user']['id'],
-        name: json['user']['name'],
-        email: json['user']['email'],
-        foyer_id: json['user']['foyer_id']??0,
-        token: json['token']??''
+      id: json['id'],
+      name: json['name'],
+      email: json['email'] ?? '',
+      foyerId: json['foyer_id'] ?? 0,
+      token: json['token'] ?? '',
     );
   }
-
 }

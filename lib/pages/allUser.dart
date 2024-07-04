@@ -63,14 +63,11 @@ class _AllUserState extends State<AllUser> {
             color: Color(0xfff9f9f9),
             padding: EdgeInsets.only(top: 35),
             child: allUser.isEmpty
-                ? Center(child: Text(
-                  "Aucun utilisateur n'est disponible",
-                  style: TextStyle(
-                    fontSize: 21,
-                    fontWeight: FontWeight.w500,
-                    color: textColor
-                  ),
-                ))
+                ? Center(child: Image.asset(
+                    "assets/images/emptyUser.png",
+                    width: MediaQuery.of(context).size.width / 2,
+                  )
+                )
                 : ListView.builder(
                 itemCount: allUser.length,
                 itemBuilder: (BuildContext context, int index) {

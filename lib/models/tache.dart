@@ -1,16 +1,16 @@
 class Tache {
+  int? id;
   String? name;
 
   Tache({
+    this.id,
     this.name,
   });
 
-// map json to post model
-
   factory Tache.fromJson(Map<String, dynamic> json) {
     return Tache(
-        name: json['name'],
+      id: json['id'],
+      name: json['name'],
     );
   }
-
 }

@@ -1,12 +1,10 @@
 import 'dart:convert';
-
-import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
-
 import '../constant.dart';
 import '../models/api_response.dart';
+import '../models/historique.dart';
+import '../models/user.dart';
 import '../services/historique_service.dart';
-import '../services/myService.dart';
 import '../services/tache_service.dart';
 import '../services/user_service.dart';
 import 'auth/login.dart';
@@ -25,19 +23,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   String userName = '';
   String foyerName = '';
   int? userId;
-
-  void _getUserDetail() async {
-    ApiResponse response = await getUserDetail();
-    if (response.data != null) {
-      setState(() {
-        data = jsonEncode(response.data);
-        userName = jsonDecode(data)["user"]["name"];
-        foyerName = jsonDecode(data)["user"]["foyer"]["name"];
-        userId = jsonDecode(data)["user"]["id"];
-      });
-    }
-  }
-
+  var listConfirmation;
+  int? nbrConfirm;
   Future<void> _getTacheTodo(int date) async {
     setState(() {
       isLoading = true;
@@ -63,27 +50,30 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     }
   }
 
-  DateTime _dateTime = DateTime.now();
-  String? dateToday;
-  void _showDate() {
-    setState(() {
-      // dateToday = DateFormat('d MMM, y', 'fr').format(DateTime.now());
-    });
+  Future<void> _historiqueToConfirm() async {
 
-  }
-  bool load = false;
-  Future<void> _addHistorique(List tacheIds) async{
-    setState(() {
-      load = true;
-    });
+    ApiResponse response = await historiqueToConfirm();
 
-    await addHistorique(tacheIds).then((value) {
+    if (response.error == null) {
       setState(() {
-        load = false;
+        nbrConfirm = (response.data as List).length;
+        listConfirmation = response.data as List<Historique>;
       });
-    });
-
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => LoginPage()),
+                (route) => false)
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${response.error}'),
+      ));
+    }
   }
+
+
+
 
 
 
@@ -91,16 +81,13 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   @override
   void initState() {
     super.initState();
-    _getUserDetail();
-    _getTacheTodo(_dateTime.day);
-    _showDate();
+    _getTacheTodo(2);
+    _historiqueToConfirm();
   }
 
   @override
   Widget build(BuildContext context) {
     final textColor = Color(0xff192b54);
-    final nbrTache = tacheTodo != null ? jsonDecode(tacheTodo).length : 0;
-    var selectedValue;
     return Scaffold(
         body: Container(
           padding: EdgeInsets.symmetric(horizontal: 8),
@@ -142,12 +129,13 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                   ? Center(
                   child: CircularProgressIndicator())
                   : ListView.builder(
-                itemCount: nbrTache,
+                itemCount: nbrConfirm,
                 itemBuilder: (context, index) {
                   final tache = jsonDecode(tacheTodo)[index];
+                  Historique confirm = listConfirmation[index];
 
                   return Container(
-                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 7),
+                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 7),
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                     decoration: BoxDecoration(
@@ -173,7 +161,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              tache["user"]["name"].toString(),
+                              confirm.user!.name.toString(),
                               style: TextStyle(
                                   color: textColor,
                                   fontSize: 16,
@@ -205,15 +193,15 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                     ),
                                   ),
                                   Wrap(
-                                    children: List.generate(tache["tache"].length, (i) {
+                                    children: List.generate(confirm.taches!.length, (i) {
                                       return Container(
                                         margin: EdgeInsets.only(right: 7),
                                         decoration: BoxDecoration(
-                                            color: Color(int.parse(tache["tache"][i].split('-')[2])).withOpacity(0.1),
+                                            // color: Color(int.parse(tache["tache"][i].split('-')[2])).withOpacity(0.1),
                                             borderRadius: BorderRadius.circular(5)),
                                         padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
                                         child: Text(
-                                          tache["tache"][i].split('-')[1].toString(),
+                                          confirm.taches![i].name.toString(),
                                           style: TextStyle(
                                             color: textColor,
                                             fontSize: 9,
@@ -228,26 +216,29 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                             ),
                           ],
                         ),
-                        Container(
-                          padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: Color(0xff21304f),
-                            borderRadius: BorderRadius.circular(7),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 1,
-                                blurRadius: 1,
-                                offset: Offset(0, 1),
+                        InkWell(
+                          onTap: _historiqueToConfirm,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: Color(0xff21304f),
+                              borderRadius: BorderRadius.circular(7),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.3),
+                                  spreadRadius: 1,
+                                  blurRadius: 1,
+                                  offset: Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              "Confirmer",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
                               ),
-                            ],
-                          ),
-                          child: Text(
-                            "Confirmer",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         )
