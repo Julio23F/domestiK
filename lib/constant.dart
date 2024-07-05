@@ -13,6 +13,8 @@ const allUser = baseURL + '/allUser';
 //Les membres qui sont déja dans le foyer
 const allMembre = baseURL + '/foyer';
 const addUsers = baseURL + '/foyer';
+//activer ou désactiver un utilisateur
+const activeOrUnable = baseURL + '/active';
 
 // Foyer
 const getFoyerURL = baseURL + '/foyer';
@@ -25,6 +27,7 @@ const urlAllUserTache = baseURL + '/foyer';
 const tache = baseURL + '/foyer';
 
 const historique = baseURL + '/historique';
+const confirmer = baseURL + '/confirmer';
 
 // ----- Errors -----
 const serverError = 'Server error';

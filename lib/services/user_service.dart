@@ -174,6 +174,46 @@ Future<void> addUser(List<int> userIds) async {
   }
 }
 
+//Activer ou désactiver un utilisateur
+Future<ApiResponse> activeOrDisable(int userId) async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    String token = await getToken();
+    final response = await http.post(
+        Uri.parse(activeOrUnable),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: {
+          "userId": userId.toString()
+        }
+
+    );
+    switch(response.statusCode){
+
+      case 200:
+        apiResponse.data = jsonDecode(response.body);
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+
+  }
+  catch(e) {
+    apiResponse.error = serverError;
+    debugPrint(e.toString());
+
+  }
+  return apiResponse;
+}
+
+
 //Obtenir tous les utilisateurs qui sont dans le foyer
 Future<ApiResponse> getMembre() async {
   ApiResponse apiResponse = ApiResponse();

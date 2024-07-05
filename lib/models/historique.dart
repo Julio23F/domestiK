@@ -2,14 +2,14 @@ import 'package:domestik/models/tache.dart';
 import 'package:domestik/models/user.dart';
 
 class Historique {
-  int? id;
+  int id;
   int? userId;
   String? state;
   User? user;
   List<Tache>? taches;
 
   Historique({
-    this.id,
+    required this.id,
     this.userId,
     this.state,
     this.user,

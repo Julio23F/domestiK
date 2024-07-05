@@ -203,7 +203,7 @@ class _AddPageState extends State<AddPage> {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                 decoration: BoxDecoration(
-                  color: Color(0xff8463BE),
+                  color: Color(0xff21304f),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(

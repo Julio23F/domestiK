@@ -92,3 +92,44 @@ Future<ApiResponse> historiqueToConfirm() async {
 
   return apiResponse;
 }
+
+
+Future<ApiResponse> confirm(int historique_id) async {
+  String token = await getToken();
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    final response = await http.post(
+      Uri.parse('${confirmer}'),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'historique_id': historique_id,
+      }),
+    );
+
+
+    switch(response.statusCode) {
+      case 200:
+        apiResponse.message = jsonDecode(response.body)['message'];
+        break;
+      case 422:
+        final errors = jsonDecode(response.body)['errors'];
+        apiResponse.error = errors[errors.keys.elementAt(0)][0];
+        break;
+      case 403:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = e.toString();
+  }
+
+  return apiResponse;
+}
