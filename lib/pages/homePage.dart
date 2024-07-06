@@ -469,10 +469,10 @@ class _HomePageState extends State<HomePage> {
               pinned: true,
               floating: false,
               delegate: SliverAppBarDelegate(
-                minHeight: 190.0,
-                maxHeight: 190.0,
+                minHeight: 160.0,
+                maxHeight: 160.0,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [
@@ -484,7 +484,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  child: ListView(
+                  child: Column(
                     children: [
                       Container(
                         child: Row(
@@ -524,24 +524,18 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
-                      Container(
-                        height: 90,
-                        margin: EdgeInsets.only( top: 5),
-                        padding: EdgeInsets.only( left: 10, right: 10),
-
-                        child: Expanded(
-                          child: DatePicker(
-                            DateTime.now(),
-                            initialSelectedDate: DateTime.now(),
-                            selectionColor: Color(0xff21304f),
-                            selectedTextColor: Colors.white,
-                            onDateChange: (date) {
-                              setState(() {
-                                selectedValue = date;
-                                _getTacheTodo(selectedValue.day);
-                              });
-                            },
-                          ),
+                      Expanded(
+                        child: DatePicker(
+                          DateTime.now(),
+                          initialSelectedDate: DateTime.now(),
+                          selectionColor: Color(0xff21304f),
+                          selectedTextColor: Colors.white,
+                          onDateChange: (date) {
+                            setState(() {
+                              selectedValue = date;
+                              _getTacheTodo(selectedValue.day);
+                            });
+                          },
                         ),
                       ),
                     ],

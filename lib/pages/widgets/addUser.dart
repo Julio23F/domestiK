@@ -6,7 +6,7 @@ import '../../services/user_service.dart';
 import '../allUser.dart';
 
 class AddUser extends StatefulWidget {
-  const AddUser({super.key});
+  const AddUser({Key? key}) : super(key: key);
 
   @override
   State<AddUser> createState() => _AddUserState();
@@ -17,6 +17,15 @@ class _AddUserState extends State<AddUser> {
   Set<int> selectedUserIds = {};
   bool isLoading = false;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  int? editingUserId;
+  TextEditingController _nameController = TextEditingController();
+  bool isAdminSelected = false; // Ajout de l'état pour suivre l'administrateur sélectionné
+
+  @override
+  void initState() {
+    _getAllUser();
+    super.initState();
+  }
 
   Future<void> _getAllUser() async {
     ApiResponse response = await getMembre();
@@ -35,24 +44,55 @@ class _AddUserState extends State<AddUser> {
     _listKey.currentState?.insertItem(index);
   }
 
-  @override
-  void initState() {
-    _getAllUser();
-    super.initState();
+  void _activeOrDisable(int userId) {
+    setState(() {
+      final user = allUser.firstWhere((u) => u["id"] == userId);
+      user["active"] = user["active"] == 1 ? 0 : 1;
+    });
+    activeOrDisable(userId);
+  }
+
+  void _startEditing(int userId, String initialName) {
+    setState(() {
+      editingUserId = userId;
+      _nameController.text = initialName;
+    });
+  }
+
+  void _stopEditing() {
+    setState(() {
+      editingUserId = null;
+    });
+  }
+
+  void _saveChanges(int userId) {
+    // Implementer la logique pour sauvegarder les changements de l'utilisateur avec l'ID userId
+    setState(() {
+      // Exemple: mettre à jour le nom de l'utilisateur dans la liste
+      final user = allUser.firstWhere((u) => u["id"] == userId);
+      user["name"] = _nameController.text;
+      _stopEditing(); // Fin du mode d'édition
+    });
+
+    // Afficher le résultat choisi dans la console
+    print("Résultat choisi : ${isAdminSelected ? 'Admin' : 'User'}");
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: AnimatedList(
-        key: _listKey,
-        initialItemCount: allUser.length,
-        itemBuilder: (BuildContext context, int index, Animation<double> animation) {
-          final user = allUser[index];
-          return _buildItem(user, animation);
-        },
-      ),
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: AnimatedList(
+          key: _listKey,
+          initialItemCount: allUser.length,
+          itemBuilder: (BuildContext context, int index, Animation<double> animation) {
+            final user = allUser[index];
+            return _buildItem(user, animation);
+          },
+        ),
+      )
+
     );
   }
 
@@ -80,109 +120,227 @@ class _AddUserState extends State<AddUser> {
         margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
         child: Stack(
           children: [
-            user["active"]!=1?
-            Positioned(
-              top: 0,
-              bottom: 0,
-              right: 0,
-              width: 5,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xff8463BE),
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
+            if (user["active"] != 1)
+              Positioned(
+                top: 0,
+                bottom: 0,
+                right: 0,
+                width: 5,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xff8463BE),
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      bottomRight: Radius.circular(10),
+                    ),
                   ),
                 ),
               ),
-            )
-            :SizedBox(),
-            ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.grey.shade400,
-                child: Icon(
-                  Icons.person_outline,
-                  color: Colors.white,
-                ),
-              ),
-              title: Text(
-                '${user["name"]}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              subtitle: Text(
-                '${user["email"]}',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                ),
-              ),
-              trailing: PopupMenuButton<String>(
-                onSelected: (String value) {
-                  print("Option sélectionnée : $value");
-                  if (value == "Désactiver") {
-                    activeOrDisable(user["id"]);
-                  }
-                },
-                itemBuilder: (BuildContext context) {
-                  return [
-                    PopupMenuItem<String>(
-                      value: 'Modifier',
-                      child: Container(
-                        width: 100, // Définir la largeur ici
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit, color: Colors.black54),
-                            SizedBox(width: 8),
-                            Text('Modifier', style: TextStyle(color: Colors.black54)),
-                          ],
-                        ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.grey.shade400,
+                    child: Text(
+                      user["name"].substring(0, 1).toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    PopupMenuItem<String>(
-                      value: 'Désactiver',
-                      child: Container(
-                        width: 100, // Définir la largeur ici
-                        child: Row(
-                          children: [
-                            Icon(Icons.block, color: Colors.black54),
-                            SizedBox(width: 8),
-                            Text(
-                                user["active"]!=1?'Réactiver':'Désactiver',
-                                style: TextStyle(color: Colors.black54)
+                  ),
+                  title: Text(
+                    '${user["name"]}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  subtitle: Text(
+                    '${user["email"]}',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  trailing: editingUserId == user["id"]
+                      ? InkWell(
+                    onTap: () {
+                      _saveChanges(user["id"]);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: Color(0xff21304f),
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      child: Text(
+                        'Enregistrer',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  )
+                      : PopupMenuButton<String>(
+                    onSelected: (String value) {
+                      print("Option sélectionnée : $value");
+                      if (value == "Désactiver") {
+                        _activeOrDisable(user["id"]);
+                        print(user["id"]);
+                      } else if (value == "Modifier") {
+                        _startEditing(user["id"], user["name"]);
+                      }
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        PopupMenuItem<String>(
+                          value: 'Modifier',
+                          child: Container(
+                            width: 100,
+                            child: Row(
+                              children: [
+                                Icon(Icons.edit, color: Colors.black54),
+                                SizedBox(width: 8),
+                                Text('Modifier', style: TextStyle(color: Colors.black54)),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'Supprimer',
-                      child: Container(
-                        width: 100, // Définir la largeur ici
-                        child: Row(
-                          children: [
-                            Icon(Icons.delete, color: Colors.black54),
-                            SizedBox(width: 8),
-                            Text('Supprimer', style: TextStyle(color: Colors.black54)),
-                          ],
+                        PopupMenuItem<String>(
+                          value: 'Désactiver',
+                          child: Container(
+                            width: 100,
+                            child: Row(
+                              children: [
+                                Icon(Icons.block, color: Colors.black54),
+                                SizedBox(width: 8),
+                                Text(
+                                  user["active"] != 1 ? 'Réactiver' : 'Désactiver',
+                                  style: TextStyle(color: Colors.black54),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                        PopupMenuItem<String>(
+                          value: 'Supprimer',
+                          child: Container(
+                            width: 100,
+                            child: Row(
+                              children: [
+                                Icon(Icons.delete, color: Colors.black54),
+                                SizedBox(width: 8),
+                                Text('Supprimer', style: TextStyle(color: Colors.black54)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ];
+                    },
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ];
-                },
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                    elevation: 4,
+                  ),
+                  onTap: () {},
                 ),
-                elevation: 4,
-              ),
-              onTap: () {},
+                editingUserId == user["id"]
+                    ? Container(
+                  padding: EdgeInsets.only(bottom: 10, left: 70),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 300),
+                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        margin: EdgeInsets.only(right: 5),
+                        decoration: BoxDecoration(
+                          color: isAdminSelected ? Colors.lightGreen.shade400 : Colors.lightGreen,
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isAdminSelected = false;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              if (!isAdminSelected)
+                                Container(
+                                  margin: EdgeInsets.only(right: 7),
+                                  padding: EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: isAdminSelected ? Colors.lightGreen.shade400 : Colors.lightGreen.shade400,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 11,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              Text(
+                                "User",
+                                style: TextStyle(
+                                  color: isAdminSelected ? Colors.white : Colors.black54,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 300),
+                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        margin: EdgeInsets.only(right: 5),
+                        decoration: BoxDecoration(
+                          color: isAdminSelected ? Colors.deepOrange : Colors.deepOrange.shade400,
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isAdminSelected = true;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              if (isAdminSelected)
+                                Container(
+                                  margin: EdgeInsets.only(right: 7),
+                                  padding: EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: isAdminSelected ? Colors.deepOrange.shade400 : Colors.deepOrange.shade400,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 11,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              Text(
+                                "Admin",
+                                style: TextStyle(
+                                  color: isAdminSelected ? Colors.black54 : Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                    : SizedBox(),
+              ],
             ),
           ],
         ),
       ),
-
     );
   }
 }
