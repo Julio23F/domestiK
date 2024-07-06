@@ -17,6 +17,7 @@ const allMembre = baseURL + '/foyer';
 const addUsers = baseURL + '/foyer';
 //activer ou désactiver un utilisateur
 const activeOrUnable = baseURL + '/active';
+const change_admin = baseURL + '/changeAdmin';
 
 // Foyer
 const getFoyerURL = baseURL + '/foyer';
