@@ -253,6 +253,47 @@ Future<ApiResponse> changeAdmin(int userId) async {
   return apiResponse;
 }
 
+//Retirer un utilisateur dun foyer
+Future<ApiResponse> removeUser(int userId) async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    String token = await getToken();
+    final response = await http.delete(
+        Uri.parse(remove_user),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: {
+          "userId": userId.toString()
+        }
+
+    );
+    print("response.statusCode");
+    print(response.statusCode);
+    switch(response.statusCode){
+
+      case 200:
+        apiResponse.data = jsonDecode(response.body);
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+
+  }
+  catch(e) {
+    apiResponse.error = serverError;
+    debugPrint(e.toString());
+
+  }
+  return apiResponse;
+}
+
 
 //Obtenir tous les utilisateurs qui sont dans le foyer
 Future<ApiResponse> getMembre() async {
