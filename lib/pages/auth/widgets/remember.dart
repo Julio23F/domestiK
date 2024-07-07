@@ -17,8 +17,8 @@ class RememberSection extends StatelessWidget {
               Navigator.push(
                   context,
                   PageTransition(
-                    type: PageTransitionType.rightToLeft, // Choisissez le type d'animation que vous souhaitez
-                    child: ForgotPasswordPage(), // Page de destination
+                    type: PageTransitionType.rightToLeft,
+                    child: ForgotPasswordPage(),
                   ),
               );
             },

@@ -1,6 +1,8 @@
+import 'package:domestik/pages/widgets/infoApp.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../services/user_service.dart';
 import 'auth/login.dart';
@@ -154,38 +156,49 @@ class _UserpageState extends State<Userpage> {
 
 
               // Info concernant l'application
-              Container(
-                margin: EdgeInsets.only(bottom: 7),
-                padding: EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(10)
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(right: 18),
-                        child: Icon(
-                          Icons.info_outline,
-                          size: 25,
-                          color: Color(0xff8463BE),
-                        )
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.rightToLeft,
+                      child: InfoApp(),
                     ),
-                    Text(
-                      "À propos",
-                      style: TextStyle(
-                          color: Color(0xff0c3141),
-                          fontWeight: FontWeight.w500
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 7),
+                  padding: EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                          margin: EdgeInsets.only(right: 18),
+                          child: Icon(
+                            Icons.info_outline,
+                            size: 25,
+                            color: Color(0xff8463BE),
+                          )
                       ),
-                    ),
-                    Spacer(),
-                    Container(
-                        child: Icon(
-                          Icons.chevron_right,
-                          color: Colors.grey,
-                        )
-                    ),
-                  ],
+                      Text(
+                        "À propos",
+                        style: TextStyle(
+                            color: Color(0xff0c3141),
+                            fontWeight: FontWeight.w500
+                        ),
+                      ),
+                      Spacer(),
+                      Container(
+                          child: Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                          )
+                      ),
+                    ],
+                  ),
                 ),
               ),
 

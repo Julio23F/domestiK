@@ -40,7 +40,6 @@ class _AddPageState extends State<AddPage> {
             children: [
               InkWell(
                 onTap: () {
-                  print("Utilisateur");
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) => AllUser()));
                 },
@@ -63,7 +62,6 @@ class _AddPageState extends State<AddPage> {
               Divider(height: 1, color: Colors.grey),
               InkWell(
                 onTap: () {
-                  print("Tache");
                   Navigator.of(context).pop();
                   openDialog();
                 },
