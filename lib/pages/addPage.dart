@@ -191,7 +191,14 @@ class _AddPageState extends State<AddPage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Ajout'),
+          title: Text(
+            "Ajout",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25
+            ),
+          ),
+
           actions: [
             InkWell(
               onTap: () {

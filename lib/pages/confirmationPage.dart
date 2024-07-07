@@ -89,42 +89,41 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   Widget build(BuildContext context) {
     final textColor = Color(0xff192b54);
     return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Confirmation",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25
+            ),
+          ),
+
+          actions: [
+            InkWell(
+              onTap: () {
+                print("Ajouter");
+              },
+              child: Container(
+                padding: EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Icon(
+                  Icons.watch_later_outlined,
+                  color: Colors.grey,
+                  size: 25,
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+          ],
+
+        ),
         body: Container(
           padding: EdgeInsets.symmetric(horizontal: 8),
           child: ListView(
             children: [
-              SizedBox(
-                height: 25,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Confirmation',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Icon(
-                      Icons.watch_later_outlined,
-                      color: Colors.grey,
-                      size: 25,
-                    ),
-                  ),
-                ],
-              ),
               SizedBox(
                 height: 15,
               ),

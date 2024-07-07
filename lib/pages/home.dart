@@ -35,6 +35,8 @@ class _HomeState extends State<Home> {
           ][currentIndex],
         ),
         BottomNavigationBar(
+          //C'est pour éviter que les autres éléments du BottomNavigationBarItem ne s'affiche pas quand il y a 4 item
+          type: BottomNavigationBarType.fixed,
           currentIndex: currentIndex,
           onTap: (index) => setCurrentIndex(index),
           selectedItemColor: Color(0xff8463BE),
@@ -52,7 +54,7 @@ class _HomeState extends State<Home> {
               label: 'Add',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: Icon(Icons.settings),
               label: 'Paramètre',
             ),
           ],

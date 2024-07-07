@@ -66,7 +66,7 @@ class _InfoAppState extends State<InfoApp> {
             // Paramètres
             InfoSection(
               title: 'Paramètres',
-              icon: Icons.person,
+              icon: Icons.settings,
               content: [
                 "Modifiez votre profil, gérez les notifications et choisissez entre le mode sombre ou clair.",
               ],
@@ -136,20 +136,20 @@ class InfoSection extends StatelessWidget {
                 children: [
                   Icon(
                     icon,
-                    color: Colors.green,
+                    color: Color(0xff8463BE),
                   ),
                   SizedBox(width: 8),
-                  Text(
-                    'Page',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.green,
-                    ),
-                  ),
+                  // Text(
+                  //   'Page',
+                  //   style: TextStyle(
+                  //     fontSize: 14,
+                  //     color: Color(0xff8463BE),
+                  //   ),
+                  // ),
                 ],
               ),
               Text(
-                'Information',
+                'Page',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.blue,
