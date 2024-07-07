@@ -50,7 +50,7 @@ class _AddUserState extends State<AddUser> {
     _listKey.currentState?.removeItem(
       index,
           (context, animation) => _buildItem(user, animation,0),
-      duration: Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 350),
     );
   }
 
@@ -78,7 +78,7 @@ class _AddUserState extends State<AddUser> {
     });
   }
 
-  void _saveChanges(int userId) {
+  void _saveChanges(int userId) async{
     setState(() {
       isLoading = true;
 
@@ -87,10 +87,16 @@ class _AddUserState extends State<AddUser> {
     });
 
     print("Résultat choisi : ${isAdminSelected ? 'Admin' : 'User'}");
-    changeAdmin(userId).then((value) => setState(() {
+    if(isAdminSelected){
+      await changeAdmin(userId).then((value) => setState(() {
+        isLoading = false;
+      }));
+    }
+    setState(() {
       isLoading = false;
-      _stopEditing();
-    }));
+    });
+    _stopEditing();
+
   }
 
   @override

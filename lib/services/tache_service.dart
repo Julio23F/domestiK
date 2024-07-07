@@ -103,7 +103,7 @@ Future<ApiResponse> addTache(String name, String color) async {
   return apiResponse;
 }
 
-//Obtenir tous les utilisateurs qui sont dans le foyer
+//Obtenir tous les taches qui sont dans le foyer
 Future<ApiResponse> getTache() async {
   ApiResponse apiResponse = ApiResponse();
   ApiResponse data = await getUserDetail();
@@ -119,6 +119,45 @@ Future<ApiResponse> getTache() async {
           'Authorization': 'Bearer $token'
         });
     print(response.statusCode);
+    switch(response.statusCode){
+
+      case 200:
+        apiResponse.data = jsonDecode(response.body);
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+
+  }
+  catch(e) {
+    apiResponse.error = serverError;
+    debugPrint(e.toString());
+
+  }
+  return apiResponse;
+}
+
+
+Future<ApiResponse> deleteTache(int tacheId) async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    String token = await getToken();
+    final response = await http.delete(
+        Uri.parse(delete_tache),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: {
+          "tacheId": tacheId.toString()
+        }
+
+    );
     switch(response.statusCode){
 
       case 200:

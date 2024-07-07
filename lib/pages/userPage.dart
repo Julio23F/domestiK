@@ -13,231 +13,292 @@ class Userpage extends StatefulWidget {
 }
 
 class _UserpageState extends State<Userpage> {
+  bool _switchValue = false;
+
+  // void disconnectBluetooth() async {
+  //   if (widget.connection != null) {
+  //     try {
+  //       await widget.connection.close();
+  //       // La connexion Bluetooth est fermée avec succès
+  //       // setState(() {
+  //       //   widget.connection = null;
+  //       // });
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => StartPage(),
+  //         ),
+  //       );
+  //     } catch (e) {
+  //       // Gérer les erreurs de déconnexion
+  //       print('Erreur lors de la déconnexion Bluetooth: $e');
+  //     }
+  //   } else {
+  //     // Aucune connexion Bluetooth à fermer
+  //     print('Aucune connexion Bluetooth à fermer.');
+  //   }
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    final textColor = Color(0xff192b54);
-
     return Scaffold(
-      body: Container(
-        // color: Color(0xffF4FCFC),
-        color: Color(0xfffafafa),
-
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.only(top: 25),
-        child: SafeArea(
+        appBar: AppBar(
+          title: Text(
+            "Paramètre",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25
+            ),
+          ),
+        ),
+        body: Container(
+          padding: EdgeInsets.symmetric(vertical: 25, horizontal: 15),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: EdgeInsets.only(left: 17, right: 17),
-                margin: EdgeInsets.only(bottom: 35),
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(15)
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: 20,),
+                    Image.asset(
+                      "assets/images/logo.png",
+                      width: 90,
+                    ),
+                    SizedBox(height: 15,),
+                    Text("FARALAHY Julio",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xff0c3141)
+                      ),
+                    ),
+                    Text(
+                      "juliofaralahy23@gmail.com",
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    Container(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              padding: MaterialStatePropertyAll(EdgeInsets.all(12)),
+                              backgroundColor: MaterialStatePropertyAll(Color(0xff8463BE))
+                          ),
+                          onPressed: (){
+
+                          },
+                          child: Text(
+                              "Modifier",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18
+                              )
+                          )
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20,),
+
+              // Info compte
+              Container(
+                margin: EdgeInsets.only(bottom: 7),
+                padding: EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(10)
+                ),
                 child: Row(
                   children: [
-                    Image.asset(
-                      "assets/images/avatar.png",
-                      width: 50,
+                    Container(
+                        margin: EdgeInsets.only(right: 18),
+                        child: Icon(
+                          Icons.notifications_active_outlined,
+                          size: 25,
+                          color: Color(0xff8463BE),
+                        )
                     ),
-                    SizedBox(width: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Faralahy Julio',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: textColor,
-                          ),
-                        ),
-                        Text(
-                          'Admin',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xffcdcded),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 17, right: 17),
-                margin: EdgeInsets.only(bottom: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
                     Text(
-                      "Outils",
+                      "Notification",
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: textColor,
+                          color: Color(0xff0c3141),
+                          fontWeight: FontWeight.w500
                       ),
                     ),
-                    SizedBox(height: 20),
-                    InkWell(
-                      onTap: () {
-                        logout();
-                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>LoginPage()), (route) => false);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 7),
-                        padding: EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                            color: Color(0xfff7f7f7),
-                            borderRadius: BorderRadius.circular(15)
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.logout,
-                              size: 30,
-
-                            ),
-                            Text(
-                              "Logout",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: textColor.withOpacity(0.5),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    Spacer(),
+                    Container(
+                        child: Icon(
+                          Icons.chevron_right,
+                          color: Colors.grey,
+                        )
                     ),
                   ],
                 ),
               ),
 
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 22, horizontal: 17),
-                  decoration: BoxDecoration(
-                    color: Color(0xfffcfdf5),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
+
+              // Info concernant l'application
+              Container(
+                margin: EdgeInsets.only(bottom: 7),
+                padding: EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                        margin: EdgeInsets.only(right: 18),
+                        child: Icon(
+                          Icons.info_outline,
+                          size: 25,
+                          color: Color(0xff8463BE),
+                        )
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        spreadRadius: 5,
-                        blurRadius: 15,
-                        offset: Offset(0, 3),
+                    Text(
+                      "À propos",
+                      style: TextStyle(
+                          color: Color(0xff0c3141),
+                          fontWeight: FontWeight.w500
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Taches",
-                        style: TextStyle(
-                            color: textColor,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold
-                        ),
+                    ),
+                    Spacer(),
+                    Container(
+                        child: Icon(
+                          Icons.chevron_right,
+                          color: Colors.grey,
+                        )
+                    ),
+                  ],
+                ),
+              ),
+
+              // Mode Dark
+              Container(
+                margin: EdgeInsets.only(bottom: 7),
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 18),
+                decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                        margin: EdgeInsets.only(right: 18),
+                        child: Icon(
+                          Icons.wb_sunny_outlined,
+                          size: 25,
+                          color: Color(0xff8463BE),
+                        )
+                    ),
+                    Text(
+                      "Dark Mode",
+                      style: TextStyle(
+                          color: Color(0xff0c3141),
+                          fontWeight: FontWeight.w500
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "A faire",
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400
-                            ),
+                    ),
+                    Spacer(),
+                    Switch(
+                      value: _switchValue,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _switchValue = newValue;
+                        });
+                      },
+                      activeColor: Colors.blue[40],
+                      inactiveTrackColor: Colors.grey[40],
+                    ),
+                  ],
+                ),
+              ),
+
+              // Déconexion
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Déconnexion'),
+                        content: Text('Voulez-vous réellement vous déconnecter ?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              // Fermer le popup
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Annuler'),
                           ),
-                          Text(
-                            "Mois en cours",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400
-                            ),
+                          TextButton(
+                            onPressed: () {
+                              logout();
+                              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>LoginPage()), (route) => false);
+
+                            },
+                            child: Text('Confirmer'),
                           ),
                         ],
-                      ),
-                      SizedBox(height: 15,),
-
+                      );
+                    },
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 7),
+                  padding: EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: Row(
+                    children: [
                       Container(
-                        child: Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                for(var i = 1; i < 15; i++)
-                                  Container(
-                                      margin: EdgeInsets.only(bottom: 10),
-                                      width: MediaQuery.of(context).size.width,
-                                      padding: EdgeInsets.symmetric(vertical: 25, horizontal: 7),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10),
-                                          border: Border(bottom: BorderSide(color: Color(0xff3cadfc).withOpacity(0.3), width: 1))
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${i}",
-                                                style: TextStyle(
-                                                  color: textColor,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                              SizedBox(width: 20,),
-                                              Text(
-                                                "Douche",
-                                                style: TextStyle(
-                                                  color: textColor,
-                                                  fontSize: 16,
-
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.only(right: 7),
-                                            decoration: BoxDecoration(
-                                                color: Color(0xffd8e6fe),
-                                                borderRadius: BorderRadius.circular(5)
-                                            ),
-                                            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                                            child: Text(
-                                              "2 jun 2024",
-                                              style: TextStyle(
-                                                color: textColor,
-                                                fontSize: 12
-                                              ),
-                                            ),
-
-                                          )
-
-                                        ],
-                                      )
-                                  ),
-
-
-                              ],
-                            ),
-                          ),
+                          margin: EdgeInsets.only(right: 18),
+                          child: Icon(
+                            Icons.logout_outlined,
+                            size: 25,
+                            color: Color(0xff8463BE),
+                          )
+                      ),
+                      Text(
+                        "Déconnexion",
+                        style: TextStyle(
+                            color: Color(0xff0c3141),
+                            fontWeight: FontWeight.w500
                         ),
-                      )
+                      ),
+
+                      Spacer(),
+                      Container(
+                          child: Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                          )
+                      ),
                     ],
                   ),
                 ),
               )
+
             ],
           ),
-        ),
-      ),
+        )
     );
   }
 }

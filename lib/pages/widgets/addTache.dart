@@ -28,6 +28,14 @@ class _AddTacheState extends State<AddTache> {
     }
   }
 
+  Future<void> _deleteTache(int tacheId) async {
+    // Appelez votre service de suppression de tâche ici
+    await deleteTache(tacheId);
+    setState(() {
+      allTache.removeWhere((tache) => tache["id"] == tacheId);
+    });
+  }
+
   @override
   void initState() {
     _getAllTache();
@@ -42,7 +50,7 @@ class _AddTacheState extends State<AddTache> {
           spacing: 8, // Espace horizontal entre les containers
           runSpacing: 8.0,
           children: [
-            for(int i=0; i<allTache.length; i++)
+            for (int i = 0; i < allTache.length; i++)
               _buildItem(allTache[i])
           ],
         )
@@ -53,7 +61,7 @@ class _AddTacheState extends State<AddTache> {
   Widget _buildItem(tache) {
     return Container(
       height: 130,
-      width: (MediaQuery.of(context).size.width/2) - 20,
+      width: (MediaQuery.of(context).size.width / 2) - 20,
       decoration: BoxDecoration(
         color: Color(int.parse(tache["color"])).withOpacity(0.7),
         borderRadius: BorderRadius.circular(10),
@@ -65,23 +73,41 @@ class _AddTacheState extends State<AddTache> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(),
-              IconButton(
-                icon: Icon(Icons.more_vert, color: Colors.white.withOpacity(0.9),),
-                onPressed: () {
-                  print('action');
+              PopupMenuButton<String>(
+                icon: Icon(Icons.more_vert, color: Colors.white.withOpacity(0.9)),
+                onSelected: (String result) {
+                  if (result == 'delete') {
+                    _deleteTache(tache["id"]);
+                  }
                 },
+                itemBuilder: (BuildContext context) => [
+                  PopupMenuItem<String>(
+                    value: 'delete',
+                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 3),
+                    child: Container(
+                      width: 105,
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete, color: Colors.black54),
+                          SizedBox(width: 5),
+                          Text('Supprimer', style: TextStyle(color: Colors.black54)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
           Center(
-              child: Text(
-                  tache["name"],
-                  style: TextStyle(
-                    fontSize: 19,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white
-                  ),
-              )
+            child: Text(
+              tache["name"],
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
           ),
         ],
       ),

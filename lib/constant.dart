@@ -29,6 +29,7 @@ const deleteFoyerURL = baseURL + '/foyer';
 // Tache
 const urlAllUserTache = baseURL + '/foyer';
 const tache = baseURL + '/foyer';
+const delete_tache = baseURL + '/deleteTache';
 
 const historique = baseURL + '/historique';
 const confirmer = baseURL + '/confirmer';
