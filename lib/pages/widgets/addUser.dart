@@ -19,7 +19,7 @@ class _AddUserState extends State<AddUser> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   int? editingUserId;
   TextEditingController _nameController = TextEditingController();
-  bool isAdminSelected = false; // Ajout de l'état pour suivre l'administrateur sélectionné
+  bool isAdminSelected = false;
 
   @override
   void initState() {
@@ -121,7 +121,7 @@ class _AddUserState extends State<AddUser> {
       axis: Axis.vertical,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: Colors.purple.withOpacity(0.1),
@@ -129,10 +129,10 @@ class _AddUserState extends State<AddUser> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 0.5,
-              blurRadius: 7,
-              offset: Offset(0, 2),
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 0.3,
+              blurRadius: 5,
+              offset: Offset(0, 1),
             ),
           ],
         ),
@@ -160,7 +160,7 @@ class _AddUserState extends State<AddUser> {
               children: [
                 ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: Colors.grey.shade400,
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
                     child: Text(
                       user["name"].substring(0, 1).toUpperCase(),
                       style: TextStyle(
@@ -171,16 +171,14 @@ class _AddUserState extends State<AddUser> {
                   ),
                   title: Text(
                     '${user["name"]}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
+                      style: Theme.of(context).textTheme.labelLarge
+
+
+
                   ),
                   subtitle: Text(
                     '${user["email"]}',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall
                   ),
                   trailing: editingUserId == user["id"]
                       ? InkWell(

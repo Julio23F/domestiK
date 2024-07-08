@@ -28,12 +28,12 @@ class _AddPageState extends State<AddPage> {
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 15),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
-            border: Border.all(color: Colors.grey.shade300, width: 1.0),
+            border: Border.all(color: Theme.of(context).colorScheme.secondary, width: 1.0),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -54,6 +54,7 @@ class _AddPageState extends State<AddPage> {
                       SizedBox(width: 10),
                       Text(
                         'Ajouter un Utilisateur',
+                          style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
                   ),
@@ -76,6 +77,7 @@ class _AddPageState extends State<AddPage> {
                       SizedBox(width: 10),
                       Text(
                         'Ajouter une tache',
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
                   ),
@@ -102,8 +104,7 @@ class _AddPageState extends State<AddPage> {
             children: [
               TextField(
                 autofocus: true,
-                decoration:
-                InputDecoration(hintText: "Entrer le nom de la tache"),
+                decoration: InputDecoration(hintText: "Entrer le nom de la tache"),
                 controller: foyerController,
               ),
               SizedBox(height: 20),
@@ -131,7 +132,11 @@ class _AddPageState extends State<AddPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Annuler")),
+              child: Text(
+                  "Annuler",
+                  style: Theme.of(context).textTheme.bodyMedium,
+              )
+          ),
           TextButton(
               onPressed: () async {
                 _addTache(foyerController.text);
@@ -140,7 +145,11 @@ class _AddPageState extends State<AddPage> {
                 });
                 Navigator.of(context).pop();
               },
-              child: Text("Save")),
+              child: Text(
+                  "Save",
+                  style: Theme.of(context).textTheme.bodyMedium,
+              )
+          ),
         ],
       )
   );
@@ -191,6 +200,7 @@ class _AddPageState extends State<AddPage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
           title: Text(
             "Ajout",
             style: TextStyle(
@@ -226,12 +236,16 @@ class _AddPageState extends State<AddPage> {
             SizedBox(width: 10),
           ],
           bottom: TabBar(
+            labelColor: Theme.of(context).colorScheme.surface,
+            unselectedLabelColor: Colors.grey,
+            indicatorColor: Theme.of(context).colorScheme.surface,
             tabs: [
               Tab(text: 'Membres'),
               Tab(text: 'Taches'),
             ],
           ),
         ),
+
         body: TabBarView(
           children: [
             AddUser(),

@@ -85,6 +85,7 @@ class _AddTacheState extends State<AddTache> {
                     value: 'delete',
                     padding: EdgeInsets.symmetric(vertical: 0, horizontal: 3),
                     child: Container(
+
                       width: 105,
                       child: Row(
                         children: [
@@ -96,6 +97,11 @@ class _AddTacheState extends State<AddTache> {
                     ),
                   ),
                 ],
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 4,
               ),
             ],
           ),

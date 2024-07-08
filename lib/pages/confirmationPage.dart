@@ -90,6 +90,8 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
     final textColor = Color(0xff192b54);
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           title: Text(
             "Confirmation",
             style: TextStyle(
@@ -106,7 +108,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
               child: Container(
                 padding: EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: Theme.of(context).colorScheme.secondary,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Icon(
@@ -143,7 +145,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     padding: EdgeInsets.only(
                         top: 15, bottom: 15, left: 20, right: 15),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: Colors.purple.withOpacity(0.1),
@@ -166,17 +168,11 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                           children: [
                             Text(
                               confirm.user!.name.toString(),
-                              style: TextStyle(
-                                  color: textColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500),
+                              style: Theme.of(context).textTheme.bodyMedium
                             ),
                             Text(
                               "Admin",
-                              style: TextStyle(
-                                color: textColor,
-                                fontSize: 8,
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 10),
@@ -199,21 +195,19 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                     children: List.generate(
                                         confirm.taches!.length, (i) {
                                       return Container(
-                                        margin:
-                                        EdgeInsets.only(right: 7),
+                                        margin:EdgeInsets.only(right: 7),
                                         decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.circular(5)),
+                                            color: Theme.of(context).colorScheme.secondary,
+                                            borderRadius: BorderRadius.circular(5)
+                                        ),
                                         padding: EdgeInsets.symmetric(
                                             vertical: 4,
                                             horizontal: 10),
                                         child: Text(
                                           confirm.taches![i].name
                                               .toString(),
-                                          style: TextStyle(
-                                            color: textColor,
-                                            fontSize: 9,
-                                          ),
+                                            style: Theme.of(context).textTheme.bodySmall
+
                                         ),
                                       );
                                     }),

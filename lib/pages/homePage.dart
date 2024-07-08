@@ -119,6 +119,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
         content: Text('${response.error}'),
       ));
     }
@@ -147,6 +148,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     final nbrTache = tacheTodo != null ? jsonDecode(tacheTodo).length : 0;
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
         slivers: [
           SliverPersistentHeader(
@@ -156,7 +158,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               minHeight: 100.0,
               maxHeight: 100.0,
               child: Container(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.primary,
                 padding: EdgeInsets.only(top: 35, left: 10, right: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,6 +168,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 28,
+                        color: Theme.of(context).colorScheme.surface
                       ),
                     ),
                     Row(
@@ -177,15 +180,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             Text(
                               userName,
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: Theme.of(context).colorScheme.surface
+
                               ),
                             ),
                             Text(
                               'Admin',
                               style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 16,
+                                fontSize: 13,
                               ),
                             ),
                           ],
@@ -218,7 +223,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.primary,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.1),
@@ -256,7 +261,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           Container(
                             padding: EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
+                              color: Theme.of(context).colorScheme.secondary,
+
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Icon(
@@ -302,7 +308,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           width: MediaQuery.of(context).size.width,
                           padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                           decoration: BoxDecoration(
-                            color: (tache["user"]["id"] == userId) ? Color(0xff21304f) : Colors.white,
+                            color: (tache["user"]["id"] == userId) ? Color(0xff21304f) : Theme.of(context).colorScheme.primary,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
                               color: Colors.purple.withOpacity(0.1),
@@ -325,11 +331,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 children: [
                                   Text(
                                     tache["user"]["name"].toString(),
-                                    style: TextStyle(
-                                      color: (tache["user"]["id"] == userId) ? Colors.white : textColor,
+                                    style: (tache["user"]["id"] == userId) ? TextStyle(
+                                      color: Colors.white,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
-                                    ),
+                                    ) : Theme.of(context).textTheme.bodyMedium,
                                   ),
                                   SizedBox(height: 5),
                                   Wrap(
@@ -367,19 +373,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 ),
                                 child: (tache["user"]["id"] == userId)
                                     ? Container(
-                                  padding: EdgeInsets.only(left: 20),
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      left: BorderSide(
-                                        color: Colors.grey.withOpacity(0.6),
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                  ),
+                                  height: 70,
+
                                   child: load
-                                      ? CircularProgressIndicator(
-                                    color: Colors.grey.shade400,
-                                  )
+                                      ? Container(
+                                        margin: EdgeInsets.symmetric(vertical: 16),
+
+                                        child: CircularProgressIndicator(),
+                                      )
                                       : InkWell(
                                     onTap: () {
                                       _addHistorique(convert(tache["tache"]));

@@ -38,7 +38,8 @@ class _AllUserState extends State<AllUser> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         title: Padding(
           padding: const EdgeInsets.only(top: 20.0),
           child: Center(
@@ -60,7 +61,7 @@ class _AllUserState extends State<AllUser> {
       body: Stack(
         children: <Widget>[
           Container(
-            color: Color(0xfff9f9f9),
+            color: Theme.of(context).colorScheme.background,
             padding: EdgeInsets.only(top: 35),
             child: allUser.isEmpty
                 ? Center(child: Image.asset(
@@ -140,39 +141,46 @@ class _AllUserState extends State<AllUser> {
   }
 
   Widget _buildUserTile(String name, String email, int userId, bool isSelected) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.grey[400],
-        child: Icon(
-          Icons.person_outline_outlined,
-          color: Colors.white,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(7),
+        color: Theme.of(context).colorScheme.primary,
+      ),
+      margin: EdgeInsets.symmetric(vertical: 2, horizontal: 3),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: Colors.grey[400],
+          child: Icon(
+            Icons.person_outline_outlined,
+            color: Colors.white,
+          ),
         ),
-      ),
-      title: Text(
-        name,
-        style: TextStyle(
-          fontWeight: FontWeight.w500,
+        title: Text(
+          name,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
         ),
+        subtitle: Text(email),
+        trailing: isSelected
+            ? Icon(
+          Icons.check_circle,
+          color: Colors.purple[500],
+        )
+            : Icon(
+          Icons.check_circle_outline,
+          color: Colors.grey,
+        ),
+        onTap: () {
+          setState(() {
+            if (selectedUserIds.contains(userId)) {
+              selectedUserIds.remove(userId);
+            } else {
+              selectedUserIds.add(userId);
+            }
+          });
+        },
       ),
-      subtitle: Text(email),
-      trailing: isSelected
-          ? Icon(
-        Icons.check_circle,
-        color: Colors.purple[500],
-      )
-          : Icon(
-        Icons.check_circle_outline,
-        color: Colors.grey,
-      ),
-      onTap: () {
-        setState(() {
-          if (selectedUserIds.contains(userId)) {
-            selectedUserIds.remove(userId);
-          } else {
-            selectedUserIds.add(userId);
-          }
-        });
-      },
     );
   }
 

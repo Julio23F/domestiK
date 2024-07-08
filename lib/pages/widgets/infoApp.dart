@@ -12,7 +12,10 @@ class _InfoAppState extends State<InfoApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
@@ -95,7 +98,7 @@ class InfoSection extends StatelessWidget {
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.only(top: 24),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -119,7 +122,7 @@ class InfoSection extends StatelessWidget {
                   item,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey[700],
+                    color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
                   ),
                 ),
                 SizedBox(height: 8.0),
