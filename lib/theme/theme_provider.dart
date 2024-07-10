@@ -29,7 +29,7 @@ class ThemeProvider with ChangeNotifier {
 
 
 
-  void updateSwitchValue(bool newValue) {
+  void updateSwitchValue(bool newValue) async{
 
     _switchValue = newValue;
     if (newValue) {
@@ -37,6 +37,7 @@ class ThemeProvider with ChangeNotifier {
     } else {
       _themeData = lightTheme;
     }
+    await updateUserPreference(!newValue);
     notifyListeners();
   }
 

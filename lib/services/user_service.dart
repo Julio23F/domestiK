@@ -262,6 +262,47 @@ Future<ApiResponse> changeAdmin(int userId) async {
   return apiResponse;
 }
 
+
+//Mettre à jour le mode(dark or light) chosi par l'utilisateur dans la base de donnée
+Future<ApiResponse> updateUserPreference(bool mode) async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    String token = await getToken();
+    final response = await http.post(
+        Uri.parse(preference),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: {
+          "mode": mode.toString()
+        }
+
+    );
+    print(mode.toString());
+    switch(response.statusCode){
+
+      case 200:
+        apiResponse.data = jsonDecode(response.body);
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+
+  }
+  catch(e) {
+    apiResponse.error = serverError;
+    debugPrint(e.toString());
+
+  }
+  return apiResponse;
+}
+
 //Retirer un utilisateur dun foyer
 //Retirer un utilisateur dun foyer
 Future<ApiResponse> removeUserService(int userId) async {

@@ -9,6 +9,7 @@ const loginURL = baseURL + '/login';
 const registerURL = baseURL + '/register';
 const logoutURL = baseURL + '/logout';
 const userURL = baseURL + '/user';
+const preference = baseURL + '/updateUserPreference';
 
 //Tous les utilisateurs qui ne sont pas encore dans un foyer
 const allUser = baseURL + '/allUser';

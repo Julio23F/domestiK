@@ -396,27 +396,45 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           : Theme.of(context).textTheme.bodyMedium,
                                     ),
                                     SizedBox(height: 5),
-                                    Wrap(
-                                      spacing: 5,
-                                      children: List.generate(tache["tache"].length, (i) {
-                                        return Container(
-                                          margin: EdgeInsets.only(right: 7),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          margin:
+                                          EdgeInsets.only(right: 7),
+                                          padding: EdgeInsets.all(4),
                                           decoration: BoxDecoration(
-                                            color: (tache["user"]["id"] == userId || Provider.of<ThemeProvider>(context).themeData == darkTheme)
-                                                ? Colors.white.withOpacity(0.1)
-                                                : Color(int.parse(tache["tache"][i].split('-')[2])).withOpacity(0.1),
-                                            borderRadius: BorderRadius.circular(5),
+                                            color: tache["user"]["id"] == userId?Colors.white.withOpacity(0.1):Colors.grey.shade400,
+                                            shape: BoxShape.circle,
                                           ),
-                                          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-                                          child: Text(
-                                            tache["tache"][i].split('-')[1].toString(),
-                                            style: TextStyle(
-                                              color: (tache["user"]["id"] == userId || Provider.of<ThemeProvider>(context).themeData == darkTheme) ? Colors.white : textColor,
-                                              fontSize: 9,
-                                            ),
+                                          child: Icon(
+                                              Icons.cleaning_services_rounded,
+                                            size: 11,
+                                            color: Colors.white,
                                           ),
-                                        );
-                                      }),
+                                        ),
+                                        Wrap(
+                                          spacing: 5,
+                                          children: List.generate(tache["tache"].length, (i) {
+                                            return Container(
+                                              margin: EdgeInsets.only(right: 7),
+                                              decoration: BoxDecoration(
+                                                color: (tache["user"]["id"] == userId || Provider.of<ThemeProvider>(context).themeData == darkTheme)
+                                                    ? Colors.white.withOpacity(0.1)
+                                                    : Color(int.parse(tache["tache"][i].split('-')[2])).withOpacity(0.1),
+                                                borderRadius: BorderRadius.circular(5),
+                                              ),
+                                              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                                              child: Text(
+                                                tache["tache"][i].split('-')[1].toString(),
+                                                style: TextStyle(
+                                                  color: (tache["user"]["id"] == userId || Provider.of<ThemeProvider>(context).themeData == darkTheme) ? Colors.white : textColor,
+                                                  fontSize: 9,
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                        ),
+                                      ],
                                     )
                                   ],
                                 ),
