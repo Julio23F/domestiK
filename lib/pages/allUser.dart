@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'package:domestik/models/api_response.dart';
+import 'package:domestik/provider/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../provider/confirmation_provider.dart';
 import '../services/user_service.dart';
+import '../theme/theme_provider.dart';
 
 class AllUser extends StatefulWidget {
   const AllUser({super.key});
@@ -13,7 +17,9 @@ class AllUser extends StatefulWidget {
 class _AllUserState extends State<AllUser> {
   List<dynamic> allUser = [];
   Set<int> selectedUserIds = {};
-  bool isLoading = false; // Variable d'état pour le chargement
+  List<dynamic> selectedListUser = [];
+
+  bool isLoading = false;
 
   Future<void> _getAllUser() async {
     ApiResponse response = await getAllUser();
@@ -36,111 +42,120 @@ class _AllUserState extends State<AllUser> {
   Widget build(BuildContext context) {
     final textColor = Color(0xff192b54);
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'All User',
-                  style: TextStyle(
-                    color: textColor,
-                    fontWeight: FontWeight.w500,
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => UserProvider(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'All User',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.surface,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            color: Theme.of(context).colorScheme.background,
-            padding: EdgeInsets.only(top: 35),
-            child: allUser.isEmpty
-                ? Center(child: Image.asset(
-                    "assets/images/emptyUser.png",
-                    width: MediaQuery.of(context).size.width / 2,
-                  )
-                )
-                : ListView.builder(
-                itemCount: allUser.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final user = allUser[index];
-                  final userId = user['id'];
-                  return _buildUserTile(
-                    user['name'] ?? 'No Name',
-                    user['email'] ?? 'No Email',
-                    userId,
-                    selectedUserIds.contains(userId),
-                  );
-                }),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              color: Colors.white.withOpacity(0.9),
-              padding: EdgeInsets.symmetric(vertical: 15),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ElevatedButton(
-                  onPressed: isLoading ? null : _addUserToFoyer,
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
+        body: Consumer<UserProvider>(
+            builder: (context, userProvider, child){
+              return Stack(
+                children: <Widget>[
+                  Container(
+                    color: Theme.of(context).colorScheme.background,
+                    padding: EdgeInsets.only(top: 35),
+                    child: allUser.isEmpty
+                        ? Center(child: Image.asset(
+                      "assets/images/emptyUser.png",
+                      width: MediaQuery.of(context).size.width / 2,
+                    )
+                    )
+                        : ListView.builder(
+                        itemCount: allUser.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final user = allUser[index];
+                          final userId = user['id'];
+                          return _buildUserTile(
+                            user,
+                            user['name'] ?? 'No Name',
+                            user['email'] ?? 'No Email',
+                            userId,
+                            selectedUserIds.contains(userId),
+                          );
+                        }),
                   ),
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xff74ABED),
-                          Color(0xff9771F4),
-                          Color(0xff8463BE),
-                        ],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
                     child: Container(
-                      alignment: Alignment.center,
-                      constraints: BoxConstraints(
-                        maxWidth: double.infinity,
-                        minHeight: 50.0,
-                      ),
-                      child: isLoading
-                          ? CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      )
-                          : Text(
-                        'Ajouter au foyer',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
+                      color: Colors.transparent,
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: ElevatedButton(
+                          onPressed: isLoading ? null : _addUserToFoyer,
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          child: Ink(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xff74ABED),
+                                  Color(0xff9771F4),
+                                  Color(0xff8463BE),
+                                ],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: Container(
+                              alignment: Alignment.center,
+                              constraints: BoxConstraints(
+                                maxWidth: double.infinity,
+                                minHeight: 50.0,
+                              ),
+                              child: isLoading
+                                  ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              )
+                                  : Text(
+                                'Ajouter au foyer',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ),
-          ),
-        ],
+                ],
+              );
+            }
+
+        ),
       ),
     );
   }
 
-  Widget _buildUserTile(String name, String email, int userId, bool isSelected) {
+  Widget _buildUserTile(user, String name, String email, int userId, bool isSelected) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(7),
@@ -177,6 +192,7 @@ class _AllUserState extends State<AllUser> {
               selectedUserIds.remove(userId);
             } else {
               selectedUserIds.add(userId);
+              selectedListUser.add(user);
             }
           });
         },
@@ -190,8 +206,15 @@ class _AllUserState extends State<AllUser> {
     });
     await addUser(selectedUserIds.toList());
     await _getAllUser();
+    
+    Provider.of<UserProvider>(context, listen: false).addUser(selectedListUser);
+    print("object");
+    print(selectedListUser);
     setState(() {
+      selectedUserIds.clear();
+      selectedListUser.clear();
       isLoading = false;
+
     });
   }
 }

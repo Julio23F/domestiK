@@ -22,10 +22,13 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void addUser(dynamic user) {
-    allUser.add(user);
+  //Ajouter des utilisateurs à partir de AllUser Page
+  void addUser(List<dynamic> userIds) {
+    print(userIds);
+    allUser.addAll(userIds);
     notifyListeners();
   }
+
 
   void removeUser(int index, int userId) {
     allUser.removeAt(index);
