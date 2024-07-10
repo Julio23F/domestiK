@@ -36,6 +36,7 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
+
   void activeOrDisable(int userId) async {
     isLoading = true;
     notifyListeners();

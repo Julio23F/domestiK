@@ -113,6 +113,15 @@ Future<ApiResponse> getUserDetailSercice() async {
   return apiResponse;
 }
 
+//Obtenir le mode choisi par l'utilisateur
+Future<bool> getUserMode() async {
+  ApiResponse response = await getUserDetailSercice();
+  final data = jsonEncode(response.data);
+  final mode = jsonDecode(data)["user"]["mode"];
+  print('mode avant');
+  print(mode);
+  return (mode==1)?true:false;
+}
 //Obtenir tous les utilisateurs qui ne sont pas encore dans un foyer
 Future<ApiResponse> getAllUser() async {
   ApiResponse apiResponse = ApiResponse();
