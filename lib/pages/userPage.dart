@@ -197,18 +197,28 @@ class _UserpageState extends State<Userpage> {
                     ),
                   ),
                   Spacer(),
+                  // Switch(
+                  //   value: _switchValue,
+                  //   onChanged: (newValue) {
+                  //     setState(() {
+                  //       _switchValue = newValue;
+                  //       Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+                  //     });
+                  //   },
+                  //   activeColor: Theme.of(context).colorScheme.secondary,
+                  //   inactiveTrackColor: Colors.white.withOpacity(0.5),
+                  //   inactiveThumbColor: Color(0xff8463BE),
+                  // ),
                   Switch(
-                    value: _switchValue,
+                    value: Provider.of<ThemeProvider>(context, listen: false).switchValue,
                     onChanged: (newValue) {
-                      setState(() {
-                        _switchValue = newValue;
-                        Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-                      });
+                      Provider.of<ThemeProvider>(context, listen: false).updateSwitchValue(newValue);
                     },
                     activeColor: Theme.of(context).colorScheme.secondary,
                     inactiveTrackColor: Colors.white.withOpacity(0.5),
                     inactiveThumbColor: Color(0xff8463BE),
-                  ),
+                  )
+
                 ],
               ),
             ),

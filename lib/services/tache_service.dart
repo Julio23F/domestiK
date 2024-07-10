@@ -12,13 +12,14 @@ import 'foyer_service.dart';
 
 Future<ApiResponse> todoTache (date) async {
   ApiResponse apiResponse = ApiResponse();
+
   try{
     String token = await getToken();
     // ApiResponse foyer = await getFoyerId();
-    ApiResponse data = await getUserDetail();
+    ApiResponse data = await getUserDetailSercice();
     final userDetail = jsonEncode(data.data);
     int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
-    print(foyer_id);
+
     final uri = '$urlAllUserTache/${foyer_id}/todoTache';
     final response = await http.post(
         Uri.parse(uri),
@@ -30,7 +31,10 @@ Future<ApiResponse> todoTache (date) async {
     );
     switch(response.statusCode){
       case 200:
+
         apiResponse.data = jsonDecode(response.body);
+        // print(apiResponse.data);
+
         break;
       case 422:
         final errors = jsonDecode(response.body)['errors'];
@@ -62,7 +66,7 @@ Future<ApiResponse> addTache(String name, String color) async {
   String token = await getToken();
   ApiResponse apiResponse = ApiResponse();
   try {
-    ApiResponse data = await getUserDetail();
+    ApiResponse data = await getUserDetailSercice();
     final userDetail = jsonEncode(data.data);
     int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
     final uri = '${tache}/${foyer_id}/tache';
@@ -106,7 +110,7 @@ Future<ApiResponse> addTache(String name, String color) async {
 //Obtenir tous les taches qui sont dans le foyer
 Future<ApiResponse> getTache() async {
   ApiResponse apiResponse = ApiResponse();
-  ApiResponse data = await getUserDetail();
+  ApiResponse data = await getUserDetailSercice();
   final userDetail = jsonEncode(data.data);
   int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
   try {

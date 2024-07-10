@@ -1,9 +1,8 @@
-import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../models/api_response.dart';
-import '../../services/user_service.dart';
-import '../allUser.dart';
+import 'package:provider/provider.dart';
+import '../../provider/user_provider.dart'; // Correct path to UserProvider
+import '../../models/api_response.dart'; // Correct path to ApiResponse
+import '../allUser.dart'; // Adjust as per your structure
 
 class AddUser extends StatefulWidget {
   const AddUser({Key? key}) : super(key: key);
@@ -13,56 +12,15 @@ class AddUser extends StatefulWidget {
 }
 
 class _AddUserState extends State<AddUser> {
-  List<dynamic> allUser = [];
   Set<int> selectedUserIds = {};
-  bool isLoading = false;
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   int? editingUserId;
   TextEditingController _nameController = TextEditingController();
   bool isAdminSelected = false;
 
   @override
   void initState() {
-    _getAllUser();
     super.initState();
-  }
-
-  Future<void> _getAllUser() async {
-    ApiResponse response = await getMembre();
-    if (response.data != null) {
-      final data = jsonEncode(response.data);
-      final users = jsonDecode(data)["users"];
-      for (var user in users) {
-        _addUser(user);
-      }
-    }
-  }
-
-  void _addUser(dynamic user) {
-    final int index = allUser.length;
-    allUser.add(user);
-    _listKey.currentState?.insertItem(index);
-  }
-
-  void _removeUser(int index, int userId) {
-    final user = allUser.removeAt(index);
-    removeUser(userId);
-    _listKey.currentState?.removeItem(
-      index,
-          (context, animation) => _buildItem(user, animation,0),
-      duration: Duration(milliseconds: 350),
-    );
-  }
-
-  void _activeOrDisable(int userId) {
-    setState(() {
-      isLoading = true;
-      final user = allUser.firstWhere((u) => u["id"] == userId);
-      user["active"] = user["active"] == 1 ? 0 : 1;
-    });
-    activeOrDisable(userId).then((value) => setState(() {
-      isLoading = false;
-    }));
+    Provider.of<UserProvider>(context, listen: false).getAllUser();
   }
 
   void _startEditing(int userId, String initialName) {
@@ -78,196 +36,192 @@ class _AddUserState extends State<AddUser> {
     });
   }
 
-  void _saveChanges(int userId) async{
+  void _saveChanges(int userId) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     setState(() {
-      isLoading = true;
-
-      final user = allUser.firstWhere((u) => u["id"] == userId);
+      final user = userProvider.allUser.firstWhere((u) => u["id"] == userId);
       user["name"] = _nameController.text;
     });
 
-    print("Résultat choisi : ${isAdminSelected ? 'Admin' : 'User'}");
-    if(isAdminSelected){
-      await changeAdmin(userId).then((value) => setState(() {
-        isLoading = false;
-      }));
+    if (isAdminSelected) {
+      // await userProvider.changeAdmin(userId);
     }
-    setState(() {
-      isLoading = false;
-    });
-    _stopEditing();
 
+    _stopEditing();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: AnimatedList(
-            key: _listKey,
-            initialItemCount: allUser.length,
-            itemBuilder: (BuildContext context, int index, Animation<double> animation) {
-              final user = allUser[index];
-              return _buildItem(user, animation, index);
-            },
-          ),
-        ));
+      body: Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Consumer<UserProvider>(
+          builder: (context, userProvider, child) {
+            if (userProvider.isLoading) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            return ListView.builder(
+              itemCount: userProvider.allUser.length,
+              itemBuilder: (BuildContext context, int index) {
+                final user = userProvider.allUser[index];
+                return _buildItem(user, userProvider, index);
+              },
+            );
+          },
+        ),
+      ),
+    );
   }
 
-  Widget _buildItem(dynamic user, Animation<double> animation, int index) {
-    return SizeTransition(
-      sizeFactor: animation,
-      axis: Axis.vertical,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: Colors.purple.withOpacity(0.1),
-            width: 0.5,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 0.3,
-              blurRadius: 5,
-              offset: Offset(0, 1),
-            ),
-          ],
+  Widget _buildItem(dynamic user, UserProvider userProvider, index) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.purple.withOpacity(0.1),
+          width: 0.5,
         ),
-        margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-        child: Stack(
-          children: [
-            if (user["active"] != 1)
-              Positioned(
-                top: 0,
-                bottom: 0,
-                right: 0,
-                width: 5,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xff8463BE),
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(10),
-                      bottomRight: Radius.circular(10),
-                    ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 0.3,
+            blurRadius: 5,
+            offset: Offset(0, 1),
+          ),
+        ],
+      ),
+      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+      child: Stack(
+        children: [
+          if (user["active"] != 1)
+            Positioned(
+              top: 0,
+              bottom: 0,
+              right: 0,
+              width: 5,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xff8463BE),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
                   ),
                 ),
               ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Theme.of(context).colorScheme.tertiary,
-                    child: Text(
-                      user["name"].substring(0, 1).toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Theme.of(context).colorScheme.tertiary,
+                  child: Text(
+                    user["name"].substring(0, 1).toUpperCase(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  title: Text(
-                    '${user["name"]}',
-                      style: Theme.of(context).textTheme.labelLarge
-
-
-
-                  ),
-                  subtitle: Text(
-                    '${user["email"]}',
-                    style: Theme.of(context).textTheme.bodySmall
-                  ),
-                  trailing: editingUserId == user["id"]
-                      ? InkWell(
-                    onTap: () {
-                      _saveChanges(user["id"]);
-                    },
-                    child: isLoading
-                        ? CircularProgressIndicator()
-                        : Container(
-                      padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Color(0xff21304f),
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                      child: Text(
-                        'Enregistrer',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  )
-                      : PopupMenuButton<String>(
-                    onSelected: (String value) {
-                      print("Option sélectionnée : $value");
-                      if (value == "Désactiver") {
-                        _activeOrDisable(user["id"]);
-                        print(user["id"]);
-                      } else if (value == "Modifier") {
-                        _startEditing(user["id"], user["name"]);
-                      } else if (value == "Supprimer") {
-                        _removeUser(index, user["id"]);
-                        print(user["id"]);
-                      }
-                    },
-                    itemBuilder: (BuildContext context) {
-                      return [
-                        PopupMenuItem<String>(
-                          value: 'Modifier',
-                          child: Container(
-                            width: 100,
-                            child: Row(
-                              children: [
-                                Icon(Icons.edit, color: Colors.black54),
-                                SizedBox(width: 8),
-                                Text('Modifier', style: TextStyle(color: Colors.black54)),
-                              ],
-                            ),
-                          ),
-                        ),
-                        PopupMenuItem<String>(
-                          value: 'Désactiver',
-                          child: Container(
-                            width: 100,
-                            child: Row(
-                              children: [
-                                Icon(Icons.block, color: Colors.black54),
-                                SizedBox(width: 8),
-                                Text(
-                                  user["active"] != 1 ? 'Réactiver' : 'Désactiver',
-                                  style: TextStyle(color: Colors.black54),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        PopupMenuItem<String>(
-                          value: 'Supprimer',
-                          child: Container(
-                            width: 100,
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete, color: Colors.black54),
-                                SizedBox(width: 8),
-                                Text('Supprimer', style: TextStyle(color: Colors.black54)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ];
-                    },
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    elevation: 4,
-                  ),
-                  onTap: () {},
                 ),
-                editingUserId == user["id"]
-                    ? Container(
+                title: Text(
+                  '${user["name"]}',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                subtitle: Text(
+                  '${user["email"]}',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
+                  ),
+                ),
+                trailing: editingUserId == user["id"]
+                    ? InkWell(
+                  onTap: () {
+                    _saveChanges(user["id"]);
+                  },
+                  child: userProvider.isLoading
+                      ? CircularProgressIndicator()
+                      : Container(
+                    padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Color(0xff21304f),
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: Text(
+                      'Enregistrer',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                )
+                    : PopupMenuButton<String>(
+                  onSelected: (String value) {
+                    if (value == "Désactiver") {
+                      userProvider.activeOrDisable(user["id"]);
+                    } else if (value == "Modifier") {
+                      _startEditing(user["id"], user["name"]);
+                    } else if (value == "Supprimer") {
+                      userProvider.removeUser(index, user["id"]);
+                    }
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem<String>(
+                        value: 'Modifier',
+                        child: Container(
+                          width: 100,
+                          child: Row(
+                            children: [
+                              Icon(Icons.edit, color: Colors.black54),
+                              SizedBox(width: 8),
+                              Text('Modifier', style: TextStyle(color: Colors.black54)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'Désactiver',
+                        child: Container(
+                          width: 100,
+                          child: Row(
+                            children: [
+                              Icon(Icons.block, color: Colors.black54),
+                              SizedBox(width: 8),
+                              Text(
+                                user["active"] != 1 ? 'Réactiver' : 'Désactiver',
+                                style: TextStyle(color: Colors.black54),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'Supprimer',
+                        child: Container(
+                          width: 100,
+                          child: Row(
+                            children: [
+                              Icon(Icons.delete, color: Colors.black54),
+                              SizedBox(width: 8),
+                              Text('Supprimer', style: TextStyle(color: Colors.black54)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ];
+                  },
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  elevation: 4,
+                ),
+                onTap: () {},
+              ),
+              if (editingUserId == user["id"])
+                Container(
                   padding: EdgeInsets.only(bottom: 10, left: 70),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -356,12 +310,10 @@ class _AddUserState extends State<AddUser> {
                       ),
                     ],
                   ),
-                )
-                    : SizedBox(),
-              ],
-            ),
-          ],
-        ),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }

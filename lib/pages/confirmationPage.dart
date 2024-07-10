@@ -1,105 +1,27 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../constant.dart';
-import '../models/api_response.dart';
+import 'package:provider/provider.dart';
 import '../models/historique.dart';
-import '../models/user.dart';
-import '../services/historique_service.dart';
-import '../services/tache_service.dart';
-import '../services/user_service.dart';
+import '../provider/confirmation_provider.dart';
 import 'auth/login.dart';
 
-class ConfirmationPage extends StatefulWidget {
+class ConfirmationPage extends StatelessWidget {
   const ConfirmationPage({super.key});
 
   @override
-  State<ConfirmationPage> createState() => _ConfirmationPageState();
-}
-
-class _ConfirmationPageState extends State<ConfirmationPage> {
-  String data = '';
-  var tacheTodo;
-  bool isLoading = true;
-  String userName = '';
-  String foyerName = '';
-  int? userId;
-  Map<int, bool> stateMap = {};
-  Map<int, bool> loadingMap = {};
-
-  var listConfirmation;
-  int? nbrConfirm;
-
-  Future<void> _historiqueToConfirm() async {
-    ApiResponse response = await historiqueToConfirm();
-
-    if (response.error == null) {
-      setState(() {
-        nbrConfirm = (response.data as List).length;
-        listConfirmation = response.data as List<Historique>;
-        isLoading = false;
-      });
-    } else if (response.error == unauthorized) {
-      logout().then((value) => {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => LoginPage()),
-                (route) => false)
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}'),
-      ));
-    }
-  }
-
-  Future<void> _confirm(int foyer_id) async {
-    setState(() {
-      loadingMap[foyer_id] = true;
-    });
-
-    ApiResponse response = await confirm(foyer_id);
-
-    if (response.error == null) {
-      setState(() {
-        stateMap[foyer_id] = true;
-      });
-    } else if (response.error == unauthorized) {
-      logout().then((value) => {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => LoginPage()),
-                (route) => false)
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}'),
-      ));
-    }
-
-    setState(() {
-      loadingMap[foyer_id] = false;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _historiqueToConfirm();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final textColor = Color(0xff192b54);
-    return Scaffold(
+    return ChangeNotifierProvider(
+      create: (context) => ConfirmationProvider(),
+      child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text(
             "Confirmation",
             style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25
+              fontWeight: FontWeight.bold,
+              fontSize: 25,
             ),
           ),
-
           actions: [
             InkWell(
               onTap: () {
@@ -120,30 +42,24 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
             ),
             SizedBox(width: 10),
           ],
-
         ),
-        body: Container(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: ListView(
-            children: [
-              SizedBox(
-                height: 15,
-              ),
-              isLoading
+        body: Consumer<ConfirmationProvider>(
+          builder: (context, provider, child) {
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: provider.isLoading
                   ? Center(child: CircularProgressIndicator())
                   : ListView.builder(
-                itemCount: nbrConfirm,
+                itemCount: provider.nbrConfirm,
                 itemBuilder: (context, index) {
-                  Historique confirm = listConfirmation[index];
-                  bool isConfirmed = stateMap[confirm.id] ?? false;
-                  bool isLoading = loadingMap[confirm.id] ?? false;
+                  Historique confirm = provider.listConfirmation![index];
+                  bool isConfirmed = provider.stateMap[confirm.id] ?? false;
+                  bool isLoading = provider.loadingMap[confirm.id] ?? false;
 
                   return Container(
-                    margin:
-                    EdgeInsets.symmetric(vertical: 5, horizontal: 7),
+                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 7),
                     width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.only(
-                        top: 15, bottom: 15, left: 20, right: 15),
+                    padding: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 15),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(10),
@@ -168,11 +84,11 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                           children: [
                             Text(
                               confirm.user!.name.toString(),
-                              style: Theme.of(context).textTheme.bodyMedium
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
                               "Admin",
-                              style: Theme.of(context).textTheme.bodySmall
+                              style: Theme.of(context).textTheme.bodySmall,
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 10),
@@ -182,7 +98,9 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                     margin: EdgeInsets.only(right: 7),
                                     padding: EdgeInsets.all(4),
                                     decoration: BoxDecoration(
-                                      color: (confirm.state!=null) ? Color(0xff8463BE) : Colors.grey.shade400,
+                                      color: (confirm.state != null)
+                                          ? Color(0xff8463BE)
+                                          : Colors.grey.shade400,
                                       shape: BoxShape.circle,
                                     ),
                                     child: Icon(
@@ -192,22 +110,17 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                     ),
                                   ),
                                   Wrap(
-                                    children: List.generate(
-                                        confirm.taches!.length, (i) {
+                                    children: List.generate(confirm.taches!.length, (i) {
                                       return Container(
-                                        margin:EdgeInsets.only(right: 7),
+                                        margin: EdgeInsets.only(right: 7),
                                         decoration: BoxDecoration(
-                                            color: Theme.of(context).colorScheme.secondary,
-                                            borderRadius: BorderRadius.circular(5)
+                                          color: Theme.of(context).colorScheme.secondary,
+                                          borderRadius: BorderRadius.circular(5),
                                         ),
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 4,
-                                            horizontal: 10),
+                                        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
                                         child: Text(
-                                          confirm.taches![i].name
-                                              .toString(),
-                                            style: Theme.of(context).textTheme.bodySmall
-
+                                          confirm.taches![i].name.toString(),
+                                          style: Theme.of(context).textTheme.bodySmall,
                                         ),
                                       );
                                     }),
@@ -217,42 +130,38 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                             ),
                           ],
                         ),
-                        (isConfirmed || confirm.state!=null)
+                        (isConfirmed || confirm.state != null)
                             ? Container(
                           width: 8,
                           height: 8,
                           margin: EdgeInsets.only(right: 25),
                           decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Color(0xff8463BE),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey
-                                      .withOpacity(0.9),
-                                  spreadRadius: 1,
-                                  blurRadius: 3,
-                                  offset: Offset(0, 1),
-                                ),
-                              ]),
+                            shape: BoxShape.circle,
+                            color: Color(0xff8463BE),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.9),
+                                spreadRadius: 1,
+                                blurRadius: 3,
+                                offset: Offset(0, 1),
+                              ),
+                            ],
+                          ),
                         )
                             : InkWell(
                           onTap: () {
-                            _confirm(confirm.id);
-                            print(confirm.state);
+                            provider.confirm(confirm.id);
                           },
                           child: isLoading
                               ? CircularProgressIndicator()
                               : Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 7, horizontal: 10),
+                            padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
                             decoration: BoxDecoration(
                               color: Color(0xff21304f),
-                              borderRadius:
-                              BorderRadius.circular(7),
+                              borderRadius: BorderRadius.circular(7),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.grey
-                                      .withOpacity(0.3),
+                                  color: Colors.grey.withOpacity(0.3),
                                   spreadRadius: 1,
                                   blurRadius: 1,
                                   offset: Offset(0, 1),
@@ -268,16 +177,17 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                               ),
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   );
                 },
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
               ),
-            ],
-          ),
-        ));
+            );
+          },
+        ),
+      ),
+    );
   }
 }

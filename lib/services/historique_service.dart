@@ -9,12 +9,12 @@ import 'package:http/http.dart' as http;
 import '../models/historique.dart';
 
 //Add in Historique
-Future<ApiResponse> addHistorique(List tacheIds) async {
+Future<ApiResponse> addHistoriqueService(List tacheIds) async {
   String token = await getToken();
   ApiResponse apiResponse = ApiResponse();
 
   try {
-    ApiResponse data = await getUserDetail();
+    ApiResponse data = await getUserDetailSercice();
     final userDetail = jsonEncode(data.data);
     int user_id = jsonDecode(userDetail)["user"]["id"];
 
@@ -94,7 +94,7 @@ Future<ApiResponse> historiqueToConfirm() async {
 }
 
 
-Future<ApiResponse> confirm(int historique_id) async {
+Future<ApiResponse> confirmService(int historique_id) async {
   String token = await getToken();
   ApiResponse apiResponse = ApiResponse();
 
@@ -111,7 +111,7 @@ Future<ApiResponse> confirm(int historique_id) async {
       }),
     );
 
-
+    print(response.statusCode);
     switch(response.statusCode) {
       case 200:
         apiResponse.message = jsonDecode(response.body)['message'];

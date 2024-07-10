@@ -66,7 +66,7 @@ void loadUserInfo(BuildContext context) async {
   if (token == '') {
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
   } else {
-    ApiResponse response = await getUserDetail();
+    ApiResponse response = await getUserDetailSercice();
     final userDetail = jsonEncode(response.data);
     // print("Foyer_id");
     print(jsonDecode(userDetail)["user"]["foyer_id"]);

@@ -80,7 +80,7 @@ Future<ApiResponse> register(String name, String email, String password) async {
 
 
 // User
-Future<ApiResponse> getUserDetail() async {
+Future<ApiResponse> getUserDetailSercice() async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -151,7 +151,7 @@ Future<ApiResponse> getAllUser() async {
 //Ajouter des utilisateurs dans un foyer
 Future<void> addUser(List<int> userIds) async {
   String token = await getToken();
-  ApiResponse data = await getUserDetail();
+  ApiResponse data = await getUserDetailSercice();
   final userDetail = jsonEncode(data.data);
   int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
 
@@ -176,7 +176,7 @@ Future<void> addUser(List<int> userIds) async {
 
 
 //Activer ou désactiver un utilisateur
-Future<ApiResponse> activeOrDisable(int userId) async {
+Future<ApiResponse> activeOrDisableService(int userId) async {
   ApiResponse apiResponse = ApiResponse();
 
   try {
@@ -254,7 +254,8 @@ Future<ApiResponse> changeAdmin(int userId) async {
 }
 
 //Retirer un utilisateur dun foyer
-Future<ApiResponse> removeUser(int userId) async {
+//Retirer un utilisateur dun foyer
+Future<ApiResponse> removeUserService(int userId) async {
   ApiResponse apiResponse = ApiResponse();
 
   try {
@@ -298,7 +299,7 @@ Future<ApiResponse> removeUser(int userId) async {
 //Obtenir tous les utilisateurs qui sont dans le foyer
 Future<ApiResponse> getMembre() async {
   ApiResponse apiResponse = ApiResponse();
-  ApiResponse data = await getUserDetail();
+  ApiResponse data = await getUserDetailSercice();
   final userDetail = jsonEncode(data.data);
   int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
   try {
