@@ -197,7 +197,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               Container(
                                 padding: EdgeInsets.symmetric(vertical: 1, horizontal: 8),
                                 decoration: BoxDecoration(
-                                  color: (accountType == "")?Colors.transparent:(accountType == "admin")?Colors.deepOrange.withOpacity(0.4):Colors.green.withOpacity(0.2),
+                                  color: (accountType == "")?Colors.transparent:(accountType == "admin")?Colors.deepOrange.withOpacity(0.3):Colors.green.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(5)
                                 ),
                                 child: Text(

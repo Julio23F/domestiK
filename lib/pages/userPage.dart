@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:domestik/pages/widgets/infoApp.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:domestik/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
+import '../models/api_response.dart';
 import '../provider/home_provider.dart';
 import '../services/user_service.dart';
 import '../theme/theme_provider.dart';
@@ -18,10 +21,27 @@ class Userpage extends StatefulWidget {
 
 class _UserpageState extends State<Userpage> {
   bool _switchValue = false;
+  String? _selectedImage;
+
+  List<String> listImage = [
+    "assets/images/profils/ai-generated-8361907_1280.jpg",
+    "assets/images/profils/bald-eagle-550804_640.jpg",
+    "assets/images/profils/bird-4078_1280.jpg",
+    "assets/images/profils/horse-5625922_1280.jpg",
+    "assets/images/profils/rabbit-6485072_1280.jpg",
+    "assets/images/profils/rhodesian-ridgeback-2727035_1280.jpg",
+    "assets/images/profils/snowman-2995146_1280.png",
+    "assets/images/profils/banana-2449019_1280.jpg",
+    "assets/images/profils/drop-5269146_1280.jpg",
+    "assets/images/profils/fire-2777580_1280.jpg",
+    "assets/images/profils/illistration-7236397_1280.jpg",
+    "assets/images/profils/thunder-953118_1280.jpg",
+  ];
 
   @override
   void initState() {
     super.initState();
+    Provider.of<UserProvider>(context, listen: false).getUserProfil();
   }
 
   @override
@@ -40,7 +60,7 @@ class _UserpageState extends State<Userpage> {
       ),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 25, horizontal: 15),
-        child: Column(
+        child: ListView(
           children: [
             Container(
               width: double.infinity,
@@ -52,9 +72,32 @@ class _UserpageState extends State<Userpage> {
               child: Column(
                 children: [
                   SizedBox(height: 20),
-                  Image.asset(
-                    "assets/images/logo.png",
-                    width: 90,
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        vertical: 2, horizontal: 2),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Color(0xff8463BE),
+                        width: 2.0,
+                      ),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surface
+                          .withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Consumer<UserProvider>(
+                      builder: (context, userProvider, child) {
+                        return ClipOval(
+                          child: Image.asset(
+                            userProvider.profil,
+                            width: 120,
+                            height: 120,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                   SizedBox(height: 15),
                   Text(
@@ -80,9 +123,100 @@ class _UserpageState extends State<Userpage> {
                         padding: MaterialStatePropertyAll(EdgeInsets.all(12)),
                         backgroundColor: MaterialStatePropertyAll(Color(0xff8463BE)),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            String? localSelectedImage = _selectedImage;
+                            return StatefulBuilder(
+                              builder: (context, setState) {
+                                return AlertDialog(
+                                  title: Text('Choisir un profil'),
+                                  content: Wrap(
+                                    spacing: 10.0,
+                                    runSpacing: 12.0,
+                                    children: listImage.map((image) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            localSelectedImage = image;
+                                          });
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2, horizontal: 2),
+                                          decoration: BoxDecoration(
+                                            border: localSelectedImage == image
+                                                ? Border.all(
+                                              color: Colors.red,
+                                              width: 2.0,
+                                            )
+                                                : Border.all(
+                                              color: Colors.transparent,
+                                              width: 2.0,
+                                            ),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .surface
+                                                .withOpacity(0.2),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: ClipOval(
+                                            child: Image.asset(
+                                              image,
+                                              width: 30,
+                                              height: 30,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        'Annuler',
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .surface
+                                                .withOpacity(0.5)),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _selectedImage = localSelectedImage;
+                                        });
+                                        Provider.of<UserProvider>(context, listen: false).updateUser(_selectedImage!);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        'Enregistrer',
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .surface
+                                                .withOpacity(0.5)),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ).then((selectedIcon) {
+                          if (selectedIcon != null) {
+                            print('Profil sélectionné : $selectedIcon');
+                          }
+                        });
+                      },
                       child: Text(
-                        "Modifier",
+                        "Profil",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -199,15 +333,16 @@ class _UserpageState extends State<Userpage> {
                   ),
                   Spacer(),
                   Switch(
-                    value: Provider.of<ThemeProvider>(context, listen: false).switchValue,
+                    value: Provider.of<ThemeProvider>(context, listen: false)
+                        .switchValue,
                     onChanged: (newValue) {
-                      Provider.of<ThemeProvider>(context, listen: false).updateSwitchValue(newValue);
+                      Provider.of<ThemeProvider>(context, listen: false)
+                          .updateSwitchValue(newValue);
                     },
                     activeColor: Theme.of(context).colorScheme.secondary,
                     inactiveTrackColor: Colors.white.withOpacity(0.5),
                     inactiveThumbColor: Color(0xff8463BE),
                   )
-
                 ],
               ),
             ),
@@ -225,27 +360,38 @@ class _UserpageState extends State<Userpage> {
                             Navigator.of(context).pop();
                           },
                           child: Text(
-                              'Annuler',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.surface.withOpacity(0.5)
-                              ),
+                            'Annuler',
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surface
+                                    .withOpacity(0.5)),
                           ),
                         ),
                         TextButton(
                           onPressed: () {
-                            Provider.of<HistoriqueProvider>(context,listen: false).reset();
 
                             logout();
                             Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(builder: (context) => LoginPage()),
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()),
                                   (route) => false,
-                            );
+                            ).then((value) {
+                              Provider.of<HistoriqueProvider>(context,
+                                  listen: false)
+                                  .reset();
+                              Provider.of<UserProvider>(context,
+                                  listen: false)
+                                  .reset();
+                            });
                           },
                           child: Text(
-                              'Confirmer',
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.surface.withOpacity(0.5)
-                              ),
+                            'Confirmer',
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surface
+                                    .withOpacity(0.5)),
                           ),
                         ),
                       ],
@@ -288,6 +434,7 @@ class _UserpageState extends State<Userpage> {
                 ),
               ),
             ),
+            // Other widgets remain unchanged
           ],
         ),
       ),

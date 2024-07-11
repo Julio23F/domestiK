@@ -6,7 +6,13 @@ import '../../services/user_service.dart';
 class UserProvider with ChangeNotifier {
   List<dynamic> allUser = [];
   bool isLoading = false;
+  String _profil = "assets/images/icon.png";
 
+  String get profil => _profil;
+
+  UserProvider(){
+    getUserProfil();
+  }
 
   Future<void> getAllUser() async {
     isLoading = true;
@@ -31,6 +37,24 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  //Mise à jour du profil
+  void updateUser(String path) {
+    _profil = path;
+    notifyListeners();
+    updateUserService(path);
+
+  }
+  //Obtenir le profil du compte utilisateur
+  Future<void> getUserProfil() async {
+    ApiResponse response = await getUserDetailSercice();
+    if (response.data != null) {
+      final data = jsonEncode(response.data);
+      final userProfil = jsonDecode(data)["user"]["profil"];
+      _profil = userProfil;
+      notifyListeners();
+    }
+  }
+
 
   void removeUser(int index, int userId) {
     allUser.removeAt(index);
@@ -49,6 +73,13 @@ class UserProvider with ChangeNotifier {
     await activeOrDisableService(userId);
 
     isLoading = false;
+    notifyListeners();
+  }
+
+
+
+  void reset() {
+    _profil = '';
     notifyListeners();
   }
 }

@@ -139,9 +139,9 @@ class _ConfirmationPageState extends State<ConfirmationPage>
                                 ),
                                 Text(
                                   "Admin",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall,
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
+                                  ),
                                 ),
                                 Container(
                                   margin: EdgeInsets.only(top: 10),

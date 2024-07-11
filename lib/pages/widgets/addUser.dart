@@ -137,7 +137,7 @@ class _AddUserState extends State<AddUser> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               ListTile(
-                leading: CircleAvatar(
+                leading: (user["profil"] == null)?CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.tertiary,
                   child: Text(
                     user["name"].substring(0, 1).toUpperCase(),
@@ -145,11 +145,38 @@ class _AddUserState extends State<AddUser> {
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
+                  )
+                ):Container(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 2, horizontal: 2),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color(0xff8463BE),
+                      width: 2.0,
+                    ),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .surface
+                        .withOpacity(0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: ClipOval(
+                    child: Image.asset(
+                      user["profil"],
+                      width: 35,
+                      height: 35,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
+
                 title: Text(
-                  '${user["name"]}',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                    '${user["name"]}',
+                    style: TextStyle(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surface,
+                    )
                 ),
                 subtitle: Text(
                   '${user["email"]}',
@@ -209,7 +236,7 @@ class _AddUserState extends State<AddUser> {
                                 child: Text(
                                   'Fermer',
                                   style: TextStyle(
-                                    color: Theme.of(context).colorScheme.surface.withOpacity(0.5)
+                                      color: Theme.of(context).colorScheme.surface.withOpacity(0.5)
                                   ),
                                 ),
                               ),

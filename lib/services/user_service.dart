@@ -303,6 +303,46 @@ Future<ApiResponse> updateUserPreference(bool mode) async {
   return apiResponse;
 }
 
+
+//Mettre à jour le profil
+Future<ApiResponse> updateUserService(String path) async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    String token = await getToken();
+    final response = await http.post(
+        Uri.parse(constUpdateUser),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: {
+          "profil": path.toString()
+        }
+    );
+    print(path.toString());
+    switch(response.statusCode){
+
+      case 200:
+        apiResponse.data = jsonDecode(response.body);
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+
+  }
+  catch(e) {
+    apiResponse.error = serverError;
+    debugPrint(e.toString());
+
+  }
+  return apiResponse;
+}
+
 //Retirer un utilisateur dun foyer
 //Retirer un utilisateur dun foyer
 Future<ApiResponse> removeUserService(int userId) async {
