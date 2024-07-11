@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:domestik/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -28,9 +29,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   String data = '';
   var tacheTodo;
   bool isLoading = true;
-  String userName = '';
-  String foyerName = '';
-  int? userId;
+
   bool isToday = false;
 
   // String dateToday = DateFormat('d MMMM y', 'fr_FR').format(DateTime.now());
@@ -44,7 +43,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       vsync: this,
     );
 
-    _getUserDetail();
+
     _getTacheTodo(DateTime.now().day);
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -67,17 +66,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   //     userId = jsonDecode(data)["user"]["id"];
   //   });
   // }
-  void _getUserDetail() async {
-    ApiResponse response = await getUserDetailSercice();
-    if (response.data != null) {
-      setState(() {
-        data = jsonEncode(response.data);
-        userName = jsonDecode(data)["user"]["name"];
-        foyerName = jsonDecode(data)["user"]["foyer"]["name"];
-        userId = jsonDecode(data)["user"]["id"];
-      });
-    }
-  }
+
+
 
   // Future<void> _getTacheTodo(int date) async {
   //   // Simulated response for tache todo
@@ -220,7 +210,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Androibé",
+                        provider.foyerName,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 28,
@@ -234,7 +224,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                userName,
+                                provider.userName,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
@@ -358,11 +348,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             CurveTween(curve: Curves.easeInOut),
                           ),
                           child: Container(
-                            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 7),
+                            margin: EdgeInsets.only(top: 10, left: 7, right: 7),
                             width: MediaQuery.of(context).size.width,
                             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                             decoration: BoxDecoration(
-                              color: (tache["user"]["id"] == userId)
+                              color: (tache["user"]["id"] == provider.userId)
                                   ? Color(0xff21304f)
                                   : Theme.of(context).colorScheme.primary,
                               borderRadius: BorderRadius.circular(10),
@@ -387,7 +377,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   children: [
                                     Text(
                                       tache["user"]["name"].toString(),
-                                      style: (tache["user"]["id"] == userId)
+                                      style: (tache["user"]["id"] == provider.userId)
                                           ? TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
@@ -403,7 +393,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           EdgeInsets.only(right: 7),
                                           padding: EdgeInsets.all(4),
                                           decoration: BoxDecoration(
-                                            color: tache["user"]["id"] == userId?Colors.white.withOpacity(0.1):Colors.grey.shade400,
+                                            color: tache["user"]["id"] == provider.userId?Colors.white.withOpacity(0.1):Colors.grey.shade400,
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
@@ -418,7 +408,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             return Container(
                                               margin: EdgeInsets.only(right: 7),
                                               decoration: BoxDecoration(
-                                                color: (tache["user"]["id"] == userId || Provider.of<ThemeProvider>(context).themeData == darkTheme)
+                                                color: (tache["user"]["id"] == provider.userId || Provider.of<ThemeProvider>(context).themeData == darkTheme)
                                                     ? Colors.white.withOpacity(0.1)
                                                     : Color(int.parse(tache["tache"][i].split('-')[2])).withOpacity(0.1),
                                                 borderRadius: BorderRadius.circular(5),
@@ -427,7 +417,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               child: Text(
                                                 tache["tache"][i].split('-')[1].toString(),
                                                 style: TextStyle(
-                                                  color: (tache["user"]["id"] == userId || Provider.of<ThemeProvider>(context).themeData == darkTheme) ? Colors.white : textColor,
+                                                  color: (tache["user"]["id"] == provider.userId || Provider.of<ThemeProvider>(context).themeData == darkTheme) ? Colors.white : textColor,
                                                   fontSize: 9,
                                                 ),
                                               ),
@@ -440,20 +430,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 ),
                                 SizedBox(width: 10),
                                 Container(
-                                  padding: EdgeInsets.all(10),
+                                  padding: EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(7),
                                     border: Border.all(
-                                      color: (tache["user"]["id"] == userId) ? Colors.white.withOpacity(0.15) : Colors.grey.withOpacity(0.1),
+                                      color: (tache["user"]["id"] == provider.userId) ? Colors.white.withOpacity(0.15) : Colors.grey.withOpacity(0.1),
                                     ),
                                   ),
-                                  child: (tache["user"]["id"] == userId)
+                                  child: (tache["user"]["id"] == provider.userId)
                                       ?Container(
                                         child: provider.isLoading
                                             ? Container(
                                                 margin: EdgeInsets.symmetric(vertical: 16),
 
-                                                child: CircularProgressIndicator(),
+                                                child: CircularProgressIndicator(color: Colors.white,),
                                             )
                                             : (provider.isCheck || tache["state"]  || !isToday)
                                             ?Icon(
@@ -463,13 +453,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             )
                                             :InkWell(
                                               onTap: () {
-
                                                 provider.addHistorique(convert(tache["tache"]));
                                               },
 
                                               child: Container(
-                                                height: 70,
-                                                width: 35,
+                                                width: 30,
+                                                padding: EdgeInsets.symmetric(vertical: 10),
                                                 decoration: BoxDecoration(
                                                   color: Color(0xff8463BE),
                                                   borderRadius: BorderRadius.circular(7),
@@ -489,7 +478,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                       'Confirmer',
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 11,
+                                                        fontSize: 9,
                                                         fontWeight: FontWeight.bold,
                                                       ),
                                                     ),

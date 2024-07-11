@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../provider/user_provider.dart'; // Correct path to UserProvider
 import '../../models/api_response.dart'; // Correct path to ApiResponse
+import '../../services/user_service.dart';
 import '../allUser.dart'; // Adjust as per your structure
 
 class AddUser extends StatefulWidget {
@@ -16,11 +19,24 @@ class _AddUserState extends State<AddUser> {
   int? editingUserId;
   TextEditingController _nameController = TextEditingController();
   bool isAdminSelected = false;
+  String accountType = "user";
+  //Obtenir le type de compte
+  Future<void> getUserAccountType() async {
+    ApiResponse response = await getUserDetailSercice();
+    final data = jsonEncode(response.data);
+    final type = jsonDecode(data)["user"]["accountType"];
+    setState(() {
+      accountType = type;
+    });
+    print(accountType);
+
+  }
 
   @override
   void initState() {
     super.initState();
     Provider.of<UserProvider>(context, listen: false).getAllUser();
+    getUserAccountType();
   }
 
   void _startEditing(int userId, String initialName) {
@@ -49,6 +65,10 @@ class _AddUserState extends State<AddUser> {
 
     _stopEditing();
   }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -158,12 +178,46 @@ class _AddUserState extends State<AddUser> {
                 )
                     : PopupMenuButton<String>(
                   onSelected: (String value) {
-                    if (value == "Désactiver") {
-                      userProvider.activeOrDisable(user["id"]);
-                    } else if (value == "Modifier") {
-                      _startEditing(user["id"], user["name"]);
-                    } else if (value == "Supprimer") {
-                      userProvider.removeUser(index, user["id"]);
+                    if(accountType == "admin"){
+                      if (value == "Désactiver") {
+                        userProvider.activeOrDisable(user["id"]);
+                      } else if (value == "Modifier") {
+                        _startEditing(user["id"], user["name"]);
+                      } else if (value == "Supprimer") {
+                        userProvider.removeUser(index, user["id"]);
+                      }
+                    }
+                    else{
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                              'Accès Refusé',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            content: Text(
+                              "Seul l'admin de ce foyer peut accéder à cette section.",
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'Fermer',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.surface.withOpacity(0.5)
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+
+                        },
+                      );
                     }
                   },
                   itemBuilder: (BuildContext context) {
@@ -171,7 +225,14 @@ class _AddUserState extends State<AddUser> {
                       PopupMenuItem<String>(
                         value: 'Modifier',
                         child: Container(
-                          width: 100,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              right: BorderSide(
+                                  color: (accountType == "user")?Colors.red:Colors.transparent,
+                                  width: 2
+                              ),
+                            ),
+                          ),
                           child: Row(
                             children: [
                               Icon(Icons.edit, color: Colors.black54),
@@ -184,7 +245,14 @@ class _AddUserState extends State<AddUser> {
                       PopupMenuItem<String>(
                         value: 'Désactiver',
                         child: Container(
-                          width: 100,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              right: BorderSide(
+                                  color: (accountType == "user")?Colors.red:Colors.transparent,
+                                  width: 2
+                              ),
+                            ),
+                          ),
                           child: Row(
                             children: [
                               Icon(Icons.block, color: Colors.black54),
@@ -200,7 +268,14 @@ class _AddUserState extends State<AddUser> {
                       PopupMenuItem<String>(
                         value: 'Supprimer',
                         child: Container(
-                          width: 100,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              right: BorderSide(
+                                  color: (accountType == "user")?Colors.red:Colors.transparent,
+                                  width: 2
+                              ),
+                            ),
+                          ),
                           child: Row(
                             children: [
                               Icon(Icons.delete, color: Colors.black54),

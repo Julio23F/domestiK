@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'package:domestik/pages/auth/login.dart';
 import 'package:domestik/pages/home.dart';
 import 'package:domestik/pages/infoPage.dart';
+import 'package:domestik/provider/home_provider.dart';
+import 'package:domestik/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 import '../constant.dart';
 import '../models/api_response.dart';
@@ -24,6 +27,10 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     loadUserInfo(context);
+    // Récupérer le mode choisi par l'utilsateur
+    Provider.of<ThemeProvider>(context,listen: false).checkUserPrefernce();
+    Provider.of<HistoriqueProvider>(context,listen: false).getUserDetail();
+
     super.initState();
   }
 

@@ -7,6 +7,7 @@ class UserProvider with ChangeNotifier {
   List<dynamic> allUser = [];
   bool isLoading = false;
 
+
   Future<void> getAllUser() async {
     isLoading = true;
 
@@ -21,6 +22,7 @@ class UserProvider with ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
+
 
   //Ajouter des utilisateurs à partir de AllUser Page
   void addUser(List<dynamic> userIds) {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/home_provider.dart';
 import '../services/user_service.dart';
 import '../theme/theme_provider.dart';
 import 'auth/login.dart';
@@ -232,6 +233,8 @@ class _UserpageState extends State<Userpage> {
                         ),
                         TextButton(
                           onPressed: () {
+                            Provider.of<HistoriqueProvider>(context,listen: false).reset();
+
                             logout();
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(builder: (context) => LoginPage()),
