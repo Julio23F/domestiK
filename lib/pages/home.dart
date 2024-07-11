@@ -51,7 +51,7 @@ class _HomeState extends State<Home> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.add),
-              label: 'Add',
+              label: 'Ajout',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),

@@ -34,10 +34,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   // String dateToday = DateFormat('d MMMM y', 'fr_FR').format(DateTime.now());
   String dateToday = DateFormat.yMMMd('en').format(DateTime.now()); // Replace 'en' with your locale
+  String accountType = "";
+
   @override
   void initState() {
     super.initState();
-
+    getUserAccountType();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -56,56 +58,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _controller.dispose();
     super.dispose();
   }
+  //Obtenir le type de compte
+  Future<void> getUserAccountType() async {
+    ApiResponse response = await getUserDetailSercice();
+    final data = jsonEncode(response.data);
+    final type = jsonDecode(data)["user"]["accountType"];
+    setState(() {
+      accountType = type;
+    });
+    print(accountType);
 
-  // void _getUserDetail() async {
-  //   // Simulated response for user detail
-  //   setState(() {
-  //     data = '{"user":{"name":"John Doe","foyer":{"name":"Sample Foyer"},"id":1}}';
-  //     userName = jsonDecode(data)["user"]["name"];
-  //     foyerName = jsonDecode(data)["user"]["foyer"]["name"];
-  //     userId = jsonDecode(data)["user"]["id"];
-  //   });
-  // }
-
-
-
-  // Future<void> _getTacheTodo(int date) async {
-  //   // Simulated response for tache todo
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //
-  //   await Future.delayed(Duration(seconds: 2)); // Simulate async operation
-  //
-  //   setState(() {
-  //     tacheTodo = '[{"user":{"id":1,"name":"John Doe"},"tache":["8-chambre-4294940672","5-essais-0xff192b54"]}]';
-  //     isLoading = false;
-  //
-  //     // Reset animations for new data
-  //     _offsetAnimations.clear();
-  //     _controller.reset();
-  //
-  //     _offsetAnimations = List.generate(
-  //       jsonDecode(tacheTodo).length,
-  //           (index) => Tween<Offset>(
-  //         begin: const Offset(1, 0),
-  //         end: Offset.zero,
-  //       ).animate(
-  //         CurvedAnimation(
-  //           parent: _controller,
-  //           curve: Interval(
-  //             (index + 1) * 0.1,
-  //             1.0,
-  //             curve: Curves.easeOut,
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //
-  //     // Start the animation
-  //     _startAnimation();
-  //   });
-  // }
+  }
   Future<void> _getTacheTodo(int date) async {
     DateTime now = DateTime.now();
     // String formattedDate = DateFormat('yyyy-MM-dd').format(now);
@@ -231,11 +194,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   color: Theme.of(context).colorScheme.surface,
                                 ),
                               ),
-                              Text(
-                                'Admin',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13,
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 1, horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: (accountType == "")?Colors.transparent:(accountType == "admin")?Colors.deepOrange.withOpacity(0.4):Colors.green.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(5)
+                                ),
+                                child: Text(
+                                  accountType,
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.surface,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
                             ],

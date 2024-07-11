@@ -33,14 +33,24 @@ class _InfoPageState extends State<InfoPage> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text("Annuler"),
+            child: Text(
+                "Annuler",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.surface
+                ),
+            ),
           ),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
               _creatFoyer();
             },
-            child: Text("Save"),
+            child: Text(
+                "Save",
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.surface
+                ),
+            ),
           ),
         ],
       ),
@@ -129,7 +139,7 @@ class _InfoPageState extends State<InfoPage> {
                     ),
                   ),
                   Text(
-                    'Simplifiez Votre Quotidien en Un Clic',
+                    'Simplifiez Votre Quotidien en Quelques Clics',
                     style: TextStyle(
                       color: textColor,
                     ),

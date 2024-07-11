@@ -58,7 +58,7 @@ class _UserpageState extends State<Userpage> {
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "FARALAHY Julio",
+                    Provider.of<HistoriqueProvider>(context).userName,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -66,7 +66,7 @@ class _UserpageState extends State<Userpage> {
                     ),
                   ),
                   Text(
-                    "juliofaralahy23@gmail.com",
+                    Provider.of<HistoriqueProvider>(context).userEmail,
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 16,

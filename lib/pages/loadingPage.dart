@@ -26,10 +26,10 @@ class _LoadingPageState extends State<LoadingPage> {
 
   @override
   void initState() {
-    loadUserInfo(context);
     // Récupérer le mode choisi par l'utilsateur
     Provider.of<ThemeProvider>(context,listen: false).checkUserPrefernce();
     Provider.of<HistoriqueProvider>(context,listen: false).getUserDetail();
+    loadUserInfo(context);
 
     super.initState();
   }

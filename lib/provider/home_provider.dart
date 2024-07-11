@@ -11,6 +11,7 @@ class HistoriqueProvider extends ChangeNotifier {
   bool _isCheck = false;
 
   String _userName = "";
+  String _userEmail = "";
   String _foyerName = "";
   int _userId = 0;
 
@@ -18,12 +19,10 @@ class HistoriqueProvider extends ChangeNotifier {
   bool get isCheck => _isCheck;
 
   String get userName => _userName;
+  String get userEmail => _userEmail;
   String get foyerName => _foyerName;
   int get userId => _userId;
 
-  HistoriqueProvider(){
-    getUserDetail();
-  }
 
 
   Future<void> addHistorique(List tacheIds) async {
@@ -32,7 +31,7 @@ class HistoriqueProvider extends ChangeNotifier {
     await addHistoriqueService(tacheIds);
     notifyListeners();
 
-    await Future.delayed(Duration(seconds: 2)); // Placeholder for async operation
+    await Future.delayed(Duration(seconds: 2));
 
     _isLoading = false;
     _isCheck = true;
@@ -44,6 +43,7 @@ class HistoriqueProvider extends ChangeNotifier {
     if (response.data != null) {
       final data = jsonEncode(response.data);
       _userName = jsonDecode(data)["user"]["name"];
+      _userEmail = jsonDecode(data)["user"]["email"];
       _foyerName = jsonDecode(data)["user"]["foyer"]["name"];
       _userId = jsonDecode(data)["user"]["id"];
     }
@@ -55,6 +55,7 @@ class HistoriqueProvider extends ChangeNotifier {
     _isLoading = false;
     _userName = "";
     _foyerName = "";
+    _userEmail = "";
     _userId = 0;
     print("effacer");
     notifyListeners();

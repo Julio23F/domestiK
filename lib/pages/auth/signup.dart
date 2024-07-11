@@ -8,29 +8,30 @@ import '../../services/user_service.dart';
 import '../home.dart';
 import 'login.dart';
 
-
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
   @override
-  State<SignupPage> createState() => _LoginPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<SignupPage> {
-
+class _SignupPageState extends State<SignupPage> {
   final _formkey = GlobalKey<FormState>();
 
   final confEmailController = TextEditingController();
   final confMDPController = TextEditingController();
   final confNomController = TextEditingController();
   final confMDP2Controller = TextEditingController();
+
   bool loading = false;
-  void _registerUser () async {
+  bool _passwordVisible1 = false;
+  bool _passwordVisible2 = false;
+
+  void _registerUser() async {
     ApiResponse response = await register(confNomController.text, confEmailController.text, confMDPController.text);
-    if(response.error == null) {
+    if (response.error == null) {
       _saveAndRedirectToHome(response.data as User);
-    }
-    else {
+    } else {
       setState(() {
         loading = !loading;
       });
@@ -51,13 +52,11 @@ class _LoginPageState extends State<SignupPage> {
   @override
   void dispose() {
     super.dispose();
-
     confEmailController.dispose();
     confMDPController.dispose();
     confNomController.dispose();
     confMDP2Controller.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -103,194 +102,206 @@ class _LoginPageState extends State<SignupPage> {
                           ),
                           SizedBox(height: 25),
                           Container(
-                              margin: EdgeInsets.only(bottom: 15),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  labelText: 'Nom',
-                                  hintText: 'Votre nom',
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black26,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.grey, // Nouvelle couleur du bord
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.grey, // Nouvelle couleur du bord
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
+                            margin: EdgeInsets.only(bottom: 15),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Nom',
+                                hintText: 'Votre nom',
+                                hintStyle: const TextStyle(
+                                  color: Colors.black26,
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Colors.grey,
                                   ),
                                 ),
-                                validator: (value){
-                                  if(value == null || value.isEmpty ){
-                                    return "Invalide";
-                                  }
-                                  return null;
-                                },
-                                controller: confNomController,
-                              )
-                          ),
-
-                          Container(
-                              margin: EdgeInsets.only(bottom: 15),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  labelText: 'Email',
-                                  hintText: 'Votre adresse email',
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black26,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.grey, // Nouvelle couleur du bord
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.grey, // Nouvelle couleur du bord
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Colors.grey,
                                   ),
                                 ),
-                                validator: (value){
-                                  if(value == null || value.isEmpty ){
-                                    return "Adresse email invalide";
-                                  }
-                                  return null;
-                                },
-                                controller: confEmailController,
-                              )
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Invalide";
+                                }
+                                return null;
+                              },
+                              controller: confNomController,
+                            ),
                           ),
                           Container(
-                              margin: EdgeInsets.only(bottom: 15),
-                              child: TextFormField(
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  labelText: 'Mot de passe',
-                                  hintText: 'Votre mot de passe',
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black26,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.grey, // Nouvelle couleur du bord
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.grey, // Nouvelle couleur du bord
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
+                            margin: EdgeInsets.only(bottom: 15),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                hintText: 'Votre adresse email',
+                                hintStyle: const TextStyle(
+                                  color: Colors.black26,
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Colors.grey,
                                   ),
                                 ),
-                                validator: (value){
-
-                                  if(value!.length < 5){
-                                    return "Le mot de passe doit contenir au moins 6 caractères";
-                                  }
-                                  return null;
-                                },
-                                controller: confMDPController,
-                              )
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Adresse email invalide";
+                                }
+                                return null;
+                              },
+                              controller: confEmailController,
+                            ),
                           ),
                           Container(
-                              margin: EdgeInsets.only(bottom: 15),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  labelText: 'Confirmation mdp',
-                                  hintText: 'Confirmation mdp',
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black26,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.grey, // Nouvelle couleur du bord
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.grey, // Nouvelle couleur du bord
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
+                            margin: EdgeInsets.only(bottom: 15),
+                            child: TextFormField(
+                              obscureText: !_passwordVisible1,
+                              decoration: InputDecoration(
+                                labelText: 'Mot de passe',
+                                hintText: 'Votre mot de passe',
+                                hintStyle: const TextStyle(
+                                  color: Colors.black26,
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Colors.grey,
                                   ),
                                 ),
-                                validator: (value){
-                                  if(value != confMDPController.text ){
-                                    print(value);
-                                    print(confMDPController.text);
-                                    return "La confirmation du mdp est incorrect";
-                                  }
-                                  return null;
-                                },
-                                controller: confMDP2Controller,
-                              )
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _passwordVisible1
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    color: Colors.grey,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordVisible1 = !_passwordVisible1;
+                                    });
+                                  },
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value!.length < 5) {
+                                  return "Le mot de passe doit contenir au moins 6 caractères";
+                                }
+                                return null;
+                              },
+                              controller: confMDPController,
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 15),
+                            child: TextFormField(
+                              obscureText: !_passwordVisible2,
+                              decoration: InputDecoration(
+                                labelText: 'Confirmation mdp',
+                                hintText: 'Confirmation mdp',
+                                hintStyle: const TextStyle(
+                                  color: Colors.black26,
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _passwordVisible2
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    color: Colors.grey,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordVisible2 = !_passwordVisible2;
+                                    });
+                                  },
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value != confMDPController.text) {
+                                  return "La confirmation du mdp est incorrect";
+                                }
+                                return null;
+                              },
+                              controller: confMDP2Controller,
+                            ),
                           ),
                           Container(
                             margin: EdgeInsets.only(top: 35),
                             width: double.infinity,
                             child: ElevatedButton(
-                                style: ButtonStyle(
-                                    padding: MaterialStatePropertyAll(EdgeInsets.all(12)),
-                                    backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 66, 101, 224))
-                                ),
-                                onPressed: () {
-                                  if(_formkey.currentState!.validate()){
-                                    setState(() {
-                                      loading = !loading;
-                                      _registerUser();
-                                    });
-                                  }
-                                },
-                                child: loading? CircularProgressIndicator(color: Colors.white,)
-                                :Text(
-                                    "Sign up",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18
-                                    )
-                                )
+                              style: ButtonStyle(
+                                padding: MaterialStatePropertyAll(EdgeInsets.all(12)),
+                                backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 66, 101, 224)),
+                              ),
+                              onPressed: () {
+                                if (_formkey.currentState!.validate()) {
+                                  setState(() {
+                                    loading = true;
+                                    _registerUser();
+                                  });
+                                }
+                              },
+                              child: loading
+                                  ? CircularProgressIndicator(color: Colors.white)
+                                  : Text(
+                                "Inscription",
+                                style: TextStyle(color: Colors.white, fontSize: 18),
+                              ),
                             ),
                           ),
                           Container(
-                              margin: EdgeInsets.only(top: 15),
-                              width: double.infinity,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Vous avez déjà compte ?"),
-                                  TextButton(
-                                    onPressed: (){
-                                      Navigator.push(
-                                          context,
-                                          PageRouteBuilder(
-                                              pageBuilder: (_, __, ___) => LoginPage()
-                                          )
-                                      );
-                                    },
-                                    child: Text(
-                                      "Connexion",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.blueAccent
+                            margin: EdgeInsets.only(top: 15),
+                            width: double.infinity,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Vous avez déjà un compte ?"),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (_, __, ___) => LoginPage(),
                                       ),
+                                    );
+                                  },
+                                  child: Text(
+                                    "Connexion",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.blueAccent,
                                     ),
                                   ),
-                                ],
-                              )
-                          )
-
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -298,5 +309,3 @@ class _LoginPageState extends State<SignupPage> {
     );
   }
 }
-
-

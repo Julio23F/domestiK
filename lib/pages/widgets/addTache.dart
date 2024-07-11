@@ -17,6 +17,7 @@ class _AddTacheState extends State<AddTache> {
   List<dynamic> allTache = [];
   Set<int> selectedUserIds = {};
   bool isLoading = false;
+  String accountType = "user";
 
   Future<void> _getAllTache() async {
     ApiResponse response = await getTache();
@@ -35,10 +36,20 @@ class _AddTacheState extends State<AddTache> {
       allTache.removeWhere((tache) => tache["id"] == tacheId);
     });
   }
+  //Obtenir le type de compte
+  Future<void> getUserAccountType() async {
+    ApiResponse response = await getUserDetailSercice();
+    final data = jsonEncode(response.data);
+    final type = jsonDecode(data)["user"]["accountType"];
+    setState(() {
+      accountType = type;
+    });
+  }
 
   @override
   void initState() {
     _getAllTache();
+    getUserAccountType();
     super.initState();
   }
 
@@ -76,16 +87,59 @@ class _AddTacheState extends State<AddTache> {
               PopupMenuButton<String>(
                 icon: Icon(Icons.more_vert, color: Colors.white.withOpacity(0.9)),
                 onSelected: (String result) {
-                  if (result == 'delete') {
-                    _deleteTache(tache["id"]);
+                  if(accountType == "admin") {
+                    if (result == 'delete') {
+                      _deleteTache(tache["id"]);
+                    }
                   }
+                  else{
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(
+                            'Accès Refusé',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          content: Text(
+                            "Seul l'admin de ce foyer peut accéder à cette section.",
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                'Fermer',
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.surface.withOpacity(0.5)
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+
+                      },
+                    );
+                  }
+
                 },
                 itemBuilder: (BuildContext context) => [
                   PopupMenuItem<String>(
                     value: 'delete',
+                    height: 35,
                     padding: EdgeInsets.symmetric(vertical: 0, horizontal: 3),
                     child: Container(
-
+                      decoration: BoxDecoration(
+                        border: Border(
+                          right: BorderSide(
+                              color: (accountType == "user")?Colors.red:Colors.transparent,
+                              width: 2
+                          ),
+                        ),
+                      ),
                       width: 105,
                       child: Row(
                         children: [

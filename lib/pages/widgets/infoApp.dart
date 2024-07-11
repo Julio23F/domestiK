@@ -44,6 +44,7 @@ class _InfoAppState extends State<InfoApp> {
                 "Consultez toutes vos tâches à venir, qu'elles soient à faire immédiatement ou à une date ultérieure.",
                 "Marquez vos tâches comme 'Confirmées' une fois terminées pour que d'autres utilisateurs puissent les valider.",
               ],
+              page: "Home"
             ),
 
             // Confirmation
@@ -53,6 +54,7 @@ class _InfoAppState extends State<InfoApp> {
               content: [
                 "Chaque utilisateur peut confirmer si une tâche a été réalisée avec succès.",
               ],
+              page: "Conf"
             ),
 
             // Page d'ajout
@@ -63,6 +65,7 @@ class _InfoAppState extends State<InfoApp> {
                 "Affiche la liste des utilisateurs du foyer, distinguant ceux désactivés par une bordure colorée sur la droite. Seul l'administrateur peut gérer les rôles des utilisateurs (comme les rendre administrateurs), les désactiver (pour ceux absents du foyer), ou les supprimer.",
                 "Cette page propose également la gestion des tâches, avec la possibilité pour l'administrateur de supprimer des tâches spécifiques."
               ],
+              page: "Ajout"
             ),
             //Add Page
 
@@ -73,6 +76,7 @@ class _InfoAppState extends State<InfoApp> {
               content: [
                 "Modifiez votre profil, gérez les notifications et choisissez entre le mode sombre ou clair.",
               ],
+              page: "Paramètre"
             ),
           ],
         ),
@@ -85,11 +89,14 @@ class InfoSection extends StatelessWidget {
   final String title;
   final IconData icon;
   final List<String> content;
+  final String page;
+
 
   const InfoSection({
     required this.title,
     required this.icon,
     required this.content,
+    required this.page,
   });
 
   @override
@@ -142,19 +149,13 @@ class InfoSection extends StatelessWidget {
                     color: Color(0xff8463BE),
                   ),
                   SizedBox(width: 8),
-                  // Text(
-                  //   'Page',
-                  //   style: TextStyle(
-                  //     fontSize: 14,
-                  //     color: Color(0xff8463BE),
-                  //   ),
-                  // ),
                 ],
               ),
               Text(
-                'Page',
+                page,
                 style: TextStyle(
                   fontSize: 14,
+                  fontWeight: FontWeight.w500,
                   color: Colors.blue,
                 ),
               ),
