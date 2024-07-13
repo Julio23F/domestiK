@@ -13,29 +13,27 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
-
-
   int currentIndex = 0;
-  setCurrentIndex(int index) {
+
+  void setCurrentIndex(int index) {
     setState(() {
       currentIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
           child: [
-            HomePage(),
+            HomePage(setCurrentIndex: setCurrentIndex),
             ConfirmationPage(),
             AddPage(),
             Userpage(),
           ][currentIndex],
         ),
         BottomNavigationBar(
-          //C'est pour éviter que les autres éléments du BottomNavigationBarItem ne s'affiche pas quand il y a 4 item
           type: BottomNavigationBarType.fixed,
           currentIndex: currentIndex,
           onTap: (index) => setCurrentIndex(index),
@@ -63,3 +61,4 @@ class _HomeState extends State<Home> {
     );
   }
 }
+

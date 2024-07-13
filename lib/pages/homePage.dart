@@ -17,11 +17,14 @@ import '../theme/theme_provider.dart';
 import 'auth/login.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final Function(int) setCurrentIndex;
+
+  const HomePage({Key? key, required this.setCurrentIndex}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
+
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController _controller;
@@ -212,12 +215,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           SizedBox(width: 10),
                           InkWell(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (_, __, ___) => Userpage(),
-                                ),
-                              );
+                              widget.setCurrentIndex(3);
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),

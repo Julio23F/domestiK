@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:domestik/pages/widgets/imageProfil.dart';
 import 'package:domestik/pages/widgets/infoApp.dart';
 import 'package:domestik/provider/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -72,31 +73,41 @@ class _UserpageState extends State<Userpage> {
               child: Column(
                 children: [
                   SizedBox(height: 20),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        vertical: 2, horizontal: 2),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Color(0xff8463BE),
-                        width: 2.0,
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => ImageProfil(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 2),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Color(0xff8463BE),
+                          width: 2.0,
+                        ),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surface
+                            .withOpacity(0.2),
+                        shape: BoxShape.circle,
                       ),
-                      color: Theme.of(context)
-                          .colorScheme
-                          .surface
-                          .withOpacity(0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Consumer<UserProvider>(
-                      builder: (context, userProvider, child) {
-                        return ClipOval(
-                          child: Image.asset(
-                            userProvider.profil,
-                            width: 120,
-                            height: 120,
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      },
+                      child: Consumer<UserProvider>(
+                        builder: (context, userProvider, child) {
+                          return ClipOval(
+                            child: Image.asset(
+                              userProvider.profil,
+                              width: 120,
+                              height: 120,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                   SizedBox(height: 15),
