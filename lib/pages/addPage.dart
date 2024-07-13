@@ -1,9 +1,11 @@
 import 'package:domestik/pages/widgets/addTache.dart';
+import 'package:domestik/provider/tache_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:domestik/pages/widgets/addUser.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:provider/provider.dart';
 
 import '../models/api_response.dart';
 import '../services/tache_service.dart';
@@ -139,7 +141,7 @@ class _AddPageState extends State<AddPage> {
           ),
           TextButton(
               onPressed: () async {
-                _addTache(foyerController.text);
+                Provider.of<TacheProvider>(context, listen: false).addTache(context, foyerController.text, pickerColor.value.toString());
                 setState(() {
                   foyerController.text = '';
                 });
@@ -154,33 +156,34 @@ class _AddPageState extends State<AddPage> {
       )
   );
 
-  Future<void> _addTache(String name) async {
-    ApiResponse response = await addTache(name, pickerColor.value.toString());
-    setState(() {
-      isLoading = false;
-    });
-
-    if (response.error != null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}'),
-      ));
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          content: Text('${response.message}'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    }
-  }
+  // Future<void> addTache(String name, String color) async {
+  //   ApiResponse response = await addTacheService(name, color);
+  //   // setState(() {
+  //   //   isLoading = false;
+  //   // });
+  //
+  //   if (response.error != null) {
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text('${response.error}'),
+  //     ));
+  //   }
+  //   else {
+  //     showDialog(
+  //       context: context,
+  //       builder: (context) => AlertDialog(
+  //         content: Text('${response.message}'),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //             child: Text('OK'),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //   }
+  // }
 
   void changeColor(Color color) {
     setState(() {

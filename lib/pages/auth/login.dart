@@ -103,17 +103,25 @@ class _LoginPageState extends State<LoginPage> {
                             child: TextFormField(
                               decoration: InputDecoration(
                                 labelText: 'Email',
+                                labelStyle: TextStyle(
+                                  color: Colors.black26,
+                                ),
                                 hintText: 'Votre adresse email',
                                 hintStyle: const TextStyle(
                                   color: Colors.black26,
                                 ),
                                 border: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
                                 enabledBorder: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
@@ -133,17 +141,25 @@ class _LoginPageState extends State<LoginPage> {
                               obscureText: _isObscure,
                               decoration: InputDecoration(
                                 labelText: 'Mot de passe',
+                                labelStyle: TextStyle(
+                                  color: Colors.black26,
+                                ),
                                 hintText: 'Votre mot de passe',
                                 hintStyle: const TextStyle(
                                   color: Colors.black26,
                                 ),
                                 border: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
                                 enabledBorder: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),

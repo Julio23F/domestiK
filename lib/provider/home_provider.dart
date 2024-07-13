@@ -7,7 +7,7 @@ import '../services/historique_service.dart';
 import '../services/user_service.dart';
 
 class HistoriqueProvider extends ChangeNotifier {
-  bool _isLoading = false;
+
   bool _isCheck = false;
 
   String _userName = "";
@@ -15,7 +15,7 @@ class HistoriqueProvider extends ChangeNotifier {
   String _foyerName = "";
   int _userId = 0;
 
-  bool get isLoading => _isLoading;
+
   bool get isCheck => _isCheck;
 
   String get userName => _userName;
@@ -26,14 +26,14 @@ class HistoriqueProvider extends ChangeNotifier {
 
 
   Future<void> addHistorique(List tacheIds) async {
-    _isLoading = true;
+
     print(tacheIds);
     await addHistoriqueService(tacheIds);
     notifyListeners();
 
     await Future.delayed(Duration(seconds: 2));
 
-    _isLoading = false;
+
     _isCheck = true;
     notifyListeners();
   }
@@ -52,7 +52,6 @@ class HistoriqueProvider extends ChangeNotifier {
 
   void reset() {
     _isCheck = false;
-    _isLoading = false;
     _userName = "";
     _foyerName = "";
     _userEmail = "";

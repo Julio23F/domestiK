@@ -216,7 +216,7 @@ class _UserpageState extends State<Userpage> {
                         });
                       },
                       child: Text(
-                        "Profil",
+                        "Modifier profil",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

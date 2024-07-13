@@ -28,7 +28,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   String data = '';
   var tacheTodo;
-  bool isLoading = true;
+  bool isLoading = false;
+  bool isLoad = false;
 
   bool isToday = false;
 
@@ -70,15 +71,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   }
   Future<void> _getTacheTodo(int date) async {
-    DateTime now = DateTime.now();
-    // String formattedDate = DateFormat('yyyy-MM-dd').format(now);
-    String formattedDate = DateFormat('dd').format(now);
-
     setState(() {
       isLoading = true;
     });
-
-
+    DateTime now = DateTime.now();
+    // String formattedDate = DateFormat('yyyy-MM-dd').format(now);
+    String formattedDate = DateFormat('dd').format(now);
 
 
 
@@ -294,6 +292,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           initialSelectedDate: DateTime.now(),
                           selectionColor: Color(0xff21304f),
                           selectedTextColor: Colors.white,
+                          dayTextStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.surface,
+                              fontSize: 12
+                          ),
+                          dateTextStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.surface,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 25
+                          ),
+                          monthTextStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.surface,
+                              fontSize: 11
+                          ),
                           onDateChange: (date) {
                             _getTacheTodo(date.day);
                           },
@@ -409,13 +420,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   ),
                                   child: (tache["user"]["id"] == provider.userId)
                                       ?Container(
-                                        child: provider.isLoading
+                                        child: isLoad
                                             ? Container(
-                                                margin: EdgeInsets.symmetric(vertical: 16),
-
+                                                height: 25,
+                                                width: 25,
                                                 child: CircularProgressIndicator(color: Colors.white,),
                                             )
-                                            : (provider.isCheck || tache["state"]  || !isToday)
+                                            : (provider.isCheck || tache["state"]  || !isToday || convert(tache["tache"]).contains("1"))
                                             ?Icon(
                                               Icons.done,
                                               color: Colors.white,
@@ -423,36 +434,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             )
                                             :InkWell(
                                               onTap: () {
-                                                provider.addHistorique(convert(tache["tache"]));
+                                                setState(() {
+                                                  isLoad = true;
+                                                });
+                                                print(convert(tache["tache"]).contains("1"));
+                                                provider.addHistorique(convert(tache["tache"])).then((value){
+                                                  setState(() {
+                                                    isLoad = false;
+                                                  });
+                                                });
                                               },
-
                                               child: Container(
-                                                width: 30,
-                                                padding: EdgeInsets.symmetric(vertical: 10),
+                                                padding: EdgeInsets.all(8),
                                                 decoration: BoxDecoration(
                                                   color: Color(0xff8463BE),
                                                   borderRadius: BorderRadius.circular(7),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey.withOpacity(0.3),
-                                                      spreadRadius: 1,
-                                                      blurRadius: 1,
-                                                      offset: Offset(0, 1),
-                                                    ),
-                                                  ],
                                                 ),
-                                                child: RotatedBox(
-                                                  quarterTurns: 3,
-                                                  child: Center(
-                                                    child: Text(
-                                                      'Confirmer',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 9,
-                                                        fontWeight: FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ),
+                                                child: Icon(
+                                                  Icons.done,
+                                                  color: Colors.white,
+                                                  size: 20,
                                                 ),
                                               ),
                                             )

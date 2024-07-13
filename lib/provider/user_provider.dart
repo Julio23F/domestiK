@@ -6,7 +6,7 @@ import '../../services/user_service.dart';
 class UserProvider with ChangeNotifier {
   List<dynamic> allUser = [];
   bool isLoading = false;
-  String _profil = "assets/images/icon.png";
+  String _profil = "assets/images/logo.png";
 
   String get profil => _profil;
 
@@ -49,8 +49,7 @@ class UserProvider with ChangeNotifier {
     ApiResponse response = await getUserDetailSercice();
     if (response.data != null) {
       final data = jsonEncode(response.data);
-      final userProfil = jsonDecode(data)["user"]["profil"];
-      _profil = userProfil;
+      _profil = jsonDecode(data)["user"]["profil"];
       notifyListeners();
     }
   }
@@ -79,7 +78,7 @@ class UserProvider with ChangeNotifier {
 
 
   void reset() {
-    _profil = '';
+    _profil = "assets/images/logo.png";
     notifyListeners();
   }
 }

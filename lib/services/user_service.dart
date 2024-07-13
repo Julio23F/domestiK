@@ -344,7 +344,6 @@ Future<ApiResponse> updateUserService(String path) async {
 }
 
 //Retirer un utilisateur dun foyer
-//Retirer un utilisateur dun foyer
 Future<ApiResponse> removeUserService(int userId) async {
   ApiResponse apiResponse = ApiResponse();
 

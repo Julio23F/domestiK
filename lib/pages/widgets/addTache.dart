@@ -1,7 +1,11 @@
 import 'dart:convert';
+import 'package:domestik/models/tache.dart';
+import 'package:domestik/provider/tache_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/api_response.dart';
+import '../../provider/user_provider.dart';
 import '../../services/tache_service.dart';
 import '../../services/user_service.dart';
 import '../allUser.dart';
@@ -14,28 +18,12 @@ class AddTache extends StatefulWidget {
 }
 
 class _AddTacheState extends State<AddTache> {
-  List<dynamic> allTache = [];
   Set<int> selectedUserIds = {};
   bool isLoading = false;
   String accountType = "user";
 
-  Future<void> _getAllTache() async {
-    ApiResponse response = await getTache();
-    if (response.data != null) {
-      final data = jsonEncode(response.data);
-      setState(() {
-        allTache = jsonDecode(data)["taches"];
-      });
-    }
-  }
 
-  Future<void> _deleteTache(int tacheId) async {
-    // Appelez votre service de suppression de tâche ici
-    await deleteTache(tacheId);
-    setState(() {
-      allTache.removeWhere((tache) => tache["id"] == tacheId);
-    });
-  }
+
   //Obtenir le type de compte
   Future<void> getUserAccountType() async {
     ApiResponse response = await getUserDetailSercice();
@@ -48,28 +36,37 @@ class _AddTacheState extends State<AddTache> {
 
   @override
   void initState() {
-    _getAllTache();
+    // _getAllTache();
     getUserAccountType();
+    Provider.of<TacheProvider>(context, listen: false).getAllTache();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        Wrap(
-          spacing: 8, // Espace horizontal entre les containers
-          runSpacing: 8.0,
-          children: [
-            for (int i = 0; i < allTache.length; i++)
-              _buildItem(allTache[i])
-          ],
-        )
-      ],
+    return Consumer<TacheProvider>(
+      builder: (context, tacheProvider, child){
+
+        return RefreshIndicator(
+          color: Colors.grey,
+          backgroundColor: Colors.white,
+          onRefresh: () async {
+            await tacheProvider.getAllTache();
+          },
+          child: ListView.builder(
+            itemCount: tacheProvider.allTache.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _buildItem(tacheProvider.allTache[index], tacheProvider);
+
+            },
+          ),
+        );
+      }
+
     );
   }
 
-  Widget _buildItem(tache) {
+  Widget _buildItem(tache, tacheProvider) {
     return Container(
       height: 130,
       width: (MediaQuery.of(context).size.width / 2) - 20,
@@ -89,7 +86,8 @@ class _AddTacheState extends State<AddTache> {
                 onSelected: (String result) {
                   if(accountType == "admin") {
                     if (result == 'delete') {
-                      _deleteTache(tache["id"]);
+                      print("sup");
+                      tacheProvider.deleteTache(tache["id"]);
                     }
                   }
                   else{

@@ -62,7 +62,7 @@ Future<ApiResponse> todoTache (date) async {
 
 
 //Add tache
-Future<ApiResponse> addTache(String name, String color) async {
+Future<ApiResponse> addTacheService(String name, String color) async {
   String token = await getToken();
   ApiResponse apiResponse = ApiResponse();
   try {
@@ -84,8 +84,7 @@ Future<ApiResponse> addTache(String name, String color) async {
 
     switch(response.statusCode) {
       case 200:
-        apiResponse.message = jsonDecode(response.body)['message'];
-        print(apiResponse.message);
+        apiResponse.data = jsonDecode(response.body);
         break;
       case 422:
         final errors = jsonDecode(response.body)['errors'];
@@ -146,7 +145,7 @@ Future<ApiResponse> getTache() async {
 }
 
 
-Future<ApiResponse> deleteTache(int tacheId) async {
+Future<ApiResponse> deleteTacheService(int tacheId) async {
   ApiResponse apiResponse = ApiResponse();
 
   try {

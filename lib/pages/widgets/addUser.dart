@@ -79,16 +79,24 @@ class _AddUserState extends State<AddUser> {
           builder: (context, userProvider, child) {
             if (userProvider.isLoading) {
               return Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: Theme.of(context).colorScheme.surface,),
               );
             }
 
-            return ListView.builder(
-              itemCount: userProvider.allUser.length,
-              itemBuilder: (BuildContext context, int index) {
-                final user = userProvider.allUser[index];
-                return _buildItem(user, userProvider, index);
+            return RefreshIndicator(
+              color: Colors.grey,
+              backgroundColor: Colors.white,
+              onRefresh: () async {
+                await userProvider.getAllUser();
               },
+              child: ListView.builder(
+                itemCount: userProvider.allUser.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final user = userProvider.allUser[index];
+                  return _buildItem(user, userProvider, index);
+                },
+              ),
+
             );
           },
         ),
@@ -138,14 +146,14 @@ class _AddUserState extends State<AddUser> {
             children: [
               ListTile(
                 leading: (user["profil"] == null)?CircleAvatar(
-                  backgroundColor: Theme.of(context).colorScheme.tertiary,
-                  child: Text(
-                    user["name"].substring(0, 1).toUpperCase(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    child: Text(
+                      user["name"].substring(0, 1).toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
                 ):Container(
                   padding: EdgeInsets.symmetric(
                       vertical: 2, horizontal: 2),
@@ -203,7 +211,7 @@ class _AddUserState extends State<AddUser> {
                     ),
                   ),
                 )
-                    : PopupMenuButton<String>(
+                    : accountType == "admin"?PopupMenuButton<String>(
                   onSelected: (String value) {
                     if(accountType == "admin"){
                       if (value == "Désactiver") {
@@ -252,14 +260,6 @@ class _AddUserState extends State<AddUser> {
                       PopupMenuItem<String>(
                         value: 'Modifier',
                         child: Container(
-                          decoration: BoxDecoration(
-                            border: Border(
-                              right: BorderSide(
-                                  color: (accountType == "user")?Colors.red:Colors.transparent,
-                                  width: 2
-                              ),
-                            ),
-                          ),
                           child: Row(
                             children: [
                               Icon(Icons.edit, color: Colors.black54),
@@ -272,14 +272,6 @@ class _AddUserState extends State<AddUser> {
                       PopupMenuItem<String>(
                         value: 'Désactiver',
                         child: Container(
-                          decoration: BoxDecoration(
-                            border: Border(
-                              right: BorderSide(
-                                  color: (accountType == "user")?Colors.red:Colors.transparent,
-                                  width: 2
-                              ),
-                            ),
-                          ),
                           child: Row(
                             children: [
                               Icon(Icons.block, color: Colors.black54),
@@ -295,14 +287,6 @@ class _AddUserState extends State<AddUser> {
                       PopupMenuItem<String>(
                         value: 'Supprimer',
                         child: Container(
-                          decoration: BoxDecoration(
-                            border: Border(
-                              right: BorderSide(
-                                  color: (accountType == "user")?Colors.red:Colors.transparent,
-                                  width: 2
-                              ),
-                            ),
-                          ),
                           child: Row(
                             children: [
                               Icon(Icons.delete, color: Colors.black54),
@@ -319,7 +303,7 @@ class _AddUserState extends State<AddUser> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   elevation: 4,
-                ),
+                ):Text(""),
                 onTap: () {},
               ),
               if (editingUserId == user["id"])

@@ -106,17 +106,25 @@ class _SignupPageState extends State<SignupPage> {
                             child: TextFormField(
                               decoration: InputDecoration(
                                 labelText: 'Nom',
+                                labelStyle: TextStyle(
+                                  color: Colors.black26,
+                                ),
                                 hintText: 'Votre nom',
                                 hintStyle: const TextStyle(
                                   color: Colors.black26,
                                 ),
                                 border: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
                                 enabledBorder: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
@@ -135,17 +143,25 @@ class _SignupPageState extends State<SignupPage> {
                             child: TextFormField(
                               decoration: InputDecoration(
                                 labelText: 'Email',
+                                labelStyle: TextStyle(
+                                  color: Colors.black26,
+                                ),
                                 hintText: 'Votre adresse email',
                                 hintStyle: const TextStyle(
                                   color: Colors.black26,
                                 ),
                                 border: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
                                 enabledBorder: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
@@ -165,17 +181,25 @@ class _SignupPageState extends State<SignupPage> {
                               obscureText: !_passwordVisible1,
                               decoration: InputDecoration(
                                 labelText: 'Mot de passe',
+                                labelStyle: TextStyle(
+                                  color: Colors.black26,
+                                ),
                                 hintText: 'Votre mot de passe',
                                 hintStyle: const TextStyle(
                                   color: Colors.black26,
                                 ),
                                 border: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
                                 enabledBorder: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
@@ -194,7 +218,7 @@ class _SignupPageState extends State<SignupPage> {
                                 ),
                               ),
                               validator: (value) {
-                                if (value!.length < 5) {
+                                if (value!.length < 6) {
                                   return "Le mot de passe doit contenir au moins 6 caractères";
                                 }
                                 return null;
@@ -208,17 +232,25 @@ class _SignupPageState extends State<SignupPage> {
                               obscureText: !_passwordVisible2,
                               decoration: InputDecoration(
                                 labelText: 'Confirmation mdp',
+                                labelStyle: TextStyle(
+                                  color: Colors.black26,
+                                ),
                                 hintText: 'Confirmation mdp',
                                 hintStyle: const TextStyle(
                                   color: Colors.black26,
                                 ),
                                 border: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
                                 enabledBorder: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
