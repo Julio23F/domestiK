@@ -17,6 +17,7 @@ class _ConfirmationPageState extends State<ConfirmationPage>
   @override
   void initState() {
     super.initState();
+
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500),
@@ -39,7 +40,7 @@ class _ConfirmationPageState extends State<ConfirmationPage>
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text(
-            "Confirmation",
+            "Validation",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 25,
@@ -244,7 +245,7 @@ class _ConfirmationPageState extends State<ConfirmationPage>
                                   ],
                                 ),
                                 child: Text(
-                                  "Confirmer",
+                                  "Valider",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 11,

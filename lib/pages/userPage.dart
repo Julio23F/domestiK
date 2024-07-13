@@ -100,7 +100,7 @@ class _UserpageState extends State<Userpage> {
                         builder: (context, userProvider, child) {
                           return ClipOval(
                             child: Image.asset(
-                              userProvider.profil,
+                              (userProvider.profil != null) ? userProvider.profil : "asstets/images/logo.png",
                               width: 120,
                               height: 120,
                               fit: BoxFit.cover,
@@ -380,21 +380,19 @@ class _UserpageState extends State<Userpage> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {
+                          onPressed: () async{
 
                             logout();
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                   builder: (context) => LoginPage()),
                                   (route) => false,
-                            ).then((value) {
-                              Provider.of<HistoriqueProvider>(context,
-                                  listen: false)
-                                  .reset();
-                              Provider.of<UserProvider>(context,
-                                  listen: false)
-                                  .reset();
-                            });
+                            );
+                            // await context.read<HistoriqueProvider>().reset();
+                            // await context.read<UserProvider>().reset();
+                            await Provider.of<HistoriqueProvider>(context, listen: false).reset();
+                            await Provider.of<UserProvider>(context, listen: false).reset();
+
                           },
                           child: Text(
                             'Confirmer',

@@ -104,10 +104,28 @@ class _AddPageState extends State<AddPage> {
           height: 210,
           child: Column(
             children: [
-              TextField(
+              TextFormField(
                 autofocus: true,
-                decoration: InputDecoration(hintText: "Entrer le nom de la tache"),
+                decoration: InputDecoration(
+                    hintText: "Entrer le nom de la tache",
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                ),
                 controller: foyerController,
+
               ),
               SizedBox(height: 20),
               Expanded(
@@ -118,7 +136,7 @@ class _AddPageState extends State<AddPage> {
                     Color(0xffef4749),
                     Colors.green,
                     Color(0xff1877f2),
-                    Colors.yellow,
+                    Colors.grey,
                     Colors.orange,
                     Colors.purple,
                     Colors.brown,
@@ -148,7 +166,7 @@ class _AddPageState extends State<AddPage> {
                 Navigator.of(context).pop();
               },
               child: Text(
-                  "Save",
+                  "Enregistrer",
                   style: Theme.of(context).textTheme.bodyMedium,
               )
           ),
@@ -156,34 +174,6 @@ class _AddPageState extends State<AddPage> {
       )
   );
 
-  // Future<void> addTache(String name, String color) async {
-  //   ApiResponse response = await addTacheService(name, color);
-  //   // setState(() {
-  //   //   isLoading = false;
-  //   // });
-  //
-  //   if (response.error != null) {
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       content: Text('${response.error}'),
-  //     ));
-  //   }
-  //   else {
-  //     showDialog(
-  //       context: context,
-  //       builder: (context) => AlertDialog(
-  //         content: Text('${response.message}'),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: Text('OK'),
-  //           ),
-  //         ],
-  //       ),
-  //     );
-  //   }
-  // }
 
   void changeColor(Color color) {
     setState(() {

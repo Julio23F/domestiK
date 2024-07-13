@@ -50,13 +50,13 @@ class HistoriqueProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void reset() {
+  Future<void> reset() async{
     _isCheck = false;
     _userName = "";
     _foyerName = "";
     _userEmail = "";
     _userId = 0;
-    print("effacer");
+    print("effacer home");
     notifyListeners();
   }
 }

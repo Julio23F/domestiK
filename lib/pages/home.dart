@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.access_time_outlined),
-              label: 'Confirmation',
+              label: 'Validation',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.add),

@@ -55,7 +55,7 @@ class TacheProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void reset() {
+  Future<void> reset() async{
     _profil = "assets/images/logo.png";
     _allTache.clear();
 

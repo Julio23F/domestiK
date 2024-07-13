@@ -7,8 +7,10 @@ class UserProvider with ChangeNotifier {
   List<dynamic> allUser = [];
   bool isLoading = false;
   String _profil = "assets/images/logo.png";
+  String _accountType = "";
 
   String get profil => _profil;
+  String get accountType => _accountType;
 
   UserProvider(){
     getUserProfil();
@@ -38,9 +40,9 @@ class UserProvider with ChangeNotifier {
   }
 
   //Mise à jour du profil
-  void updateUser(String path) {
+  void updateUser(String path) async{
+    await updateUserService(path);
     _profil = path;
-    updateUserService(path);
     notifyListeners();
 
   }
@@ -49,16 +51,24 @@ class UserProvider with ChangeNotifier {
     ApiResponse response = await getUserDetailSercice();
     if (response.data != null) {
       final data = jsonEncode(response.data);
-      _profil = jsonDecode(data)["user"]["profil"];
+      _profil = (jsonDecode(data)["user"]["profil"] != null) ? jsonDecode(data)["user"]["profil"] : "assets/images/logo.png";
     }
     notifyListeners();
 
   }
+  Future<void> getUserAccountType() async {
+    ApiResponse response = await getUserDetailSercice();
+    final data = jsonEncode(response.data);
+    final type = jsonDecode(data)["user"]["accountType"];
+    _accountType = type;
+    notifyListeners();
 
+  }
   //Changer l'admin du foyer
   Future<void> changeAdmin(int userId) async{
     print(userId);
     await changeAdminService(userId);
+    getUserAccountType();
     notifyListeners();
   }
 
@@ -70,21 +80,21 @@ class UserProvider with ChangeNotifier {
 
 
   void activeOrDisable(int userId) async {
-    isLoading = true;
     notifyListeners();
 
-    final user = allUser.firstWhere((u) => u["id"] == userId);
-    user["active"] = user["active"] == 1 ? 0 : 1;
+    await activeOrDisableService(userId).then((value) {
 
-    await activeOrDisableService(userId);
+      final user = allUser.firstWhere((u) => u["id"] == userId);
+      user["active"] = user["active"] == 1 ? 0 : 1;
+    });
 
-    isLoading = false;
     notifyListeners();
   }
 
 
 
-  void reset() {
+  Future<void> reset() async{
+    print('Effacer user');
     _profil = "assets/images/logo.png";
     notifyListeners();
   }

@@ -47,14 +47,14 @@ class _InfoAppState extends State<InfoApp> {
               page: "Home"
             ),
 
-            // Confirmation
+            // Validation
             InfoSection(
-              title: 'Confirmation',
+              title: 'Validation',
               icon: Icons.access_time_outlined,
               content: [
                 "Chaque utilisateur peut confirmer si une tâche a été réalisée avec succès.",
               ],
-              page: "Conf"
+              page: "Validation"
             ),
 
             // Page d'ajout
