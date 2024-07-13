@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:domestik/pages/userPage.dart';
 import 'package:domestik/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -208,16 +209,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               ),
                             ],
                           ),
-                          SizedBox(width: 7),
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Image.asset(
-                              "assets/images/avatar.png",
-                              width: 30,
+                          SizedBox(width: 10),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) => Userpage(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                shape: BoxShape.circle,
+                              ),
+                              child: ClipOval(
+                                child: Image.asset(
+                                  Provider.of<UserProvider>(context, listen: false).profil,
+                                  width: 35,
+                                  height: 35,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
                           )
                         ],

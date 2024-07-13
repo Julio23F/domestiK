@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../provider/user_provider.dart'; // Correct path to UserProvider
@@ -14,13 +13,16 @@ class AddUser extends StatefulWidget {
   State<AddUser> createState() => _AddUserState();
 }
 
-class _AddUserState extends State<AddUser> {
+class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
   Set<int> selectedUserIds = {};
   int? editingUserId;
   TextEditingController _nameController = TextEditingController();
   bool isAdminSelected = false;
   String accountType = "user";
-  //Obtenir le type de compte
+  bool isLoad = false;
+
+
+  // Obtenir le type de compte
   Future<void> getUserAccountType() async {
     ApiResponse response = await getUserDetailSercice();
     final data = jsonEncode(response.data);
@@ -29,7 +31,6 @@ class _AddUserState extends State<AddUser> {
       accountType = type;
     });
     print(accountType);
-
   }
 
   @override
@@ -53,22 +54,29 @@ class _AddUserState extends State<AddUser> {
   }
 
   void _saveChanges(int userId) async {
+    setState(() {
+      isLoad = true;
+    });
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     setState(() {
       final user = userProvider.allUser.firstWhere((u) => u["id"] == userId);
       user["name"] = _nameController.text;
     });
-
     if (isAdminSelected) {
-      // await userProvider.changeAdmin(userId);
+      print(userId);
+
+      await userProvider.changeAdmin(userId);
     }
+    else{
+      print("user choisi");
+    }
+
+    setState(() {
+      isLoad = false;
+    });
 
     _stopEditing();
   }
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +87,9 @@ class _AddUserState extends State<AddUser> {
           builder: (context, userProvider, child) {
             if (userProvider.isLoading) {
               return Center(
-                child: CircularProgressIndicator(color: Theme.of(context).colorScheme.surface,),
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.surface,
+                ),
               );
             }
 
@@ -88,6 +98,7 @@ class _AddUserState extends State<AddUser> {
               backgroundColor: Colors.white,
               onRefresh: () async {
                 await userProvider.getAllUser();
+                await getUserAccountType();
               },
               child: ListView.builder(
                 itemCount: userProvider.allUser.length,
@@ -96,7 +107,6 @@ class _AddUserState extends State<AddUser> {
                   return _buildItem(user, userProvider, index);
                 },
               ),
-
             );
           },
         ),
@@ -104,7 +114,7 @@ class _AddUserState extends State<AddUser> {
     );
   }
 
-  Widget _buildItem(dynamic user, UserProvider userProvider, index) {
+  Widget _buildItem(dynamic user, UserProvider userProvider, int index) {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
@@ -145,7 +155,8 @@ class _AddUserState extends State<AddUser> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               ListTile(
-                leading: (user["profil"] == null)?CircleAvatar(
+                leading: (user["profil"] == null)
+                    ? CircleAvatar(
                     backgroundColor: Theme.of(context).colorScheme.tertiary,
                     child: Text(
                       user["name"].substring(0, 1).toUpperCase(),
@@ -153,10 +164,9 @@ class _AddUserState extends State<AddUser> {
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
-                    )
-                ):Container(
-                  padding: EdgeInsets.symmetric(
-                      vertical: 2, horizontal: 2),
+                    ))
+                    : Container(
+                  padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Color(0xff8463BE),
@@ -177,43 +187,69 @@ class _AddUserState extends State<AddUser> {
                     ),
                   ),
                 ),
-
                 title: Text(
-                    '${user["name"]}',
-                    style: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .surface,
-                    )
+                  '${user["name"]}',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
                 ),
                 subtitle: Text(
                   '${user["email"]}',
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .surface
+                        .withOpacity(0.5),
                   ),
                 ),
                 trailing: editingUserId == user["id"]
-                    ? InkWell(
-                  onTap: () {
-                    _saveChanges(user["id"]);
-                  },
-                  child: userProvider.isLoading
-                      ? CircularProgressIndicator()
-                      : Container(
-                    padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Color(0xff21304f),
-                      borderRadius: BorderRadius.circular(7),
+                    ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        _stopEditing();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.red[400],
+                          shape: BoxShape.circle,
+                        ),
+                        padding: EdgeInsets.all(3),
+                        child: Icon(
+                          Icons.close_rounded,
+                          size: 17,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                    child: Text(
-                      'Enregistrer',
-                      style: TextStyle(color: Colors.white),
+                    SizedBox(
+                      width: 10,
                     ),
-                  ),
+                    isLoad?Container( height:25, width: 25,child: CircularProgressIndicator(color: Theme.of(context).colorScheme.surface,))
+                        :InkWell(
+                      onTap: () {
+                        _saveChanges(user["id"]);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 7, horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Color(0xff21304f),
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: Text(
+                          'Enregistrer',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
                 )
-                    : accountType == "admin"?PopupMenuButton<String>(
+                    : accountType == "admin"
+                    ? PopupMenuButton<String>(
                   onSelected: (String value) {
-                    if(accountType == "admin"){
+                    if (accountType == "admin") {
                       if (value == "Désactiver") {
                         userProvider.activeOrDisable(user["id"]);
                       } else if (value == "Modifier") {
@@ -221,8 +257,7 @@ class _AddUserState extends State<AddUser> {
                       } else if (value == "Supprimer") {
                         userProvider.removeUser(index, user["id"]);
                       }
-                    }
-                    else{
+                    } else {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -244,13 +279,15 @@ class _AddUserState extends State<AddUser> {
                                 child: Text(
                                   'Fermer',
                                   style: TextStyle(
-                                      color: Theme.of(context).colorScheme.surface.withOpacity(0.5)
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surface
+                                        .withOpacity(0.5),
                                   ),
                                 ),
                               ),
                             ],
                           );
-
                         },
                       );
                     }
@@ -262,9 +299,12 @@ class _AddUserState extends State<AddUser> {
                         child: Container(
                           child: Row(
                             children: [
-                              Icon(Icons.edit, color: Colors.black54),
+                              Icon(Icons.edit,
+                                  color: Colors.black54),
                               SizedBox(width: 8),
-                              Text('Modifier', style: TextStyle(color: Colors.black54)),
+                              Text('Modifier',
+                                  style: TextStyle(
+                                      color: Colors.black54)),
                             ],
                           ),
                         ),
@@ -274,11 +314,15 @@ class _AddUserState extends State<AddUser> {
                         child: Container(
                           child: Row(
                             children: [
-                              Icon(Icons.block, color: Colors.black54),
+                              Icon(Icons.block,
+                                  color: Colors.black54),
                               SizedBox(width: 8),
                               Text(
-                                user["active"] != 1 ? 'Réactiver' : 'Désactiver',
-                                style: TextStyle(color: Colors.black54),
+                                user["active"] != 1
+                                    ? 'Réactiver'
+                                    : 'Désactiver',
+                                style: TextStyle(
+                                    color: Colors.black54),
                               ),
                             ],
                           ),
@@ -289,9 +333,12 @@ class _AddUserState extends State<AddUser> {
                         child: Container(
                           child: Row(
                             children: [
-                              Icon(Icons.delete, color: Colors.black54),
+                              Icon(Icons.delete,
+                                  color: Colors.black54),
                               SizedBox(width: 8),
-                              Text('Supprimer', style: TextStyle(color: Colors.black54)),
+                              Text('Supprimer',
+                                  style: TextStyle(
+                                      color: Colors.black54)),
                             ],
                           ),
                         ),
@@ -303,10 +350,15 @@ class _AddUserState extends State<AddUser> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   elevation: 4,
-                ):Text(""),
+                )
+                    : Text(""),
                 onTap: () {},
               ),
-              if (editingUserId == user["id"])
+              AnimatedSize(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+
+                child: (editingUserId == user["id"])?
                 Container(
                   padding: EdgeInsets.only(bottom: 10, left: 70),
                   child: Row(
@@ -396,7 +448,8 @@ class _AddUserState extends State<AddUser> {
                       ),
                     ],
                   ),
-                ),
+                ):SizedBox(),
+              ),
             ],
           ),
         ],

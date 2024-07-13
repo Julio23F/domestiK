@@ -224,7 +224,7 @@ Future<ApiResponse> activeOrDisableService(int userId) async {
 }
 
 //Changer l'admin du foyer
-Future<ApiResponse> changeAdmin(int userId) async {
+Future<ApiResponse> changeAdminService(int userId) async {
   ApiResponse apiResponse = ApiResponse();
 
   try {
@@ -240,6 +240,8 @@ Future<ApiResponse> changeAdmin(int userId) async {
         }
 
     );
+    print("status");
+    print(response.statusCode);
     switch(response.statusCode){
 
       case 200:

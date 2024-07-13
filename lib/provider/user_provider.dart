@@ -40,8 +40,8 @@ class UserProvider with ChangeNotifier {
   //Mise à jour du profil
   void updateUser(String path) {
     _profil = path;
-    notifyListeners();
     updateUserService(path);
+    notifyListeners();
 
   }
   //Obtenir le profil du compte utilisateur
@@ -50,10 +50,17 @@ class UserProvider with ChangeNotifier {
     if (response.data != null) {
       final data = jsonEncode(response.data);
       _profil = jsonDecode(data)["user"]["profil"];
-      notifyListeners();
     }
+    notifyListeners();
+
   }
 
+  //Changer l'admin du foyer
+  Future<void> changeAdmin(int userId) async{
+    print(userId);
+    await changeAdminService(userId);
+    notifyListeners();
+  }
 
   void removeUser(int index, int userId) {
     allUser.removeAt(index);
