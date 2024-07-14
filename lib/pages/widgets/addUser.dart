@@ -209,10 +209,111 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                     ? _buildPopupMenu(userProvider, user, index)
                     : Text(""),
                 onTap: () {
-                  _showUserProfile(user);
+                  if(editingUserId != null){
+                    _stopEditing();
+                  }
+                  else{
+                    _showUserProfile(user);
+                  }
                 },
               ),
-              // Additional content...
+
+              AnimatedSize(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+
+                child: (editingUserId == user["id"])?
+                Container(
+                  padding: EdgeInsets.only(bottom: 10, left: 70),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 300),
+                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        margin: EdgeInsets.only(right: 5),
+                        decoration: BoxDecoration(
+                          color: isAdminSelected ? Colors.lightGreen.shade400 : Colors.lightGreen,
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isAdminSelected = false;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              if (!isAdminSelected)
+                                Container(
+                                  margin: EdgeInsets.only(right: 7),
+                                  padding: EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: isAdminSelected ? Colors.lightGreen.shade400 : Colors.lightGreen.shade400,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 11,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              Text(
+                                "User",
+                                style: TextStyle(
+                                  color: isAdminSelected ? Colors.white : Colors.black54,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 300),
+                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        margin: EdgeInsets.only(right: 5),
+                        decoration: BoxDecoration(
+                          color: isAdminSelected ? Colors.deepOrange : Colors.deepOrange.shade400,
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isAdminSelected = true;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              if (isAdminSelected)
+                                Container(
+                                  margin: EdgeInsets.only(right: 7),
+                                  padding: EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: isAdminSelected ? Colors.deepOrange.shade400 : Colors.deepOrange.shade400,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 11,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              Text(
+                                "Admin",
+                                style: TextStyle(
+                                  color: isAdminSelected ? Colors.black54 : Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ):SizedBox(),
+              ),
             ],
           ),
         ],
