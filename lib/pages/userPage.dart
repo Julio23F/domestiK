@@ -392,6 +392,7 @@ class _UserpageState extends State<Userpage> {
                             // await context.read<UserProvider>().reset();
                             await Provider.of<HistoriqueProvider>(context, listen: false).reset();
                             await Provider.of<UserProvider>(context, listen: false).reset();
+                            await Provider.of<ThemeProvider>(context, listen: false).reset();
 
                           },
                           child: Text(

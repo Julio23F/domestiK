@@ -3,9 +3,13 @@ import 'package:domestik/pages/auth/login.dart';
 import 'package:domestik/pages/home.dart';
 import 'package:domestik/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../provider/home_provider.dart';
+import '../provider/user_provider.dart';
 import '../services/foyer_service.dart';
 import '../services/myService.dart';
+import '../theme/theme_provider.dart';
 
 class InfoPage extends StatefulWidget {
   const InfoPage({Key? key}) : super(key: key);
@@ -183,6 +187,87 @@ class _InfoPageState extends State<InfoPage> {
                         },
                         child: Text(
                           "Actualiser",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  Text(
+                      "||",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                  ),
+                  SizedBox(height: 10,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Se déconnecter : ",
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Déconnexion'),
+                                content: Text('Voulez-vous réellement vous déconnecter ?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      'Annuler',
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .surface
+                                              .withOpacity(0.5)),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async{
+
+                                      logout();
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) => LoginPage()),
+                                            (route) => false,
+                                      );
+                                      await Provider.of<HistoriqueProvider>(context, listen: false).reset();
+                                      await Provider.of<UserProvider>(context, listen: false).reset();
+                                      await Provider.of<ThemeProvider>(context, listen: false).reset();
+
+                                    },
+                                    child: Text(
+                                      'Confirmer',
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .surface
+                                              .withOpacity(0.5)),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Text(
+                          "Déconnexion",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.blue,

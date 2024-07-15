@@ -51,17 +51,12 @@ class _AllUserState extends State<AllUser> {
           title: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'All User',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.surface,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
+              child: Text(
+                "Nouveaux utilisateurs",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.surface,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
@@ -72,12 +67,28 @@ class _AllUserState extends State<AllUser> {
                 children: <Widget>[
                   Container(
                     color: Theme.of(context).colorScheme.background,
-                    padding: EdgeInsets.only(top: 35),
+                    padding: EdgeInsets.only(top: 35, bottom: 90),
                     child: allUser.isEmpty
-                        ? Center(child: Image.asset(
-                      "assets/images/emptyUser.png",
-                      width: MediaQuery.of(context).size.width / 2,
-                    )
+                        ? Center(child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ColorFiltered(
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.surface.withOpacity(0.7),
+                                BlendMode.srcATop,
+                              ),
+                              child: Image.asset(
+                                "assets/images/emptyUser.png",
+                                width: MediaQuery.of(context).size.width / 2,
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            Text(
+                              "Aucun utilisateur disponible.",
+                              style: TextStyle(fontSize: 20, color: Colors.grey),
+                            ),
+                          ],
+                        )
                     )
                         : ListView.builder(
                         itemCount: allUser.length,
@@ -102,45 +113,53 @@ class _AllUserState extends State<AllUser> {
                       padding: EdgeInsets.symmetric(vertical: 15),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: ElevatedButton(
-                          onPressed: isLoading ? null : _addUserToFoyer,
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          child: Ink(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xff74ABED),
-                                  Color(0xff9771F4),
-                                  Color(0xff8463BE),
-                                ],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
+                        child: AbsorbPointer(
+                          absorbing: selectedUserIds.isEmpty,
+                          child: ElevatedButton(
+                            onPressed: isLoading ? null : _addUserToFoyer,
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                            child: Container(
-                              alignment: Alignment.center,
-                              constraints: BoxConstraints(
-                                maxWidth: double.infinity,
-                                minHeight: 50.0,
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    // Color(0xff74ABED),
+                                    // Color(0xff9771F4),
+                                    // Color(0xff8463BE),
+                                    selectedUserIds.isEmpty ? Colors.grey : Color(0xff74ABED),
+                                    selectedUserIds.isEmpty ? Colors.grey : Color(0xff9771F4),
+                                    selectedUserIds.isEmpty ? Colors.grey : Color(0xff8463BE),
+                                  ],
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
                               ),
-                              child: isLoading
-                                  ? CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                              )
-                                  : Text(
-                                'Ajouter au foyer',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
+                              child: Container(
+                                alignment: Alignment.center,
+                                constraints: BoxConstraints(
+                                  maxWidth: double.infinity,
+                                  minHeight: 50.0,
+                                ),
+                                child: isLoading
+                                    ? CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                )
+                                    : Text(
+                                  'Ajouter au foyer',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
+
+
                           ),
                         ),
                       ),
@@ -163,11 +182,37 @@ class _AllUserState extends State<AllUser> {
       ),
       margin: EdgeInsets.symmetric(vertical: 2, horizontal: 3),
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Colors.grey[400],
-          child: Icon(
-            Icons.person_outline_outlined,
-            color: Colors.white,
+        leading: (user["profil"] == null)
+            ? CircleAvatar(
+          backgroundColor: Theme.of(context).colorScheme.tertiary,
+          child: Text(
+            user["name"].substring(0, 1).toUpperCase(),
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        )
+            : Container(
+          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0xff8463BE),
+              width: 2.0,
+            ),
+            color: Theme.of(context)
+                .colorScheme
+                .surface
+                .withOpacity(0.2),
+            shape: BoxShape.circle,
+          ),
+          child: ClipOval(
+            child: Image.asset(
+              user["profil"],
+              width: 35,
+              height: 35,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         title: Text(
@@ -187,6 +232,7 @@ class _AllUserState extends State<AllUser> {
           color: Colors.grey,
         ),
         onTap: () {
+
           setState(() {
             if (selectedUserIds.contains(userId)) {
               selectedUserIds.remove(userId);
@@ -201,6 +247,8 @@ class _AllUserState extends State<AllUser> {
   }
 
   Future<void> _addUserToFoyer() async {
+    print("selectedUserIds.toList().isEmpty");
+    print(selectedUserIds.toList().isEmpty);
     setState(() {
       isLoading = true;
     });

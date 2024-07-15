@@ -56,7 +56,7 @@ class _AddPageState extends State<AddPage> {
                       SizedBox(width: 10),
                       Text(
                         'Ajouter un Utilisateur',
-                          style: Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
                   ),
@@ -107,22 +107,22 @@ class _AddPageState extends State<AddPage> {
               TextFormField(
                 autofocus: true,
                 decoration: InputDecoration(
-                    hintText: "Entrer le nom de la tache",
-                    border: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                      ),
+                  hintText: "Entrer le nom de la tache",
+                  border: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey,
                     ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                      ),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey,
                     ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                      ),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey,
                     ),
+                  ),
                 ),
                 controller: foyerController,
 
@@ -153,27 +153,53 @@ class _AddPageState extends State<AddPage> {
                 Navigator.of(context).pop();
               },
               child: Text(
-                  "Annuler",
-                  style: Theme.of(context).textTheme.bodyMedium,
+                "Annuler",
+                style: Theme.of(context).textTheme.bodyMedium,
               )
           ),
           TextButton(
               onPressed: () async {
-                Provider.of<TacheProvider>(context, listen: false).addTache(context, foyerController.text, pickerColor.value.toString());
+                final allTache = Provider.of<TacheProvider>(context, listen: false).allTache;
+                Navigator.of(context).pop();
+                if (allTache.length < 10) {
+                  Provider.of<TacheProvider>(context, listen: false).addTache(context, foyerController.text, pickerColor.value.toString());
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Impossible d'ajouter"),
+                        content: Text("Le nombre de vos tâches ne peut pas dépasser 10"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'Fermer',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+
                 setState(() {
                   foyerController.text = '';
                 });
-                Navigator.of(context).pop();
               },
               child: Text(
-                  "Enregistrer",
-                  style: Theme.of(context).textTheme.bodyMedium,
+                "Enregistrer",
+                style: Theme.of(context).textTheme.bodyMedium,
               )
           ),
         ],
       )
   );
-
 
   void changeColor(Color color) {
     setState(() {
@@ -201,7 +227,6 @@ class _AddPageState extends State<AddPage> {
                 fontSize: 25
             ),
           ),
-
           actions: [
             InkWell(
               onTap: () {

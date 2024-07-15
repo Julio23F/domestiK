@@ -49,6 +49,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     Provider.of<ThemeProvider>(context,listen: false).checkUserPrefernce();
 
+    Provider.of<UserProvider>(context, listen: false).getUserProfil();
+
     Provider.of<HistoriqueProvider>(context,listen: false).getUserDetail();
 
 
@@ -90,6 +92,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         // Reset animations for new data
         _offsetAnimations.clear();
         _controller.reset();
+        jsonDecode(tacheTodo).length;
+        // if (jsonDecode(tacheTodo).length > 0) {
+        //   _offsetAnimations = List.generate(
+        //     jsonDecode(tacheTodo).length,
+        //         (index) => Tween<Offset>(
+        //       begin: const Offset(1, 0),
+        //       end: Offset.zero,
+        //     ).animate(
+        //       CurvedAnimation(
+        //         parent: _controller,
+        //         curve: Interval(
+        //           index / jsonDecode(tacheTodo).length,
+        //           (index + 1) / jsonDecode(tacheTodo).length,
+        //           curve: Curves.easeOut,
+        //         ),
+        //       ),
+        //     ),
+        //   );
+        // }
 
         _offsetAnimations = List.generate(
           jsonDecode(tacheTodo).length,
@@ -97,11 +118,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             begin: const Offset(1, 0),
             end: Offset.zero,
           ).animate(
-            // CurvedAnimation(
-            //   parent: _controller,
-            //   curve: Curves.easeOut,
-            //   reverseCurve: Curves.easeIn,
-            // ),
             CurvedAnimation(
               parent: _controller,
               curve: Interval(

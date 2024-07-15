@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '../constant.dart';
 import '../models/api_response.dart';
@@ -14,14 +16,14 @@ class ConfirmationProvider with ChangeNotifier {
   Map<int, bool> loadingMap = {};
 
   ConfirmationProvider() {
-    _loadData();
+    loadData();
   }
 
-  Future<void> _loadData() async {
+  Future<void> loadData() async {
     try {
       await _historiqueToConfirm();
     } catch (e) {
-      // Handle error if necessary
+      print(e);
     }
   }
 

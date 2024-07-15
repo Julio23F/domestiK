@@ -294,7 +294,7 @@ class _SignupPageState extends State<SignupPage> {
                                 }
                               },
                               child: loading
-                                  ? CircularProgressIndicator(color: Colors.white)
+                                  ? Container(height: 27, width: 27,child: CircularProgressIndicator(color: Colors.white,))
                                   : Text(
                                 "Inscription",
                                 style: TextStyle(color: Colors.white, fontSize: 18),

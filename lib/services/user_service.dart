@@ -17,6 +17,8 @@ Future<ApiResponse> login (String email, String password) async {
         headers: {'Accept': 'application/json'},
         body: {'email': email, 'password': password}
     );
+    print('response.statusCode');
+    print(response.statusCode);
 
     switch(response.statusCode){
       case 200:
@@ -29,7 +31,8 @@ Future<ApiResponse> login (String email, String password) async {
         break;
       // Si l'utilisateur n'a pas de compte
       case 403:
-        apiResponse.error = jsonDecode(response.body)['message'];
+        apiResponse.error = jsonDecode(response.body)['errors'];
+
         break;
       default:
         apiResponse.error = somethingWentWrong;

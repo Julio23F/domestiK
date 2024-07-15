@@ -24,21 +24,30 @@ class _LoginPageState extends State<LoginPage> {
 
   bool loading = false;
   bool _isObscure = true;
+  String error = "";
 
   void _loginUser() async {
     ApiResponse response = await login(confEmailController.text, confMDPController.text);
-    final data = response.data as User;
-    print(data.name);
+
     if (response.error == null) {
+      final data = response.data as User;
+      print(data.name);
       _saveAndRedirectToHome(response.data as User);
+
     } else {
+
       setState(() {
-        loading = false;
+        error = response.error.toString();
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('${response.error}')
-      ));
+      Future.delayed(Duration(seconds: 2), () {
+        setState(() {
+          error = "";
+        });
+      });
     }
+    setState(() {
+      loading = false;
+    });
   }
 
   void _saveAndRedirectToHome(User user) async {
@@ -186,7 +195,18 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           RememberSection(),
                           Container(
-                            margin: EdgeInsets.only(top: 35),
+                            margin: EdgeInsets.only(top: 10),
+
+                            child: Text(
+                                error,
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 17
+                                ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 25),
                             width: double.infinity,
                             child: ElevatedButton(
                               style: ButtonStyle(
@@ -202,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
                                 }
                               },
                               child: loading
-                                  ? CircularProgressIndicator(color: Colors.white)
+                                  ? Container(height: 27, width: 27,child: CircularProgressIndicator(color: Colors.white,))
                                   : Text(
                                 "Connexion",
                                 style: TextStyle(color: Colors.white, fontSize: 18),

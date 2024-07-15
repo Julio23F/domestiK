@@ -22,7 +22,7 @@ class User {
       id: json['id'],
       name: json['name'],
       active: json['active'],
-      email: json['email'] ?? '',
+      email: json['email'],
       foyerId: json['foyer_id'] ?? 0,
       token: json['token'] ?? '',
     );

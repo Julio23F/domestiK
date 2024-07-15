@@ -54,4 +54,11 @@ class ThemeProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<void> reset() async{
+    print('Effacer Them');
+    _themeData = lightTheme;
+
+    notifyListeners();
+  }
 }
