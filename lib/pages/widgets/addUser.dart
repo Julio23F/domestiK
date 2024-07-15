@@ -49,6 +49,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
 
   void _stopEditing() {
     setState(() {
+      isAdminSelected = false;
       editingUserId = null;
     });
   }

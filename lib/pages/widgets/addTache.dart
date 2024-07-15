@@ -68,8 +68,8 @@ class _AddTacheState extends State<AddTache> {
 
   Widget _buildItem(tache, tacheProvider) {
     return Container(
-      height: 130,
-      width: (MediaQuery.of(context).size.width / 2) - 20,
+      height: 110,
+      // width: (MediaQuery.of(context).size.width / 2) - 20,
       decoration: BoxDecoration(
         color: Color(int.parse(tache["color"])).withOpacity(0.7),
         borderRadius: BorderRadius.circular(10),

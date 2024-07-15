@@ -72,7 +72,7 @@ class _ConfirmationPageState extends State<ConfirmationPage>
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: provider.isLoading
-                  ? Center(child: CircularProgressIndicator())
+                  ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.surface,))
                   : ListView.builder(
                 itemCount: provider.nbrConfirm,
                 itemBuilder: (context, index) {
