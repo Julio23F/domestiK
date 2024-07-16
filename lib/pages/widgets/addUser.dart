@@ -484,6 +484,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
               ],
             ),
           ),
+          if (user["id"] != userProvider.userId)
             PopupMenuItem<String>(
               value: 'Supprimer',
               child: Row(
