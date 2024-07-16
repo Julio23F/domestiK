@@ -14,6 +14,7 @@ class UserProvider with ChangeNotifier {
 
   UserProvider(){
     getUserProfil();
+    getUserAccountType();
   }
 
   Future<void> getAllUser() async {
@@ -23,7 +24,7 @@ class UserProvider with ChangeNotifier {
     if (response.data != null) {
       final data = jsonEncode(response.data);
       final users = jsonDecode(data)["users"];
-      allUser.clear(); // Clear the existing list before adding new users
+      allUser.clear();
       allUser.addAll(users);
     }
 
@@ -57,10 +58,14 @@ class UserProvider with ChangeNotifier {
 
   }
   Future<void> getUserAccountType() async {
+    print("recheche2");
+
     ApiResponse response = await getUserDetailSercice();
     final data = jsonEncode(response.data);
     final type = jsonDecode(data)["user"]["accountType"];
     _accountType = type;
+    print("type");
+    print(type);
     notifyListeners();
 
   }

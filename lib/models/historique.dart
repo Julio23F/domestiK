@@ -4,6 +4,7 @@ import 'package:domestik/models/user.dart';
 class Historique {
   int id;
   int? userId;
+  int? userConfimId;
   String? state;
   User? user;
   List<Tache>? taches;
@@ -11,6 +12,7 @@ class Historique {
   Historique({
     required this.id,
     this.userId,
+    this.userConfimId,
     this.state,
     this.user,
     this.taches,
@@ -20,6 +22,7 @@ class Historique {
     return Historique(
       id: json['id'],
       userId: json['user_id'],
+      userConfimId: json['user_confirm_id'],
       state: json['state'],
       user: json['user'] != null ? User.fromJson(json['user']) : null,
       taches: json['taches'] != null

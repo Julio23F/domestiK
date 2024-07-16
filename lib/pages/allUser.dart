@@ -36,6 +36,7 @@ class _AllUserState extends State<AllUser> {
   void initState() {
     super.initState();
     _getAllUser();
+
   }
 
   @override
@@ -63,10 +64,12 @@ class _AllUserState extends State<AllUser> {
         ),
         body: Consumer<UserProvider>(
             builder: (context, userProvider, child){
+              print("userProvider.accountType");
+              print(userProvider.accountType);
               return Stack(
                 children: <Widget>[
                   Container(
-                    color: Theme.of(context).colorScheme.background,
+                    // color: Theme.of(context).colorScheme.background,
                     padding: EdgeInsets.only(top: 35, bottom: 90),
                     child: allUser.isEmpty
                         ? Center(child: Column(
@@ -95,6 +98,7 @@ class _AllUserState extends State<AllUser> {
                         itemBuilder: (BuildContext context, int index) {
                           final user = allUser[index];
                           final userId = user['id'];
+
                           return _buildUserTile(
                             user,
                             user['name'] ?? 'No Name',
@@ -114,7 +118,8 @@ class _AllUserState extends State<AllUser> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: AbsorbPointer(
-                          absorbing: selectedUserIds.isEmpty,
+
+                          absorbing: selectedUserIds.isEmpty || userProvider.accountType == "admin",
                           child: ElevatedButton(
                             onPressed: isLoading ? null : _addUserToFoyer,
                             style: ElevatedButton.styleFrom(
@@ -130,9 +135,9 @@ class _AllUserState extends State<AllUser> {
                                     // Color(0xff74ABED),
                                     // Color(0xff9771F4),
                                     // Color(0xff8463BE),
-                                    selectedUserIds.isEmpty ? Colors.grey : Color(0xff74ABED),
-                                    selectedUserIds.isEmpty ? Colors.grey : Color(0xff9771F4),
-                                    selectedUserIds.isEmpty ? Colors.grey : Color(0xff8463BE),
+                                    selectedUserIds.isEmpty || userProvider.accountType == "user" ? Colors.grey : Color(0xff74ABED),
+                                    selectedUserIds.isEmpty || userProvider.accountType == "user" ? Colors.grey : Color(0xff9771F4),
+                                    selectedUserIds.isEmpty || userProvider.accountType == "user" ? Colors.grey : Color(0xff8463BE),
                                   ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
@@ -247,8 +252,7 @@ class _AllUserState extends State<AllUser> {
   }
 
   Future<void> _addUserToFoyer() async {
-    print("selectedUserIds.toList().isEmpty");
-    print(selectedUserIds.toList().isEmpty);
+
     setState(() {
       isLoading = true;
     });
@@ -256,8 +260,7 @@ class _AllUserState extends State<AllUser> {
     await _getAllUser();
     
     Provider.of<UserProvider>(context, listen: false).addUser(selectedListUser);
-    print("object");
-    print(selectedListUser);
+
     setState(() {
       selectedUserIds.clear();
       selectedListUser.clear();

@@ -10,25 +10,27 @@ import '../services/tache_service.dart';
 
 class ConfirmationProvider with ChangeNotifier {
   bool isLoading = true;
-  int? nbrConfirm;
+  int nbrConfirm=0;
   List<Historique>? listConfirmation;
   Map<int, bool> stateMap = {};
   Map<int, bool> loadingMap = {};
 
   ConfirmationProvider() {
-    loadData();
+    historiqueToConfirm();
   }
 
   Future<void> loadData() async {
     try {
-      await _historiqueToConfirm();
+      await historiqueToConfirm();
     } catch (e) {
       print(e);
     }
+    notifyListeners();
+
   }
 
-  Future<void> _historiqueToConfirm() async {
-    ApiResponse response = await historiqueToConfirm();
+  Future<void> historiqueToConfirm() async {
+    ApiResponse response = await historiqueToConfirmService();
 
     if (response.error == null) {
       nbrConfirm = (response.data as List).length;

@@ -18,26 +18,26 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
   int? editingUserId;
   TextEditingController _nameController = TextEditingController();
   bool isAdminSelected = false;
-  String accountType = "user";
+  // String accountType = "user";
   bool isLoad = false;
 
 
   // Obtenir le type de compte
-  Future<void> getUserAccountType() async {
-    ApiResponse response = await getUserDetailSercice();
-    final data = jsonEncode(response.data);
-    final type = jsonDecode(data)["user"]["accountType"];
-    setState(() {
-      accountType = type;
-    });
-    print(accountType);
-  }
+  // Future<void> getUserAccountType() async {
+  //   ApiResponse response = await getUserDetailSercice();
+  //   final data = jsonEncode(response.data);
+  //   final type = jsonDecode(data)["user"]["accountType"];
+  //   setState(() {
+  //     accountType = type;
+  //   });
+  //   print(accountType);
+  // }
 
   @override
   void initState() {
     super.initState();
     Provider.of<UserProvider>(context, listen: false).getAllUser();
-    getUserAccountType();
+    Provider.of<UserProvider>(context, listen: false).getUserAccountType();
   }
 
   void _startEditing(int userId, String initialName) {
@@ -86,20 +86,20 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
         padding: const EdgeInsets.only(top: 8),
         child: Consumer<UserProvider>(
           builder: (context, userProvider, child) {
-            if (userProvider.isLoading) {
-              return Center(
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.surface,
-                ),
-              );
-            }
+            // if (userProvider.isLoading) {
+            //   return Center(
+            //     child: CircularProgressIndicator(
+            //       color: Theme.of(context).colorScheme.surface,
+            //     ),
+            //   );
+            // }
 
             return RefreshIndicator(
               color: Colors.grey,
               backgroundColor: Colors.white,
               onRefresh: () async {
                 await userProvider.getAllUser();
-                await getUserAccountType();
+                await userProvider.getUserAccountType();
               },
               child: ListView.builder(
                 itemCount: userProvider.allUser.length,
@@ -202,11 +202,12 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                         .colorScheme
                         .surface
                         .withOpacity(0.5),
+                    fontSize: 10
                   ),
                 ),
                 trailing: editingUserId == user["id"]
                     ? _buildEditingActions(user)
-                    : accountType == "admin"
+                    : userProvider.accountType == "admin"
                     ? _buildPopupMenu(userProvider, user, index)
                     : Text(""),
                 onTap: () {
@@ -410,12 +411,12 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
             padding: EdgeInsets.all(3),
             child: Icon(
               Icons.close_rounded,
-              size: 17,
+              size: 20,
               color: Colors.white,
             ),
           ),
         ),
-        SizedBox(width: 10),
+        SizedBox(width: 13),
         isLoad
             ? Container(
           height: 25,
@@ -445,7 +446,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
   Widget _buildPopupMenu(UserProvider userProvider, dynamic user, int index) {
     return PopupMenuButton<String>(
       onSelected: (String value) {
-        if (accountType == "admin") {
+        if (userProvider.accountType == "admin") {
           if (value == "Désactiver") {
             userProvider.activeOrDisable(user["id"]);
           } else if (value == "Modifier") {

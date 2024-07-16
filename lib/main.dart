@@ -1,3 +1,4 @@
+import 'package:domestik/provider/confirmation_provider.dart';
 import 'package:domestik/provider/tache_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -28,6 +29,9 @@ void main() async {
           create: (BuildContext context) => HistoriqueProvider(),
         ),
         ChangeNotifierProvider(
+          create: (BuildContext context) => ConfirmationProvider() ,
+        ),
+        ChangeNotifierProvider(
           create: (BuildContext context) => TacheProvider(),
         ),
 
@@ -44,7 +48,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'DomestiK',
-      
+
       theme: Provider.of<ThemeProvider>(context).themeData,
       debugShowCheckedModeBanner: false,
       home: LoadingPage(),

@@ -54,7 +54,7 @@ Future<ApiResponse> addHistoriqueService(List tacheIds) async {
   return apiResponse;
 }
 
-Future<ApiResponse> historiqueToConfirm() async {
+Future<ApiResponse> historiqueToConfirmService() async {
   String token = await getToken();
   ApiResponse apiResponse = ApiResponse();
 
