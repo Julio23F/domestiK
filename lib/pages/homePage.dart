@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:domestik/pages/loadingPage.dart';
 import 'package:domestik/pages/userPage.dart';
 import 'package:domestik/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart';
 
@@ -50,6 +52,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     Provider.of<ThemeProvider>(context,listen: false).checkUserPrefernce();
 
     Provider.of<UserProvider>(context, listen: false).getUserProfil();
+    Provider.of<UserProvider>(context, listen: false).getUserDetail();
 
     Provider.of<HistoriqueProvider>(context,listen: false).getUserDetail();
 
@@ -164,6 +167,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+
     final textColor = Color(0xff192b54);
     final nbrTache = tacheTodo != null ? jsonDecode(tacheTodo).length : 0;
     print("tacheTodo");
@@ -175,8 +179,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Consumer<HistoriqueProvider>(
         builder: (context,provider, _) {
-          print("active");
-          print(provider.active);
+          // if (Provider.of<UserProvider>(context).foyerId == null) {
+          //   logout();
+          //   Navigator.of(context).pushAndRemoveUntil(
+          //     MaterialPageRoute(
+          //         builder: (context) => LoginPage()),
+          //         (route) => false,
+          //   );
+          //   // await context.read<HistoriqueProvider>().reset();
+          //   // await context.read<UserProvider>().reset();
+          //    Provider.of<HistoriqueProvider>(context, listen: false).reset();
+          //    Provider.of<UserProvider>(context, listen: false).reset();
+          //    Provider.of<ThemeProvider>(context, listen: false).reset();
+          //
+          // }
+          print("foyer id de julio");
+          print(Provider.of<UserProvider>(context).foyerId);
           return RefreshIndicator(
             color: Colors.grey,
             backgroundColor: Colors.white,
@@ -545,12 +563,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         Theme.of(context).colorScheme.surface.withOpacity(0.7),
                                         BlendMode.srcATop,
                                       ),
-                                      child: Image.asset(
-                                        "assets/images/coco.png",
-                                        width: MediaQuery.of(context).size.width / 3*6,
-                                        height: 300,
-                                        fit: BoxFit.cover,
+                                      child: Lottie.asset(
+                                        'assets/lottifiles/coco-light.json',
                                       ),
+
+                                      // child: Image.asset(
+                                      //   "assets/images/coco.png",
+                                      //   width: MediaQuery.of(context).size.width / 3*6,
+                                      //   height: 300,
+                                      //   fit: BoxFit.cover,
+                                      // ),
                                     ),
                                   ),
                                 ),

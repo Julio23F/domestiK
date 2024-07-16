@@ -8,11 +8,17 @@ class UserProvider with ChangeNotifier {
   bool isLoading = false;
   String _profil = "assets/images/logo.png";
   String _accountType = "";
+  int? _userId;
+  int? _foyerId;
 
   String get profil => _profil;
   String get accountType => _accountType;
+  int? get userId => _userId;
+
+  int? get foyerId => _foyerId;
 
   UserProvider(){
+    getUserDetail();
     getUserProfil();
     getUserAccountType();
   }
@@ -47,6 +53,19 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
 
   }
+  Future<void> getUserDetail() async {
+    print("sans interet");
+
+    ApiResponse response = await getUserDetailSercice();
+    final data = jsonEncode(response.data);
+    final id = jsonDecode(data)["user"]["id"];
+    final foyerId = jsonDecode(data)["user"]["foyer_id"];
+    _userId = id;
+    _foyerId = foyerId;
+
+    notifyListeners();
+  }
+
   //Obtenir le profil du compte utilisateur
   Future<void> getUserProfil() async {
     ApiResponse response = await getUserDetailSercice();
@@ -67,8 +86,9 @@ class UserProvider with ChangeNotifier {
     print("type");
     print(type);
     notifyListeners();
-
   }
+
+
   //Changer l'admin du foyer
   Future<void> changeAdmin(int userId) async{
     print(userId);
@@ -101,6 +121,7 @@ class UserProvider with ChangeNotifier {
   Future<void> reset() async{
     print('Effacer user');
     _profil = "assets/images/logo.png";
+    _userId = null;
     notifyListeners();
   }
 }

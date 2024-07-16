@@ -460,6 +460,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
       },
       itemBuilder: (BuildContext context) {
         return [
+          if (user["id"] != userProvider.userId)
           PopupMenuItem<String>(
             value: 'Modifier',
             child: Row(
@@ -483,16 +484,26 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
               ],
             ),
           ),
-          PopupMenuItem<String>(
-            value: 'Supprimer',
-            child: Row(
-              children: [
-                Icon(Icons.delete, color: Colors.black54),
-                SizedBox(width: 8),
-                Text('Supprimer', style: TextStyle(color: Colors.black54)),
-              ],
+            PopupMenuItem<String>(
+              value: 'Supprimer',
+              child: Row(
+                children: [
+                  Icon(Icons.delete, color: Colors.black54),
+                  SizedBox(width: 8),
+                  Text('Supprimer', style: TextStyle(color: Colors.black54)),
+                ],
+              ),
             ),
-          ),
+          // PopupMenuItem<String>(
+          //   value: 'Supprimer',
+          //   child: Row(
+          //     children: [
+          //       Icon(Icons.delete, color: Colors.black54),
+          //       SizedBox(width: 8),
+          //       Text('Supprimer', style: TextStyle(color: Colors.black54)),
+          //     ],
+          //   ),
+          // ),
         ];
       },
       color: Colors.white,
