@@ -119,7 +119,7 @@ class _AllUserState extends State<AllUser> {
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: AbsorbPointer(
 
-                          absorbing: selectedUserIds.isEmpty || userProvider.accountType == "admin",
+                          absorbing: selectedUserIds.isEmpty,
                           child: ElevatedButton(
                             onPressed: isLoading ? null : _addUserToFoyer,
                             style: ElevatedButton.styleFrom(

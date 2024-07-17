@@ -1,129 +1,135 @@
-// login
 import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import 'package:domestik/services/user_service.dart';
-
 import '../constant.dart';
 import '../models/api_response.dart';
 import '../models/user.dart';
-import 'package:http/http.dart' as http;
 
-Future<ApiResponse> createFoyer (String name) async {
+// Fonction pour créer un client HTTP avec vérification SSL désactivée
+HttpClient createHttpClient() {
+  return HttpClient()
+    ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+}
+
+// Créer un foyer
+Future<ApiResponse> createFoyer(String name) async {
   ApiResponse apiResponse = ApiResponse();
-  try{
+  try {
     String token = await getToken();
-    final response = await http.post(
-        Uri.parse(createFoyerURL),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
-        body: {'name': name}
-    );
-    switch(response.statusCode){
+    final client = createHttpClient();
+    final request = await client.postUrl(Uri.parse(createFoyerURL));
+    request.headers.set('Accept', 'application/json');
+    request.headers.set('Authorization', 'Bearer $token');
+    request.headers.set('Content-Type', 'application/json');
+
+    request.write(jsonEncode({'name': name}));
+
+    final response = await request.close();
+    final responseBody = await response.transform(utf8.decoder).join();
+
+    switch (response.statusCode) {
       case 200:
-        apiResponse.data = jsonDecode(response.body)["message"];
+        apiResponse.data = jsonDecode(responseBody)["message"];
         break;
-    // Si un champ n'est pas rempli
       case 422:
-        final errors = jsonDecode(response.body)['errors'];
+        final errors = jsonDecode(responseBody)['errors'];
         apiResponse.error = errors[errors.keys.elementAt(0)][0];
         break;
       case 401:
-        final errors = jsonDecode(response.body)['errors'];
+        final errors = jsonDecode(responseBody)['errors'];
         apiResponse.error = errors[errors.keys.elementAt(0)][0];
         break;
-    // Si l'utilisateur n'a pas de compte
       case 403:
-        apiResponse.error = jsonDecode(response.body)['message'];
+        apiResponse.error = jsonDecode(responseBody)['message'];
         break;
       default:
         apiResponse.error = somethingWentWrong;
         break;
     }
-  }
-  catch(e){
+  } catch (e) {
     apiResponse.error = e.toString();
   }
-
   return apiResponse;
 }
 
-// Get foyer data
-Future<ApiResponse> getFoyerData () async {
+// Obtenir les données du foyer
+Future<ApiResponse> getFoyerData() async {
   ApiResponse apiResponse = ApiResponse();
-  try{
+  try {
     String token = await getToken();
-    final response = await http.get(
-        Uri.parse(userURL),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
-    );
-    switch(response.statusCode){
+    final client = createHttpClient();
+    final request = await client.getUrl(Uri.parse(userURL));
+    request.headers.set('Accept', 'application/json');
+    request.headers.set('Authorization', 'Bearer $token');
+    request.headers.set('Content-Type', 'application/json');
+
+
+    final response = await request.close();
+    final responseBody = await response.transform(utf8.decoder).join();
+
+    switch (response.statusCode) {
       case 200:
-        apiResponse.data = jsonDecode(response.body)["user"]["foyer"];
+        apiResponse.data = jsonDecode(responseBody)["user"]["foyer"];
         break;
       case 422:
-        final errors = jsonDecode(response.body)['errors'];
+        final errors = jsonDecode(responseBody)['errors'];
         apiResponse.error = errors[errors.keys.elementAt(0)][0];
         break;
       case 401:
-        final errors = jsonDecode(response.body)['errors'];
+        final errors = jsonDecode(responseBody)['errors'];
         apiResponse.error = errors[errors.keys.elementAt(0)][0];
         break;
       case 403:
-        apiResponse.error = jsonDecode(response.body)['message'];
+        apiResponse.error = jsonDecode(responseBody)['message'];
         break;
       default:
         apiResponse.error = somethingWentWrong;
         break;
     }
-  }
-  catch(e){
+  } catch (e) {
     apiResponse.error = e.toString();
   }
-
   return apiResponse;
 }
 
-
-// Get foyer data
-Future<ApiResponse> getFoyerId () async {
+// Obtenir l'ID du foyer
+Future<ApiResponse> getFoyerId() async {
   ApiResponse apiResponse = ApiResponse();
-  try{
+  try {
     String token = await getToken();
-    final response = await http.get(
-      Uri.parse(userURL),
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      },
-    );
-    switch(response.statusCode){
+    final client = createHttpClient();
+    final request = await client.getUrl(Uri.parse(userURL));
+    request.headers.set('Accept', 'application/json');
+    request.headers.set('Authorization', 'Bearer $token');
+    request.headers.set('Content-Type', 'application/json');
+
+
+    final response = await request.close();
+    final responseBody = await response.transform(utf8.decoder).join();
+
+    switch (response.statusCode) {
       case 200:
-        apiResponse.data = jsonDecode(response.body)["user"]["foyer"]["id"];
+        apiResponse.data = jsonDecode(responseBody)["user"]["foyer"]["id"];
         break;
       case 422:
-        final errors = jsonDecode(response.body)['errors'];
+        final errors = jsonDecode(responseBody)['errors'];
         apiResponse.error = errors[errors.keys.elementAt(0)][0];
         break;
       case 401:
-        final errors = jsonDecode(response.body)['errors'];
+        final errors = jsonDecode(responseBody)['errors'];
         apiResponse.error = errors[errors.keys.elementAt(0)][0];
         break;
       case 403:
-        apiResponse.error = jsonDecode(response.body)['message'];
+        apiResponse.error = jsonDecode(responseBody)['message'];
         break;
       default:
         apiResponse.error = somethingWentWrong;
         break;
     }
-  }
-  catch(e){
+  } catch (e) {
     apiResponse.error = e.toString();
   }
-
   return apiResponse;
 }
