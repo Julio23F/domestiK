@@ -91,30 +91,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         tacheTodo = jsonEncode(response.data);
         isLoading = false;
 
-
-
-        // Reset animations for new data
         _offsetAnimations.clear();
         _controller.reset();
         jsonDecode(tacheTodo).length;
-        // if (jsonDecode(tacheTodo).length > 0) {
-        //   _offsetAnimations = List.generate(
-        //     jsonDecode(tacheTodo).length,
-        //         (index) => Tween<Offset>(
-        //       begin: const Offset(1, 0),
-        //       end: Offset.zero,
-        //     ).animate(
-        //       CurvedAnimation(
-        //         parent: _controller,
-        //         curve: Interval(
-        //           index / jsonDecode(tacheTodo).length,
-        //           (index + 1) / jsonDecode(tacheTodo).length,
-        //           curve: Curves.easeOut,
-        //         ),
-        //       ),
-        //     ),
-        //   );
-        // }
 
         _offsetAnimations = List.generate(
           jsonDecode(tacheTodo).length,
@@ -149,7 +128,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ));
     }
     //Vérifier si la date est égale à aujourd'hui
-    if(date == int.parse(formattedDate)){
+    if(date == dayOfYear(DateTime.now())){
       setState(() {
         isToday = true;
       });
@@ -446,7 +425,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               spacing: 5,
                                               children: List.generate(tache["tache"].length, (i) {
                                                 print('Liste des taches à faire');
-                                                print(convert(tache["tache"]).contains("_1"));
+                                                print(convert(tache["tache"]).isEmpty);
+                                                print(convert(tache["tache"]).contains(" "));
+                                                print(tache["tache"].isEmpty);
+
                                                 return Container(
                                                   margin: const EdgeInsets.only(right: 7),
                                                   decoration: BoxDecoration(
@@ -487,7 +469,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             width: 25,
                                             child: CircularProgressIndicator(color: Colors.white,),
                                           )
-                                              : (provider.isCheck || tache["state"]  || !isToday || convert(tache["tache"]).contains("_1"))
+                                              : (provider.isCheck || !isToday || tache["state"] || convert(tache["tache"]).isEmpty)
                                               ?const Icon(
                                             Icons.done,
                                             color: Colors.white,
