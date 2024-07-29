@@ -359,7 +359,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-                !isLoading?
+                isLoading?SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 100.0),
+                        child: Center(
+                            child: CircularProgressIndicator(
+                              color: Theme.of(context).colorScheme.surface,
+                            )
+                        ),
+                      );
+                    },
+                    childCount: 1,
+                  ),
+                ):
                 provider.active?SliverList(
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
@@ -431,6 +445,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             Wrap(
                                               spacing: 5,
                                               children: List.generate(tache["tache"].length, (i) {
+                                                print('Liste des taches à faire');
+                                                print(convert(tache["tache"]).contains("_1"));
                                                 return Container(
                                                   margin: const EdgeInsets.only(right: 7),
                                                   decoration: BoxDecoration(
@@ -482,7 +498,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               setState(() {
                                                 isLoad = true;
                                               });
-                                              print(convert(tache["tache"]).contains("1"));
+
                                               provider.addHistorique(convert(tache["tache"])).then((value){
                                                 setState(() {
                                                   isLoad = false;
@@ -593,16 +609,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     childCount: 1,
                   ),
                 )
-                    :SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      return Center(
-                          child: CircularProgressIndicator()
-                      );
-                    },
-                    childCount: 1,
-                  ),
-                )
+
 
 
               ],
