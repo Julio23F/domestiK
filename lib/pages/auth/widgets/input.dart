@@ -12,7 +12,7 @@ class _InputSectionState extends State<InputSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(bottom: 15),
+        margin: const EdgeInsets.only(bottom: 15),
         child: TextFormField(
           decoration: InputDecoration(
             labelText: 'Email',

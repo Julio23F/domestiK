@@ -3,9 +3,7 @@ import 'package:domestik/models/api_response.dart';
 import 'package:domestik/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../provider/confirmation_provider.dart';
 import '../services/user_service.dart';
-import '../theme/theme_provider.dart';
 
 class AllUser extends StatefulWidget {
   const AllUser({super.key});
@@ -41,7 +39,7 @@ class _AllUserState extends State<AllUser> {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = Color(0xff192b54);
+    const textColor = Color(0xff192b54);
 
     return ChangeNotifierProvider(
       create: (BuildContext context) => UserProvider(),
@@ -70,7 +68,7 @@ class _AllUserState extends State<AllUser> {
                 children: <Widget>[
                   Container(
                     // color: Theme.of(context).colorScheme.background,
-                    padding: EdgeInsets.only(top: 35, bottom: 90),
+                    padding: const EdgeInsets.only(top: 35, bottom: 90),
                     child: allUser.isEmpty
                         ? Center(child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -85,8 +83,8 @@ class _AllUserState extends State<AllUser> {
                                 width: MediaQuery.of(context).size.width / 2,
                               ),
                             ),
-                            SizedBox(height: 20),
-                            Text(
+                            const SizedBox(height: 20),
+                            const Text(
                               "Aucun utilisateur disponible.",
                               style: TextStyle(fontSize: 20, color: Colors.grey),
                             ),
@@ -114,7 +112,7 @@ class _AllUserState extends State<AllUser> {
                     bottom: 0,
                     child: Container(
                       color: Colors.transparent,
-                      padding: EdgeInsets.symmetric(vertical: 15),
+                      padding: const EdgeInsets.symmetric(vertical: 15),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: AbsorbPointer(
@@ -123,7 +121,7 @@ class _AllUserState extends State<AllUser> {
                           child: ElevatedButton(
                             onPressed: isLoading ? null : _addUserToFoyer,
                             style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 0),
+                              padding: const EdgeInsets.symmetric(vertical: 0),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
@@ -135,9 +133,9 @@ class _AllUserState extends State<AllUser> {
                                     // Color(0xff74ABED),
                                     // Color(0xff9771F4),
                                     // Color(0xff8463BE),
-                                    selectedUserIds.isEmpty || userProvider.accountType == "user" ? Colors.grey : Color(0xff74ABED),
-                                    selectedUserIds.isEmpty || userProvider.accountType == "user" ? Colors.grey : Color(0xff9771F4),
-                                    selectedUserIds.isEmpty || userProvider.accountType == "user" ? Colors.grey : Color(0xff8463BE),
+                                    selectedUserIds.isEmpty || userProvider.accountType == "user" ? Colors.grey : const Color(0xff74ABED),
+                                    selectedUserIds.isEmpty || userProvider.accountType == "user" ? Colors.grey : const Color(0xff9771F4),
+                                    selectedUserIds.isEmpty || userProvider.accountType == "user" ? Colors.grey : const Color(0xff8463BE),
                                   ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
@@ -146,15 +144,15 @@ class _AllUserState extends State<AllUser> {
                               ),
                               child: Container(
                                 alignment: Alignment.center,
-                                constraints: BoxConstraints(
+                                constraints: const BoxConstraints(
                                   maxWidth: double.infinity,
                                   minHeight: 50.0,
                                 ),
                                 child: isLoading
-                                    ? CircularProgressIndicator(
+                                    ? const CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                 )
-                                    : Text(
+                                    : const Text(
                                   'Ajouter au foyer',
                                   style: TextStyle(
                                     fontSize: 18,
@@ -185,24 +183,24 @@ class _AllUserState extends State<AllUser> {
         borderRadius: BorderRadius.circular(7),
         color: Theme.of(context).colorScheme.primary,
       ),
-      margin: EdgeInsets.symmetric(vertical: 2, horizontal: 3),
+      margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 3),
       child: ListTile(
         leading: (user["profil"] == null)
             ? CircleAvatar(
           backgroundColor: Theme.of(context).colorScheme.tertiary,
           child: Text(
             user["name"].substring(0, 1).toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
         )
             : Container(
-          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
           decoration: BoxDecoration(
             border: Border.all(
-              color: Color(0xff8463BE),
+              color: const Color(0xff8463BE),
               width: 2.0,
             ),
             color: Theme.of(context)
@@ -222,7 +220,7 @@ class _AllUserState extends State<AllUser> {
         ),
         title: Text(
           name,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -232,7 +230,7 @@ class _AllUserState extends State<AllUser> {
           Icons.check_circle,
           color: Colors.purple[500],
         )
-            : Icon(
+            : const Icon(
           Icons.check_circle_outline,
           color: Colors.grey,
         ),

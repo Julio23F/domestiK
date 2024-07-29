@@ -1,13 +1,11 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../provider/user_provider.dart'; // Correct path to UserProvider
-import '../../models/api_response.dart'; // Correct path to ApiResponse
-import '../../services/user_service.dart';
-import '../allUser.dart'; // Adjust as per your structure
+// Correct path to ApiResponse
+// Adjust as per your structure
 
 class AddUser extends StatefulWidget {
-  const AddUser({Key? key}) : super(key: key);
+  const AddUser({super.key});
 
   @override
   State<AddUser> createState() => _AddUserState();
@@ -16,7 +14,7 @@ class AddUser extends StatefulWidget {
 class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
   Set<int> selectedUserIds = {};
   int? editingUserId;
-  TextEditingController _nameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   bool isAdminSelected = false;
   // String accountType = "user";
   bool isLoad = false;
@@ -129,11 +127,11 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
             color: Colors.grey.withOpacity(0.1),
             spreadRadius: 0.3,
             blurRadius: 5,
-            offset: Offset(0, 1),
+            offset: const Offset(0, 1),
           ),
         ],
       ),
-      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
       child: Stack(
         children: [
           if (user["active"] != 1)
@@ -143,7 +141,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
               right: 0,
               width: 5,
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xff8463BE),
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(10),
@@ -161,17 +159,17 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                   backgroundColor: Theme.of(context).colorScheme.tertiary,
                   child: Text(
                     user["name"].substring(0, 1).toUpperCase(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 )
                     : Container(
-                  padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                  padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Color(0xff8463BE),
+                      color: const Color(0xff8463BE),
                       width: 2.0,
                     ),
                     color: Theme.of(context)
@@ -209,7 +207,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                     ? _buildEditingActions(user)
                     : userProvider.accountType == "admin"
                     ? _buildPopupMenu(userProvider, user, index)
-                    : Text(""),
+                    : const Text(""),
                 onTap: () {
                   if(editingUserId != null){
                     _stopEditing();
@@ -221,19 +219,19 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
               ),
 
               AnimatedSize(
-                duration: Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
 
                 child: (editingUserId == user["id"])?
                 Container(
-                  padding: EdgeInsets.only(bottom: 10, left: 70),
+                  padding: const EdgeInsets.only(bottom: 10, left: 70),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       AnimatedContainer(
-                        duration: Duration(milliseconds: 300),
-                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        margin: EdgeInsets.only(right: 5),
+                        duration: const Duration(milliseconds: 300),
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        margin: const EdgeInsets.only(right: 5),
                         decoration: BoxDecoration(
                           color: isAdminSelected ? Colors.lightGreen.shade400 : Colors.lightGreen,
                           borderRadius: BorderRadius.circular(7),
@@ -248,13 +246,13 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                             children: [
                               if (!isAdminSelected)
                                 Container(
-                                  margin: EdgeInsets.only(right: 7),
-                                  padding: EdgeInsets.all(4),
+                                  margin: const EdgeInsets.only(right: 7),
+                                  padding: const EdgeInsets.all(4),
                                   decoration: BoxDecoration(
                                     color: isAdminSelected ? Colors.lightGreen.shade400 : Colors.lightGreen.shade400,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.check,
                                     size: 11,
                                     color: Colors.white,
@@ -272,9 +270,9 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                         ),
                       ),
                       AnimatedContainer(
-                        duration: Duration(milliseconds: 300),
-                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        margin: EdgeInsets.only(right: 5),
+                        duration: const Duration(milliseconds: 300),
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        margin: const EdgeInsets.only(right: 5),
                         decoration: BoxDecoration(
                           color: isAdminSelected ? Colors.deepOrange : Colors.deepOrange.shade400,
                           borderRadius: BorderRadius.circular(7),
@@ -289,13 +287,13 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                             children: [
                               if (isAdminSelected)
                                 Container(
-                                  margin: EdgeInsets.only(right: 7),
-                                  padding: EdgeInsets.all(4),
+                                  margin: const EdgeInsets.only(right: 7),
+                                  padding: const EdgeInsets.all(4),
                                   decoration: BoxDecoration(
                                     color: isAdminSelected ? Colors.deepOrange.shade400 : Colors.deepOrange.shade400,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.check,
                                     size: 11,
                                     color: Colors.white,
@@ -314,7 +312,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                       ),
                     ],
                   ),
-                ):SizedBox(),
+                ):const SizedBox(),
               ),
             ],
           ),
@@ -331,13 +329,13 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: 25,),
+              const SizedBox(height: 25,),
               Container(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                     vertical: 2, horizontal: 2),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Color(0xff8463BE),
+                    color: const Color(0xff8463BE),
                     width: 2.0,
                   ),
                   color: Theme.of(context)
@@ -348,14 +346,14 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                 ),
                 child: ClipOval(
                   child: (user["profil"] == null)
-                      ? Container(
+                      ? SizedBox(
                         width: 130,
                         height: 130,
                         child: CircleAvatar(
                           backgroundColor: Theme.of(context).colorScheme.tertiary,
                           child: Text(
                         user["name"].substring(0, 1).toUpperCase(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 80
@@ -370,7 +368,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                   ),
                 )
               ),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               Text(
                   user["name"],
                   style: TextStyle(
@@ -386,7 +384,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                       color: Theme.of(context).colorScheme.surface.withOpacity(0.6)
                   ),
               ),
-              SizedBox(height: 25,),
+              const SizedBox(height: 25,),
 
             ],
           ),
@@ -408,17 +406,17 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
               color: Colors.red[400],
               shape: BoxShape.circle,
             ),
-            padding: EdgeInsets.all(3),
-            child: Icon(
+            padding: const EdgeInsets.all(3),
+            child: const Icon(
               Icons.close_rounded,
               size: 20,
               color: Colors.white,
             ),
           ),
         ),
-        SizedBox(width: 13),
+        const SizedBox(width: 13),
         isLoad
-            ? Container(
+            ? SizedBox(
           height: 25,
           width: 25,
           child: CircularProgressIndicator(color: Theme.of(context).colorScheme.surface),
@@ -428,12 +426,12 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
             _saveChanges(user["id"]);
           },
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
             decoration: BoxDecoration(
-              color: Color(0xff21304f),
+              color: const Color(0xff21304f),
               borderRadius: BorderRadius.circular(7),
             ),
-            child: Text(
+            child: const Text(
               'Enregistrer',
               style: TextStyle(color: Colors.white),
             ),
@@ -461,7 +459,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
       itemBuilder: (BuildContext context) {
         return [
           if (user["id"] != userProvider.userId)
-          PopupMenuItem<String>(
+          const PopupMenuItem<String>(
             value: 'Modifier',
             child: Row(
               children: [
@@ -475,17 +473,17 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
             value: 'Désactiver',
             child: Row(
               children: [
-                Icon(Icons.block, color: Colors.black54),
-                SizedBox(width: 8),
+                const Icon(Icons.block, color: Colors.black54),
+                const SizedBox(width: 8),
                 Text(
                   user["active"] != 1 ? 'Réactiver' : 'Désactiver',
-                  style: TextStyle(color: Colors.black54),
+                  style: const TextStyle(color: Colors.black54),
                 ),
               ],
             ),
           ),
           if (user["id"] != userProvider.userId)
-            PopupMenuItem<String>(
+            const PopupMenuItem<String>(
               value: 'Supprimer',
               child: Row(
                 children: [
@@ -520,13 +518,13 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
             'Accès Refusé',
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
-          content: Text(
+          content: const Text(
             "Seul l'admin de ce foyer peut accéder à cette section.",
           ),
           actions: [

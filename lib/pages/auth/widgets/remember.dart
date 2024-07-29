@@ -8,7 +8,7 @@ class RememberSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 5),
+      margin: const EdgeInsets.only(top: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -18,11 +18,11 @@ class RememberSection extends StatelessWidget {
                   context,
                   PageTransition(
                     type: PageTransitionType.rightToLeft,
-                    child: ForgotPasswordPage(),
+                    child: const ForgotPasswordPage(),
                   ),
               );
             },
-            child: Text(
+            child: const Text(
               "Mot de passe oublié ?",
               style: TextStyle(
                   fontSize: 17,

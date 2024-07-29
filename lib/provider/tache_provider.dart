@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../models/api_response.dart';
 import '../services/tache_service.dart';
-import '../services/user_service.dart';
 
 class TacheProvider extends ChangeNotifier {
-  List<dynamic> _allTache = [];
+  final List<dynamic> _allTache = [];
   bool isLoading = false;
   String _profil = "assets/images/logo.png";
 

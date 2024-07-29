@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/api_response.dart';
 import '../../models/user.dart';
 import '../../services/user_service.dart';
-import '../home.dart';
 import 'login.dart';
 
 class SignupPage extends StatefulWidget {
@@ -46,7 +45,7 @@ class _SignupPageState extends State<SignupPage> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.setString('token', user.token ?? '');
     await pref.setInt('userId', user.id ?? 0);
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>LoadingPage()), (route) => false);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>const LoadingPage()), (route) => false);
   }
 
   @override
@@ -64,7 +63,7 @@ class _SignupPageState extends State<SignupPage> {
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/images/auth.png'),
               fit: BoxFit.cover,
@@ -85,12 +84,12 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                   ),
                   child: Container(
-                    padding: EdgeInsets.all(25),
+                    padding: const EdgeInsets.all(25),
                     child: Form(
                       key: _formkey,
                       child: Column(
                         children: [
-                          Center(
+                          const Center(
                             child: Text(
                               "Créer un compte",
                               style: TextStyle(
@@ -100,17 +99,17 @@ class _SignupPageState extends State<SignupPage> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 25),
+                          const SizedBox(height: 25),
                           Container(
-                            margin: EdgeInsets.only(bottom: 15),
+                            margin: const EdgeInsets.only(bottom: 15),
                             child: TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Nom',
                                 labelStyle: TextStyle(
                                   color: Colors.black26,
                                 ),
                                 hintText: 'Votre nom',
-                                hintStyle: const TextStyle(
+                                hintStyle: TextStyle(
                                   color: Colors.black26,
                                 ),
                                 border: UnderlineInputBorder(
@@ -139,15 +138,15 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(bottom: 15),
+                            margin: const EdgeInsets.only(bottom: 15),
                             child: TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Email',
                                 labelStyle: TextStyle(
                                   color: Colors.black26,
                                 ),
                                 hintText: 'Votre adresse email',
-                                hintStyle: const TextStyle(
+                                hintStyle: TextStyle(
                                   color: Colors.black26,
                                 ),
                                 border: UnderlineInputBorder(
@@ -176,29 +175,29 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(bottom: 15),
+                            margin: const EdgeInsets.only(bottom: 15),
                             child: TextFormField(
                               obscureText: !_passwordVisible1,
                               decoration: InputDecoration(
                                 labelText: 'Mot de passe',
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   color: Colors.black26,
                                 ),
                                 hintText: 'Votre mot de passe',
                                 hintStyle: const TextStyle(
                                   color: Colors.black26,
                                 ),
-                                border: UnderlineInputBorder(
+                                border: const UnderlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
-                                enabledBorder: UnderlineInputBorder(
+                                enabledBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
-                                focusedBorder: UnderlineInputBorder(
+                                focusedBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
@@ -227,29 +226,29 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(bottom: 15),
+                            margin: const EdgeInsets.only(bottom: 15),
                             child: TextFormField(
                               obscureText: !_passwordVisible2,
                               decoration: InputDecoration(
                                 labelText: 'Confirmation mdp',
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   color: Colors.black26,
                                 ),
                                 hintText: 'Confirmation mdp',
                                 hintStyle: const TextStyle(
                                   color: Colors.black26,
                                 ),
-                                border: UnderlineInputBorder(
+                                border: const UnderlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
-                                enabledBorder: UnderlineInputBorder(
+                                enabledBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
                                 ),
-                                focusedBorder: UnderlineInputBorder(
+                                focusedBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.grey,
                                   ),
@@ -278,12 +277,12 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 35),
+                            margin: const EdgeInsets.only(top: 35),
                             width: double.infinity,
                             child: ElevatedButton(
-                              style: ButtonStyle(
-                                padding: MaterialStatePropertyAll(EdgeInsets.all(12)),
-                                backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 66, 101, 224)),
+                              style: const ButtonStyle(
+                                padding: WidgetStatePropertyAll(EdgeInsets.all(12)),
+                                backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 66, 101, 224)),
                               ),
                               onPressed: () {
                                 if (_formkey.currentState!.validate()) {
@@ -294,30 +293,30 @@ class _SignupPageState extends State<SignupPage> {
                                 }
                               },
                               child: loading
-                                  ? Container(height: 27, width: 27,child: CircularProgressIndicator(color: Colors.white,))
-                                  : Text(
+                                  ? const SizedBox(height: 27, width: 27,child: CircularProgressIndicator(color: Colors.white,))
+                                  : const Text(
                                 "Inscription",
                                 style: TextStyle(color: Colors.white, fontSize: 18),
                               ),
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 15),
+                            margin: const EdgeInsets.only(top: 15),
                             width: double.infinity,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text("Vous avez déjà un compte ?"),
+                                const Text("Vous avez déjà un compte ?"),
                                 TextButton(
                                   onPressed: () {
                                     Navigator.push(
                                       context,
                                       PageRouteBuilder(
-                                        pageBuilder: (_, __, ___) => LoginPage(),
+                                        pageBuilder: (_, __, ___) => const LoginPage(),
                                       ),
                                     );
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     "Connexion",
                                     style: TextStyle(
                                       fontWeight: FontWeight.w700,

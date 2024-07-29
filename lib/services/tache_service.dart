@@ -4,9 +4,7 @@ import 'package:domestik/services/user_service.dart';
 import 'package:flutter/cupertino.dart';
 import '../constant.dart';
 import '../models/api_response.dart';
-import 'package:http/http.dart' as http;
 
-import 'foyer_service.dart';
 
 // Create HTTP client with SSL verification disabled
 HttpClient createHttpClient() {
@@ -22,9 +20,9 @@ Future<ApiResponse> todoTache(date) async {
     String token = await getToken();
     ApiResponse data = await getUserDetailSercice();
     final userDetail = jsonEncode(data.data);
-    int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
+    int foyerId = jsonDecode(userDetail)["user"]["foyer_id"];
 
-    final uri = '$urlAllUserTache/$foyer_id/todoTache';
+    final uri = '$urlAllUserTache/$foyerId/todoTache';
     final client = createHttpClient();
     final request = await client.postUrl(Uri.parse(uri));
     request.headers.set('Accept', 'application/json');
@@ -70,8 +68,8 @@ Future<ApiResponse> addTacheService(String name, String color) async {
   try {
     ApiResponse data = await getUserDetailSercice();
     final userDetail = jsonEncode(data.data);
-    int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
-    final uri = '${tache}/$foyer_id/tache';
+    int foyerId = jsonDecode(userDetail)["user"]["foyer_id"];
+    final uri = '$tache/$foyerId/tache';
 
     final client = createHttpClient();
     final request = await client.postUrl(Uri.parse(uri));
@@ -114,11 +112,11 @@ Future<ApiResponse> getTache() async {
   ApiResponse apiResponse = ApiResponse();
   ApiResponse data = await getUserDetailSercice();
   final userDetail = jsonEncode(data.data);
-  int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
+  int foyerId = jsonDecode(userDetail)["user"]["foyer_id"];
 
   try {
     String token = await getToken();
-    final String url = '${allMembre}/$foyer_id/tache';
+    final String url = '$allMembre/$foyerId/tache';
 
     final client = createHttpClient();
     final request = await client.getUrl(Uri.parse(url));

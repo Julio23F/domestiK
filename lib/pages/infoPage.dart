@@ -12,7 +12,7 @@ import '../services/myService.dart';
 import '../theme/theme_provider.dart';
 
 class InfoPage extends StatefulWidget {
-  const InfoPage({Key? key}) : super(key: key);
+  const InfoPage({super.key});
 
   @override
   State<InfoPage> createState() => _InfoPageState();
@@ -26,10 +26,10 @@ class _InfoPageState extends State<InfoPage> {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Nom du foyer"),
+        title: const Text("Nom du foyer"),
         content: TextField(
           autofocus: true,
-          decoration: InputDecoration(hintText: "Entrer le nom du foyer"),
+          decoration: const InputDecoration(hintText: "Entrer le nom du foyer"),
           controller: foyerController,
         ),
         actions: [
@@ -77,7 +77,7 @@ class _InfoPageState extends State<InfoPage> {
         foyerController.text = '';
       });
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => Home()),
+        MaterialPageRoute(builder: (context) => const Home()),
             (route) => false,
       );
     } else {
@@ -95,7 +95,7 @@ class _InfoPageState extends State<InfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = Color(0xff192b54);
+    const textColor = Color(0xff192b54);
 
     return Scaffold(
       //Pour qu'il n'y pas de problème quand le clavier s'affiche
@@ -104,12 +104,12 @@ class _InfoPageState extends State<InfoPage> {
         children: <Widget>[
           Container(
             color: Colors.white,
-            padding: EdgeInsets.only(top: 35),
+            padding: const EdgeInsets.only(top: 35),
             child: Center(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0, bottom: 50),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20.0, bottom: 50),
                     child: Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -134,7 +134,7 @@ class _InfoPageState extends State<InfoPage> {
                       ),
                     ),
                   ),
-                  Text(
+                  const Text(
                     'Gérer & Organiser',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
@@ -142,19 +142,19 @@ class _InfoPageState extends State<InfoPage> {
                       fontSize: 25,
                     ),
                   ),
-                  Text(
+                  const Text(
                     'Simplifiez Votre Quotidien en Quelques Clics',
                     style: TextStyle(
                       color: textColor,
                     ),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Image.asset(
                     "assets/images/logo.png",
                     width: MediaQuery.of(context).size.width * 4 / 7,
                   ),
-                  SizedBox(height: 25),
-                  Text(
+                  const SizedBox(height: 25),
+                  const Text(
                     'Créer un foyer',
                     style: TextStyle(
                       color: textColor,
@@ -165,27 +165,27 @@ class _InfoPageState extends State<InfoPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         "Ou attendez qu'on vous ajoute : ",
                         style: TextStyle(
                           color: textColor,
                           fontSize: 16,
                         ),
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       InkWell(
                         onTap: () {
                           setState(() {
                             _isLoading = true;
                           });
                           loadUserInfo(context);
-                          Future.delayed(Duration(seconds: 2), () {
+                          Future.delayed(const Duration(seconds: 2), () {
                             setState(() {
                               _isLoading = false;
                             });
                           });
                         },
-                        child: Text(
+                        child: const Text(
                           "Actualiser",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -196,34 +196,34 @@ class _InfoPageState extends State<InfoPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10,),
-                  Text(
+                  const SizedBox(height: 10,),
+                  const Text(
                       "||",
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 16,
                       ),
                   ),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         "Se déconnecter : ",
                         style: TextStyle(
                           color: textColor,
                           fontSize: 16,
                         ),
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       InkWell(
                         onTap: () {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Déconnexion'),
-                                content: Text('Voulez-vous réellement vous déconnecter ?'),
+                                title: const Text('Déconnexion'),
+                                content: const Text('Voulez-vous réellement vous déconnecter ?'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -244,7 +244,7 @@ class _InfoPageState extends State<InfoPage> {
                                       logout();
                                       Navigator.of(context).pushAndRemoveUntil(
                                         MaterialPageRoute(
-                                            builder: (context) => LoginPage()),
+                                            builder: (context) => const LoginPage()),
                                             (route) => false,
                                       );
                                       await Provider.of<HistoriqueProvider>(context, listen: false).reset();
@@ -266,7 +266,7 @@ class _InfoPageState extends State<InfoPage> {
                             },
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           "Déconnexion",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -292,14 +292,14 @@ class _InfoPageState extends State<InfoPage> {
                   openDialog();
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 0),
+                  padding: const EdgeInsets.symmetric(vertical: 0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
                 child: Ink(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [
                         Color(0xff40719D),
                         Color(0xff40499D),
@@ -316,11 +316,11 @@ class _InfoPageState extends State<InfoPage> {
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      constraints: BoxConstraints(
+                      constraints: const BoxConstraints(
                         maxWidth: double.infinity,
                         minHeight: 50.0,
                       ),
-                      child: Text(
+                      child: const Text(
                         'Créer un foyer',
                         style: TextStyle(
                           fontSize: 18,
@@ -336,7 +336,7 @@ class _InfoPageState extends State<InfoPage> {
           if (_isLoading)
             Container(
               color: Colors.black.withOpacity(0.5),
-              child: Center(
+              child: const Center(
                 child: CircularProgressIndicator(),
               ),
             ),

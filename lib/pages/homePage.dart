@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'package:domestik/pages/loadingPage.dart';
-import 'package:domestik/pages/userPage.dart';
 import 'package:domestik/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -21,7 +19,7 @@ import 'auth/login.dart';
 class HomePage extends StatefulWidget {
   final Function(int) setCurrentIndex;
 
-  const HomePage({Key? key, required this.setCurrentIndex}) : super(key: key);
+  const HomePage({super.key, required this.setCurrentIndex});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -42,12 +40,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   // String dateToday = DateFormat('d MMMM y', 'fr_FR').format(DateTime.now());
   String dateToday = DateFormat.yMMMd('en').format(DateTime.now()); // Replace 'en' with your locale
-
+  int dayOfYear(DateTime date) {
+    int dayOfYear = int.parse(DateFormat("D").format(date));
+    return dayOfYear;
+  }
 
   @override
   void initState() {
     super.initState();
-    _getTacheTodo(DateTime.now().day);
+    _getTacheTodo(dayOfYear(DateTime.now()));
 
     Provider.of<ThemeProvider>(context,listen: false).checkUserPrefernce();
 
@@ -64,7 +65,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
 
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _startAnimation();
     });
   }
@@ -137,7 +138,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     } else if (response.error == unauthorized) {
       logout().then((value) {
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => LoginPage()),
+          MaterialPageRoute(builder: (context) => const LoginPage()),
               (route) => false,
         );
       });
@@ -168,7 +169,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
 
-    final textColor = Color(0xff192b54);
+    const textColor = Color(0xff192b54);
     final nbrTache = tacheTodo != null ? jsonDecode(tacheTodo).length : 0;
     print("tacheTodo");
     print(tacheTodo);
@@ -176,7 +177,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Consumer<HistoriqueProvider>(
         builder: (context,provider, _) {
           // if (Provider.of<UserProvider>(context).foyerId == null) {
@@ -199,7 +200,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             color: Colors.grey,
             backgroundColor: Colors.white,
             onRefresh: () async{
-              _getTacheTodo(date.day);
+              _getTacheTodo(dayOfYear(DateTime.now()));
             },
             child: CustomScrollView(
               slivers: [
@@ -211,7 +212,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     maxHeight: 100.0,
                     child: Container(
                       color: Theme.of(context).colorScheme.primary,
-                      padding: EdgeInsets.only(top: 35, left: 10, right: 10),
+                      padding: const EdgeInsets.only(top: 35, left: 10, right: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -238,7 +239,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     ),
                                   ),
                                   Container(
-                                    padding: EdgeInsets.symmetric(vertical: 1, horizontal: 8),
+                                    padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 8),
                                     decoration: BoxDecoration(
                                         color: (provider.accountType == "")?Colors.transparent:(provider.accountType == "admin")?Colors.deepOrange.withOpacity(0.3):Colors.green.withOpacity(0.2),
                                         borderRadius: BorderRadius.circular(5)
@@ -253,13 +254,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   ),
                                 ],
                               ),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               InkWell(
                                 onTap: () {
                                   widget.setCurrentIndex(3);
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                                  padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
                                   decoration: BoxDecoration(
                                     color: Colors.grey.shade100,
                                     shape: BoxShape.circle,
@@ -288,7 +289,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     minHeight: 162.0,
                     maxHeight: 162.0,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.primary,
                         boxShadow: [
@@ -296,7 +297,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             color: Colors.grey.withOpacity(0.1),
                             spreadRadius: 1,
                             blurRadius: 2,
-                            offset: Offset(0, 0.5),
+                            offset: const Offset(0, 0.5),
                           ),
                         ],
                       ),
@@ -311,12 +312,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   children: [
                                     Text(
                                       dateToday,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.grey,
                                         fontSize: 14,
                                       ),
                                     ),
-                                    Text(
+                                    const Text(
                                       'Date',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
@@ -326,12 +327,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   ],
                                 ),
                                 Container(
-                                  padding: EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(8.0),
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).colorScheme.secondary,
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.calendar_month_outlined,
                                     color: Colors.grey,
                                     size: 25,
@@ -344,7 +345,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             child: DatePicker(
                               DateTime.now(),
                               initialSelectedDate: DateTime.now(),
-                              selectionColor: Color(0xff21304f),
+                              selectionColor: const Color(0xff21304f),
                               selectedTextColor: Colors.white,
                               dayTextStyle: TextStyle(
                                   color: Theme.of(context).colorScheme.surface,
@@ -364,7 +365,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   date = value;
 
                                 });
-                                _getTacheTodo(date.day);
+                                _getTacheTodo(dayOfYear(date));
                               },
                             ),
                           ),
@@ -388,12 +389,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 CurveTween(curve: Curves.easeInOut),
                               ),
                               child: Container(
-                                margin: EdgeInsets.only(top: 10, left: 7, right: 7),
+                                margin: const EdgeInsets.only(top: 10, left: 7, right: 7),
                                 width: MediaQuery.of(context).size.width,
-                                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                                 decoration: BoxDecoration(
                                   color: (tache["user"]["id"] == provider.userId)
-                                      ? Color(0xff21304f)
+                                      ? const Color(0xff21304f)
                                       : Theme.of(context).colorScheme.primary,
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
@@ -405,7 +406,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       color: Colors.grey.withOpacity(0.1),
                                       spreadRadius: 0.2,
                                       blurRadius: 5,
-                                      offset: Offset(0, 1),
+                                      offset: const Offset(0, 1),
                                     ),
                                   ],
                                 ),
@@ -418,25 +419,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         Text(
                                           tache["user"]["name"].toString(),
                                           style: (tache["user"]["id"] == provider.userId)
-                                              ? TextStyle(
+                                              ? const TextStyle(
                                             color: Colors.white,
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                           )
                                               : Theme.of(context).textTheme.bodyMedium,
                                         ),
-                                        SizedBox(height: 5),
+                                        const SizedBox(height: 5),
                                         Row(
                                           children: [
                                             Container(
                                               margin:
-                                              EdgeInsets.only(right: 7),
-                                              padding: EdgeInsets.all(4),
+                                              const EdgeInsets.only(right: 7),
+                                              padding: const EdgeInsets.all(4),
                                               decoration: BoxDecoration(
                                                 color: tache["user"]["id"] == provider.userId?Colors.white.withOpacity(0.1):Colors.grey.shade400,
                                                 shape: BoxShape.circle,
                                               ),
-                                              child: Icon(
+                                              child: const Icon(
                                                 Icons.cleaning_services_rounded,
                                                 size: 11,
                                                 color: Colors.white,
@@ -446,14 +447,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               spacing: 5,
                                               children: List.generate(tache["tache"].length, (i) {
                                                 return Container(
-                                                  margin: EdgeInsets.only(right: 7),
+                                                  margin: const EdgeInsets.only(right: 7),
                                                   decoration: BoxDecoration(
                                                     color: (tache["user"]["id"] == provider.userId || Provider.of<ThemeProvider>(context).themeData == darkTheme)
                                                         ? Colors.white.withOpacity(0.1)
                                                         : Color(int.parse(tache["tache"][i].split('-')[2])).withOpacity(0.1),
                                                     borderRadius: BorderRadius.circular(5),
                                                   ),
-                                                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                                                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
                                                   child: Text(
                                                     tache["tache"][i].split('-')[1].toString(),
                                                     style: TextStyle(
@@ -468,9 +469,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         )
                                       ],
                                     ),
-                                    SizedBox(width: 10),
+                                    const SizedBox(width: 10),
                                     Container(
-                                      padding: EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(8),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(7),
                                         border: Border.all(
@@ -480,13 +481,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       child: (tache["user"]["id"] == provider.userId)
                                           ?Container(
                                           child: isLoad
-                                              ? Container(
+                                              ? const SizedBox(
                                             height: 25,
                                             width: 25,
                                             child: CircularProgressIndicator(color: Colors.white,),
                                           )
                                               : (provider.isCheck || tache["state"]  || !isToday || convert(tache["tache"]).contains("1"))
-                                              ?Icon(
+                                              ?const Icon(
                                             Icons.done,
                                             color: Colors.white,
                                             size: 20,
@@ -504,12 +505,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               });
                                             },
                                             child: Container(
-                                              padding: EdgeInsets.all(8),
+                                              padding: const EdgeInsets.all(8),
                                               decoration: BoxDecoration(
-                                                color: Color(0xff8463BE),
+                                                color: const Color(0xff8463BE),
                                                 borderRadius: BorderRadius.circular(7),
                                               ),
-                                              child: Icon(
+                                              child: const Icon(
                                                 Icons.done,
                                                 color: Colors.white,
                                                 size: 20,
@@ -522,13 +523,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         height: 8,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: Color(0xff8463BE),
+                                          color: const Color(0xff8463BE),
                                           boxShadow: [
                                             BoxShadow(
                                               color: Colors.grey.withOpacity(0.9),
                                               spreadRadius: 1,
                                               blurRadius: 3,
-                                              offset: Offset(0, 1),
+                                              offset: const Offset(0, 1),
                                             ),
                                           ],
                                         ),
@@ -576,9 +577,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 25),
+                                  padding: const EdgeInsets.symmetric(horizontal: 25),
                                   child: Text(
                                     "Votre compte est actuellement désactivé",
                                     textAlign: TextAlign.center,
@@ -589,7 +590,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 Text(
                                   "Veuillez informer votre admin pour le réactiver.",
                                   textAlign: TextAlign.center,

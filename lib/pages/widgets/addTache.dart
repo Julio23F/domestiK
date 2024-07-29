@@ -1,14 +1,9 @@
 import 'dart:convert';
-import 'package:domestik/models/tache.dart';
 import 'package:domestik/provider/tache_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/api_response.dart';
-import '../../provider/user_provider.dart';
-import '../../services/tache_service.dart';
 import '../../services/user_service.dart';
-import '../allUser.dart';
 
 class AddTache extends StatefulWidget {
   const AddTache({super.key});
@@ -74,13 +69,13 @@ class _AddTacheState extends State<AddTache> {
         color: Color(int.parse(tache["color"])).withOpacity(0.7),
         borderRadius: BorderRadius.circular(10),
       ),
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(),
+              const SizedBox(),
               PopupMenuButton<String>(
                 icon: Icon(Icons.more_vert, color: Colors.white.withOpacity(0.9)),
                 onSelected: (String result) {
@@ -95,13 +90,13 @@ class _AddTacheState extends State<AddTache> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text(
+                          title: const Text(
                             'Accès Refusé',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          content: Text(
+                          content: const Text(
                             "Seul l'admin de ce foyer peut accéder à cette section.",
                           ),
                           actions: [
@@ -128,7 +123,7 @@ class _AddTacheState extends State<AddTache> {
                   PopupMenuItem<String>(
                     value: 'delete',
                     height: 35,
-                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 3),
+                    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 3),
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border(
@@ -139,7 +134,7 @@ class _AddTacheState extends State<AddTache> {
                         ),
                       ),
                       width: 105,
-                      child: Row(
+                      child: const Row(
                         children: [
                           Icon(Icons.delete, color: Colors.black54),
                           SizedBox(width: 5),
@@ -160,7 +155,7 @@ class _AddTacheState extends State<AddTache> {
           Center(
             child: Text(
               tache["name"],
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 19,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,

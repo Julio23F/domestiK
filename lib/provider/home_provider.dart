@@ -35,7 +35,7 @@ class HistoriqueProvider extends ChangeNotifier {
     await addHistoriqueService(tacheIds);
     notifyListeners();
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
 
 
     _isCheck = true;

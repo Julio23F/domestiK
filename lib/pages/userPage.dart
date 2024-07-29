@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:domestik/pages/widgets/imageProfil.dart';
 import 'package:domestik/pages/widgets/infoApp.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-import '../models/api_response.dart';
 import '../provider/home_provider.dart';
 import '../services/user_service.dart';
 import '../theme/theme_provider.dart';
@@ -21,7 +19,7 @@ class Userpage extends StatefulWidget {
 }
 
 class _UserpageState extends State<Userpage> {
-  bool _switchValue = false;
+  final bool _switchValue = false;
   String? _selectedImage;
 
   List<String> listImage = [
@@ -51,7 +49,7 @@ class _UserpageState extends State<Userpage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
+        title: const Text(
           "Paramètre",
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -60,34 +58,34 @@ class _UserpageState extends State<Userpage> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+        padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
         child: ListView(
           children: [
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Column(
                 children: [
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   InkWell(
                     onTap: (){
                       Navigator.push(
                         context,
                         PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => ImageProfil(),
+                          pageBuilder: (_, __, ___) => const ImageProfil(),
                         ),
                       );
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                           vertical: 2, horizontal: 2),
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: Color(0xff8463BE),
+                          color: const Color(0xff8463BE),
                           width: 2.0,
                         ),
                         color: Theme.of(context)
@@ -110,7 +108,7 @@ class _UserpageState extends State<Userpage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     Provider.of<HistoriqueProvider>(context).userName,
                     style: TextStyle(
@@ -121,18 +119,18 @@ class _UserpageState extends State<Userpage> {
                   ),
                   Text(
                     Provider.of<HistoriqueProvider>(context).userEmail,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 16,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Container(
+                  const SizedBox(height: 20),
+                  SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      style: ButtonStyle(
-                        padding: MaterialStatePropertyAll(EdgeInsets.all(12)),
-                        backgroundColor: MaterialStatePropertyAll(Color(0xff8463BE)),
+                      style: const ButtonStyle(
+                        padding: WidgetStatePropertyAll(EdgeInsets.all(12)),
+                        backgroundColor: WidgetStatePropertyAll(Color(0xff8463BE)),
                       ),
                       onPressed: () {
                         showDialog(
@@ -142,7 +140,7 @@ class _UserpageState extends State<Userpage> {
                             return StatefulBuilder(
                               builder: (context, setState) {
                                 return AlertDialog(
-                                  title: Text('Choisir un profil'),
+                                  title: const Text('Choisir un profil'),
                                   content: Wrap(
                                     spacing: 10.0,
                                     runSpacing: 12.0,
@@ -154,7 +152,7 @@ class _UserpageState extends State<Userpage> {
                                           });
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               vertical: 2, horizontal: 2),
                                           decoration: BoxDecoration(
                                             border: localSelectedImage == image
@@ -226,7 +224,7 @@ class _UserpageState extends State<Userpage> {
                           }
                         });
                       },
-                      child: Text(
+                      child: const Text(
                         "Modifier profil",
                         style: TextStyle(
                           color: Colors.white,
@@ -238,10 +236,10 @@ class _UserpageState extends State<Userpage> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              margin: EdgeInsets.only(bottom: 7),
-              padding: EdgeInsets.all(18),
+              margin: const EdgeInsets.only(bottom: 7),
+              padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(10),
@@ -249,8 +247,8 @@ class _UserpageState extends State<Userpage> {
               child: Row(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(right: 18),
-                    child: Icon(
+                    margin: const EdgeInsets.only(right: 18),
+                    child: const Icon(
                       Icons.notifications_active_outlined,
                       size: 25,
                       color: Color(0xff8463BE),
@@ -263,9 +261,9 @@ class _UserpageState extends State<Userpage> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Container(
-                    child: Icon(
+                    child: const Icon(
                       Icons.chevron_right,
                       color: Colors.grey,
                     ),
@@ -279,13 +277,13 @@ class _UserpageState extends State<Userpage> {
                   context,
                   PageTransition(
                     type: PageTransitionType.rightToLeft,
-                    child: InfoApp(),
+                    child: const InfoApp(),
                   ),
                 );
               },
               child: Container(
-                margin: EdgeInsets.only(bottom: 7),
-                padding: EdgeInsets.all(18),
+                margin: const EdgeInsets.only(bottom: 7),
+                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.circular(10),
@@ -293,8 +291,8 @@ class _UserpageState extends State<Userpage> {
                 child: Row(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(right: 18),
-                      child: Icon(
+                      margin: const EdgeInsets.only(right: 18),
+                      child: const Icon(
                         Icons.info_outline,
                         size: 25,
                         color: Color(0xff8463BE),
@@ -307,9 +305,9 @@ class _UserpageState extends State<Userpage> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Container(
-                      child: Icon(
+                      child: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
                       ),
@@ -319,8 +317,8 @@ class _UserpageState extends State<Userpage> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(bottom: 7),
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 18),
+              margin: const EdgeInsets.only(bottom: 7),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 18),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(10),
@@ -328,8 +326,8 @@ class _UserpageState extends State<Userpage> {
               child: Row(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(right: 18),
-                    child: Icon(
+                    margin: const EdgeInsets.only(right: 18),
+                    child: const Icon(
                       Icons.wb_sunny_outlined,
                       size: 25,
                       color: Color(0xff8463BE),
@@ -342,7 +340,7 @@ class _UserpageState extends State<Userpage> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Switch(
                     value: Provider.of<ThemeProvider>(context, listen: false)
                         .switchValue,
@@ -352,7 +350,7 @@ class _UserpageState extends State<Userpage> {
                     },
                     activeColor: Theme.of(context).colorScheme.secondary,
                     inactiveTrackColor: Colors.white.withOpacity(0.5),
-                    inactiveThumbColor: Color(0xff8463BE),
+                    inactiveThumbColor: const Color(0xff8463BE),
                   )
                 ],
               ),
@@ -363,8 +361,8 @@ class _UserpageState extends State<Userpage> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text('Déconnexion'),
-                      content: Text('Voulez-vous réellement vous déconnecter ?'),
+                      title: const Text('Déconnexion'),
+                      content: const Text('Voulez-vous réellement vous déconnecter ?'),
                       actions: [
                         TextButton(
                           onPressed: () {
@@ -385,7 +383,7 @@ class _UserpageState extends State<Userpage> {
                             logout();
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                  builder: (context) => LoginPage()),
+                                  builder: (context) => const LoginPage()),
                                   (route) => false,
                             );
                             // await context.read<HistoriqueProvider>().reset();
@@ -410,8 +408,8 @@ class _UserpageState extends State<Userpage> {
                 );
               },
               child: Container(
-                margin: EdgeInsets.only(bottom: 7),
-                padding: EdgeInsets.all(18),
+                margin: const EdgeInsets.only(bottom: 7),
+                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.circular(10),
@@ -419,8 +417,8 @@ class _UserpageState extends State<Userpage> {
                 child: Row(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(right: 18),
-                      child: Icon(
+                      margin: const EdgeInsets.only(right: 18),
+                      child: const Icon(
                         Icons.logout_outlined,
                         size: 25,
                         color: Color(0xff8463BE),
@@ -433,9 +431,9 @@ class _UserpageState extends State<Userpage> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Container(
-                      child: Icon(
+                      child: const Icon(
                         Icons.chevron_right,
                         color: Colors.grey,
                       ),

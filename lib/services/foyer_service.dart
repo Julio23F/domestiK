@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as http;
 
 import 'package:domestik/services/user_service.dart';
 import '../constant.dart';
 import '../models/api_response.dart';
-import '../models/user.dart';
 
 // Fonction pour créer un client HTTP avec vérification SSL désactivée
 HttpClient createHttpClient() {

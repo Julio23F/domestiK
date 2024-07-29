@@ -61,8 +61,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   'assets/images/cadenas-ouvert.png',
                   width: 100,
               ),
-              SizedBox(height: 25,),
-              Text(
+              const SizedBox(height: 25,),
+              const Text(
                 "Mot de passe oublié",
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -70,8 +70,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   fontWeight: FontWeight.bold
                 ),
               ),
-              SizedBox(height: 15,),
-              Text(
+              const SizedBox(height: 15,),
+              const Text(
                 "Veuillez saisir votre adresse e-mail, et nous vous enverrons un lien vous permettant de modifier le mot de passe.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -79,7 +79,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   color: Colors.grey
                 ),
               ),
-              SizedBox(height: 22,),
+              const SizedBox(height: 22,),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Email',
@@ -109,15 +109,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 controller: confEmailController,
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 25),
+                margin: const EdgeInsets.symmetric(vertical: 25),
                 width: double.infinity,
                 child: ElevatedButton(
-                    style: ButtonStyle(
-                        padding: MaterialStatePropertyAll(EdgeInsets.all(12)),
-                        backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 66, 101, 224))
+                    style: const ButtonStyle(
+                        padding: WidgetStatePropertyAll(EdgeInsets.all(12)),
+                        backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 66, 101, 224))
                     ),
                     onPressed: () {},
-                    child: Text(
+                    child: const Text(
                         "Enoyer",
                         style: TextStyle(
                             color: Colors.white,

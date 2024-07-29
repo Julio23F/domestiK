@@ -1,19 +1,11 @@
-import 'dart:convert';
 
-import 'package:domestik/pages/auth/login.dart';
-import 'package:domestik/pages/home.dart';
-import 'package:domestik/pages/infoPage.dart';
 import 'package:domestik/provider/home_provider.dart';
 import 'package:domestik/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
-import '../constant.dart';
-import '../models/api_response.dart';
-import '../models/user.dart';
 import '../services/myService.dart';
-import '../services/user_service.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -43,8 +35,8 @@ class _LoadingPageState extends State<LoadingPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset("assets/images/logo.png", width: 90,),
-            SizedBox(height: 10,),
-            SpinKitThreeBounce(
+            const SizedBox(height: 10,),
+            const SpinKitThreeBounce(
               color: Color(0xff8463BE),
               size: 18,
             ),

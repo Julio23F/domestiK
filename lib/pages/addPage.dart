@@ -1,18 +1,14 @@
 import 'package:domestik/pages/widgets/addTache.dart';
 import 'package:domestik/provider/tache_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:domestik/pages/widgets/addUser.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../models/api_response.dart';
-import '../services/tache_service.dart';
 import 'allUser.dart';
 
 class AddPage extends StatefulWidget {
-  const AddPage({Key? key}) : super(key: key);
+  const AddPage({super.key});
 
   @override
   State<AddPage> createState() => _AddPageState();
@@ -28,10 +24,10 @@ class _AddPageState extends State<AddPage> {
       context: context,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
@@ -43,17 +39,17 @@ class _AddPageState extends State<AddPage> {
               InkWell(
                 onTap: () {
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => AllUser()));
+                      .push(MaterialPageRoute(builder: (context) => const AllUser()));
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.person_add,
                         color: Colors.grey,
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Text(
                         'Ajouter un Utilisateur',
                         style: Theme.of(context).textTheme.bodyMedium,
@@ -62,21 +58,21 @@ class _AddPageState extends State<AddPage> {
                   ),
                 ),
               ),
-              Divider(height: 1, color: Colors.grey),
+              const Divider(height: 1, color: Colors.grey),
               InkWell(
                 onTap: () {
                   Navigator.of(context).pop();
                   openDialog();
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.assignment,
                         color: Colors.grey,
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Text(
                         'Ajouter une tache',
                         style: Theme.of(context).textTheme.bodyMedium,
@@ -90,7 +86,7 @@ class _AddPageState extends State<AddPage> {
         );
       },
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
     );
@@ -99,14 +95,14 @@ class _AddPageState extends State<AddPage> {
   Future openDialog() => showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Tache"),
-        content: Container(
+        title: const Text("Tache"),
+        content: SizedBox(
           height: 210,
           child: Column(
             children: [
               TextFormField(
                 autofocus: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Entrer le nom de la tache",
                   border: UnderlineInputBorder(
                     borderSide: BorderSide(
@@ -127,12 +123,12 @@ class _AddPageState extends State<AddPage> {
                 controller: foyerController,
 
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                 child: BlockPicker(
                   pickerColor: pickerColor,
                   onColorChanged: changeColor,
-                  availableColors: [
+                  availableColors: const [
                     Color(0xffef4749),
                     Colors.green,
                     Color(0xff1877f2),
@@ -168,8 +164,8 @@ class _AddPageState extends State<AddPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text("Impossible d'ajouter"),
-                        content: Text("Le nombre de vos tâches ne peut pas dépasser 10"),
+                        title: const Text("Impossible d'ajouter"),
+                        content: const Text("Le nombre de vos tâches ne peut pas dépasser 10"),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -220,7 +216,7 @@ class _AddPageState extends State<AddPage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
-          title: Text(
+          title: const Text(
             "Ajout",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -234,12 +230,12 @@ class _AddPageState extends State<AddPage> {
                 _showFlexibleBottomSheet(context);
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                 decoration: BoxDecoration(
-                  color: Color(0xff21304f),
+                  color: const Color(0xff21304f),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Row(
+                child: const Row(
                   children: [
                     Icon(Icons.add, color: Colors.white),
                     SizedBox(width: 5),
@@ -251,20 +247,20 @@ class _AddPageState extends State<AddPage> {
                 ),
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
           ],
           bottom: TabBar(
             labelColor: Theme.of(context).colorScheme.surface,
             unselectedLabelColor: Colors.grey,
             indicatorColor: Theme.of(context).colorScheme.surface,
-            tabs: [
+            tabs: const [
               Tab(text: 'Membres'),
               Tab(text: 'Taches'),
             ],
           ),
         ),
 
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             AddUser(),
             AddTache(),

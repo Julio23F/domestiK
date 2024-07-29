@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constant.dart';
@@ -170,9 +169,9 @@ Future<void> addUser(List<int> userIds) async {
   String token = await getToken();
   ApiResponse data = await getUserDetailSercice();
   final userDetail = jsonEncode(data.data);
-  int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
+  int foyerId = jsonDecode(userDetail)["user"]["foyer_id"];
 
-  final String url = '${addUsers}/$foyer_id/addUser';
+  final String url = '$addUsers/$foyerId/addUser';
 
   final client = createHttpClient();
   final request = await client.postUrl(Uri.parse(url));
@@ -370,11 +369,11 @@ Future<ApiResponse> getMembre() async {
   ApiResponse apiResponse = ApiResponse();
   ApiResponse data = await getUserDetailSercice();
   final userDetail = jsonEncode(data.data);
-  int foyer_id = jsonDecode(userDetail)["user"]["foyer_id"];
+  int foyerId = jsonDecode(userDetail)["user"]["foyer_id"];
   try {
     String token = await getToken();
     final client = createHttpClient();
-    final String url = '${allMembre}/${foyer_id}/allMembre';
+    final String url = '$allMembre/$foyerId/allMembre';
     final request = await client.getUrl(Uri.parse(url));
     request.headers.set('Accept', 'application/json');
     request.headers.set('Content-Type', 'application/json'); // Ajout de l'en-tête

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class InfoApp extends StatefulWidget {
@@ -20,14 +19,14 @@ class _InfoAppState extends State<InfoApp> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            Text(
+            const Text(
               "Comment utiliser l'application Domestik",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               "Découvrez les fonctionnalités de l'application grâce à ces informations.",
               style: TextStyle(
@@ -37,7 +36,7 @@ class _InfoAppState extends State<InfoApp> {
             ),
 
             // HomePage
-            InfoSection(
+            const InfoSection(
               title: 'Page d\'accueil',
               icon: Icons.home,
               content: [
@@ -48,7 +47,7 @@ class _InfoAppState extends State<InfoApp> {
             ),
 
             // Validation
-            InfoSection(
+            const InfoSection(
               title: 'Validation',
               icon: Icons.access_time_outlined,
               content: [
@@ -58,7 +57,7 @@ class _InfoAppState extends State<InfoApp> {
             ),
 
             // Page d'ajout
-            InfoSection(
+            const InfoSection(
               title: 'Page d\'ajout',
               icon: Icons.add,
               content: [
@@ -70,7 +69,7 @@ class _InfoAppState extends State<InfoApp> {
             //Add Page
 
             // Paramètres
-            InfoSection(
+            const InfoSection(
               title: 'Paramètres',
               icon: Icons.settings,
               content: [
@@ -92,7 +91,7 @@ class InfoSection extends StatelessWidget {
   final String page;
 
 
-  const InfoSection({
+  const InfoSection({super.key, 
     required this.title,
     required this.icon,
     required this.content,
@@ -102,8 +101,8 @@ class InfoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.only(top: 24),
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(top: 24),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(8),
@@ -113,12 +112,12 @@ class InfoSection extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: content
@@ -132,13 +131,13 @@ class InfoSection extends StatelessWidget {
                     color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
                   ),
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
               ],
             ))
                 .toList(),
           ),
 
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -146,14 +145,14 @@ class InfoSection extends StatelessWidget {
                 children: [
                   Icon(
                     icon,
-                    color: Color(0xff8463BE),
+                    color: const Color(0xff8463BE),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                 ],
               ),
               Text(
                 page,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.blue,

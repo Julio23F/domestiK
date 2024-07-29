@@ -1,12 +1,9 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import '../constant.dart';
 import '../models/api_response.dart';
 import '../models/historique.dart';
 import '../services/historique_service.dart';
-import '../services/user_service.dart';
-import '../services/tache_service.dart';
 
 class ConfirmationProvider with ChangeNotifier {
   bool isLoading = true;
@@ -44,25 +41,25 @@ class ConfirmationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future confirm(int foyer_id) async {
+  Future confirm(int foyerId) async {
 
-    if (loadingMap[foyer_id] == true) {
+    if (loadingMap[foyerId] == true) {
       return;
     }
-    loadingMap[foyer_id] = true;
+    loadingMap[foyerId] = true;
     notifyListeners();
 
-    ApiResponse response = await confirmService(foyer_id);
+    ApiResponse response = await confirmService(foyerId);
 
     if (response.error == null) {
-      stateMap[foyer_id] = true;
+      stateMap[foyerId] = true;
     } else if (response.error == unauthorized) {
       // Handle unauthorized error
     } else {
       // Handle other errors
     }
 
-    loadingMap[foyer_id] = false;
+    loadingMap[foyerId] = false;
     notifyListeners();
   }
 }

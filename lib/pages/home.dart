@@ -1,5 +1,4 @@
 import 'package:domestik/pages/addPage.dart';
-import 'package:domestik/pages/auth/historiquePage.dart';
 import 'package:domestik/pages/confirmationPage.dart';
 import 'package:domestik/pages/homePage.dart';
 import 'package:domestik/pages/userPage.dart';
@@ -28,16 +27,16 @@ class _HomeState extends State<Home> {
         Expanded(
           child: [
             HomePage(setCurrentIndex: setCurrentIndex),
-            ConfirmationPage(),
-            AddPage(),
-            Userpage(),
+            const ConfirmationPage(),
+            const AddPage(),
+            const Userpage(),
           ][currentIndex],
         ),
         BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: currentIndex,
           onTap: (index) => setCurrentIndex(index),
-          selectedItemColor: Color(0xff8463BE),
+          selectedItemColor: const Color(0xff8463BE),
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),

@@ -6,10 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:domestik/provider/home_provider.dart';
 import 'package:domestik/provider/user_provider.dart';
 import 'package:domestik/theme/theme_provider.dart';
-import 'package:domestik/theme/dark_theme.dart';
-import 'package:domestik/theme/light_theme.dart';
 import 'package:domestik/pages/loadingPage.dart';
-import 'package:domestik/pages/homePage.dart';
 
 void main() async {
   // Initialize locale data
@@ -36,13 +33,13 @@ void main() async {
         ),
 
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +48,7 @@ class MyApp extends StatelessWidget {
 
       theme: Provider.of<ThemeProvider>(context).themeData,
       debugShowCheckedModeBanner: false,
-      home: LoadingPage(),
+      home: const LoadingPage(),
     );
   }
 }

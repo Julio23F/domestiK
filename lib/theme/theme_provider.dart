@@ -1,10 +1,8 @@
-import 'dart:convert';
 
 import 'package:domestik/theme/dark_theme.dart';
 import 'package:domestik/theme/light_theme.dart';
 import 'package:flutter/material.dart';
 
-import '../models/api_response.dart';
 import '../services/user_service.dart';
 
 class ThemeProvider with ChangeNotifier {

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:domestik/services/user_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../constant.dart';
@@ -64,7 +63,7 @@ void loadUserInfo(BuildContext context) async {
   // print("Id");
   // print(id);
   if (token == '') {
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false);
   } else {
     ApiResponse response = await getUserDetailSercice();
     final userDetail = jsonEncode(response.data);
@@ -73,12 +72,12 @@ void loadUserInfo(BuildContext context) async {
 
     if (response.error == null) {
       if (jsonDecode(userDetail)["user"]["foyer_id"] == null) {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InfoPage()), (route) => false);
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const InfoPage()), (route) => false);
       } else {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Home()), (route) => false);
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const Home()), (route) => false);
       }
     } else if (response.error == unauthorized) {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('${response.error}'),

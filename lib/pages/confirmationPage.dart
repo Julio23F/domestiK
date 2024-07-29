@@ -9,7 +9,7 @@ import '../provider/confirmation_provider.dart';
 import '../services/user_service.dart';
 
 class ConfirmationPage extends StatefulWidget {
-  const ConfirmationPage({Key? key}) : super(key: key);
+  const ConfirmationPage({super.key});
 
   @override
   _ConfirmationPageState createState() => _ConfirmationPageState();
@@ -52,7 +52,7 @@ class _ConfirmationPageState extends State<ConfirmationPage>
 
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
     _animationController.forward();
 
@@ -72,7 +72,7 @@ class _ConfirmationPageState extends State<ConfirmationPage>
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          title: Text(
+          title: const Text(
             "Validation",
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -85,19 +85,19 @@ class _ConfirmationPageState extends State<ConfirmationPage>
                 print("Ajouter");
               },
               child: Container(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.secondary,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.watch_later_outlined,
                   color: Colors.grey,
                   size: 25,
                 ),
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
           ],
         ),
         body: Consumer<ConfirmationProvider>(
@@ -110,14 +110,14 @@ class _ConfirmationPageState extends State<ConfirmationPage>
               },
               child: Container(
                 height: MediaQuery.of(context).size.height,
-                padding: EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: provider.nbrConfirm == 0
                     ? ListView(
                   children: [
                     Container(
                         padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 2/6),
                         height: MediaQuery.of(context).size.height * 3/4,
-                        child: Column(
+                        child: const Column(
                           children: [
                             Icon(
                               Icons.warning,
@@ -148,12 +148,12 @@ class _ConfirmationPageState extends State<ConfirmationPage>
                     return Column(
                       children: [
                         AnimatedOpacity(
-                          duration: Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 500),
                           opacity: 1.0,
                           curve: Curves.easeIn,
                           child: SlideTransition(
                             position: Tween<Offset>(
-                              begin: Offset(0.0, -0.5),
+                              begin: const Offset(0.0, -0.5),
                               end: Offset.zero,
                             ).animate(
                               CurvedAnimation(
@@ -172,10 +172,10 @@ class _ConfirmationPageState extends State<ConfirmationPage>
                                 });
                               },
                               child: Container(
-                                margin: EdgeInsets.symmetric(
+                                margin: const EdgeInsets.symmetric(
                                     vertical: 5, horizontal: 7),
                                 width: MediaQuery.of(context).size.width,
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                     top: 15,
                                     bottom: 15,
                                     left: 20,
@@ -192,7 +192,7 @@ class _ConfirmationPageState extends State<ConfirmationPage>
                                       color: Colors.grey.withOpacity(0.1),
                                       spreadRadius: 0.2,
                                       blurRadius: 5,
-                                      offset: Offset(0, 1),
+                                      offset: const Offset(0, 1),
                                     ),
                                   ],
                                 ),
@@ -214,19 +214,19 @@ class _ConfirmationPageState extends State<ConfirmationPage>
                                           ),
                                         ),
                                         Container(
-                                          margin: EdgeInsets.only(top: 10),
+                                          margin: const EdgeInsets.only(top: 10),
                                           child: Row(
                                             children: [
                                               Container(
-                                                margin: EdgeInsets.only(right: 7),
-                                                padding: EdgeInsets.all(4),
+                                                margin: const EdgeInsets.only(right: 7),
+                                                padding: const EdgeInsets.all(4),
                                                 decoration: BoxDecoration(
                                                   color: (isConfirmed || confirm.state != null)
-                                                      ? Color(0xff8463BE)
+                                                      ? const Color(0xff8463BE)
                                                       : Colors.grey.shade400,
                                                   shape: BoxShape.circle,
                                                 ),
-                                                child: Icon(
+                                                child: const Icon(
                                                   Icons.check,
                                                   size: 11,
                                                   color: Colors.white,
@@ -237,12 +237,12 @@ class _ConfirmationPageState extends State<ConfirmationPage>
                                                   confirm.taches!.length,
                                                       (i) {
                                                     return Container(
-                                                      margin: EdgeInsets.only(right: 7),
+                                                      margin: const EdgeInsets.only(right: 7),
                                                       decoration: BoxDecoration(
                                                         color: Theme.of(context).colorScheme.secondary,
                                                         borderRadius: BorderRadius.circular(5),
                                                       ),
-                                                      padding: EdgeInsets.symmetric(
+                                                      padding: const EdgeInsets.symmetric(
                                                           vertical: 4, horizontal: 10),
                                                       child: Text(
                                                         confirm.taches![i].name.toString(),
@@ -256,12 +256,12 @@ class _ConfirmationPageState extends State<ConfirmationPage>
                                           ),
                                         ),
                                         AnimatedContainer(
-                                          duration: Duration(milliseconds: 300),
+                                          duration: const Duration(milliseconds: 300),
                                           height: _selectedIndex == index && userConfirmName != null ? 60 : 0,
                                           curve: Curves.easeInOut,
                                           child: Container(
-                                            margin: EdgeInsets.only(top: 20),
-                                            padding: EdgeInsets.symmetric(vertical: 1, horizontal: 15),
+                                            margin: const EdgeInsets.only(top: 20),
+                                            padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 15),
                                             decoration: BoxDecoration(
                                               color: Colors.grey.withOpacity(0.2),
                                               borderRadius: BorderRadius.circular(7),
@@ -276,7 +276,7 @@ class _ConfirmationPageState extends State<ConfirmationPage>
                                                   ),
                                                 ),
                                                 Text(
-                                                  ' ${userConfirmName}',
+                                                  ' $userConfirmName',
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w500,
@@ -294,16 +294,16 @@ class _ConfirmationPageState extends State<ConfirmationPage>
                                         ? Container(
                                       width: 8,
                                       height: 8,
-                                      margin: EdgeInsets.only(right: 25),
+                                      margin: const EdgeInsets.only(right: 25),
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Color(0xff8463BE),
+                                        color: const Color(0xff8463BE),
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.grey.withOpacity(0.9),
                                             spreadRadius: 1,
                                             blurRadius: 3,
-                                            offset: Offset(0, 1),
+                                            offset: const Offset(0, 1),
                                           ),
                                         ],
                                       ),
@@ -314,23 +314,23 @@ class _ConfirmationPageState extends State<ConfirmationPage>
                                             provider.confirm(confirm.id);
                                           },
                                           child: isLoading
-                                              ? CircularProgressIndicator()
+                                              ? const CircularProgressIndicator()
                                               : Container(
-                                            padding: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                                 vertical: 7, horizontal: 10),
                                             decoration: BoxDecoration(
-                                              color: Color(0xff21304f),
+                                              color: const Color(0xff21304f),
                                               borderRadius: BorderRadius.circular(7),
                                               boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.grey.withOpacity(0.3),
                                                   spreadRadius: 1,
                                                   blurRadius: 1,
-                                                  offset: Offset(0, 1),
+                                                  offset: const Offset(0, 1),
                                                 ),
                                               ],
                                             ),
-                                            child: Text(
+                                            child: const Text(
                                               "Valider",
                                               style: TextStyle(
                                                 color: Colors.white,
@@ -340,7 +340,7 @@ class _ConfirmationPageState extends State<ConfirmationPage>
                                             ),
                                           ),
                                         )
-                                        :SizedBox(),
+                                        :const SizedBox(),
                                   ],
                                 ),
                               ),
