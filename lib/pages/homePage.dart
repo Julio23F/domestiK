@@ -177,24 +177,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       body: Consumer<HistoriqueProvider>(
         builder: (context,provider, _) {
-          // if (Provider.of<UserProvider>(context).foyerId == null) {
-          //   logout();
-          //   Navigator.of(context).pushAndRemoveUntil(
-          //     MaterialPageRoute(
-          //         builder: (context) => LoginPage()),
-          //         (route) => false,
-          //   );
-          //   // await context.read<HistoriqueProvider>().reset();
-          //   // await context.read<UserProvider>().reset();
-          //    Provider.of<HistoriqueProvider>(context, listen: false).reset();
-          //    Provider.of<UserProvider>(context, listen: false).reset();
-          //    Provider.of<ThemeProvider>(context, listen: false).reset();
-          //
-          // }
-          print("foyer id de julio");
           print(Provider.of<UserProvider>(context).foyerId);
           return RefreshIndicator(
             color: Colors.grey,
@@ -374,7 +359,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-
+                !isLoading?
                 provider.active?SliverList(
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
@@ -486,7 +471,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             width: 25,
                                             child: CircularProgressIndicator(color: Colors.white,),
                                           )
-                                              : (provider.isCheck || tache["state"]  || !isToday || convert(tache["tache"]).contains("1"))
+                                              : (provider.isCheck || tache["state"]  || !isToday || convert(tache["tache"]).contains("_1"))
                                               ?const Icon(
                                             Icons.done,
                                             color: Colors.white,
@@ -603,6 +588,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             ),
                           ),
                         )
+                      );
+                    },
+                    childCount: 1,
+                  ),
+                )
+                    :SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                      return Center(
+                          child: CircularProgressIndicator()
                       );
                     },
                     childCount: 1,
