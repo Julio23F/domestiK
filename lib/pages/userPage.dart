@@ -239,7 +239,7 @@ class _UserpageState extends State<Userpage> {
             const SizedBox(height: 20),
             Container(
               margin: const EdgeInsets.only(bottom: 7),
-              padding: const EdgeInsets.all(18),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(10),
@@ -283,7 +283,7 @@ class _UserpageState extends State<Userpage> {
               },
               child: Container(
                 margin: const EdgeInsets.only(bottom: 7),
-                padding: const EdgeInsets.all(18),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.circular(10),
@@ -318,7 +318,7 @@ class _UserpageState extends State<Userpage> {
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 7),
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 18),
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 14),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(10),
@@ -409,7 +409,7 @@ class _UserpageState extends State<Userpage> {
               },
               child: Container(
                 margin: const EdgeInsets.only(bottom: 7),
-                padding: const EdgeInsets.all(18),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.circular(10),

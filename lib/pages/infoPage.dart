@@ -50,7 +50,7 @@ class _InfoPageState extends State<InfoPage> {
               _creatFoyer();
             },
             child: Text(
-                "Save",
+                "Enregistrer",
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.surface
                 ),

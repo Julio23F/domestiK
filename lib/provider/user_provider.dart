@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:domestik/models/groupe.dart';
 import 'package:flutter/material.dart';
 import '../../models/api_response.dart';
 import '../../services/user_service.dart';
 
 class UserProvider with ChangeNotifier {
   List<dynamic> allUser = [];
+  List<dynamic> allGroupe = [];
   bool isLoading = false;
   String _profil = "assets/images/logo.png";
   String _accountType = "";
@@ -43,6 +45,24 @@ class UserProvider with ChangeNotifier {
   void addUser(List<dynamic> userIds) {
     print(userIds);
     allUser.addAll(userIds);
+    notifyListeners();
+  }
+  void createGroupe(List<dynamic> users, String groupeName) {
+    Set<int> selectedUserIds = users.map((user) => user["id"] as int).toSet();
+    allUser.removeWhere((user) => selectedUserIds.contains(user["id"]));
+
+    List<String> images = users
+        .where((user) => user["profil"] != null)
+        .map((user) => user["profil"] as String)
+        .toList();
+
+    Groupe groupe = Groupe(
+        name: groupeName,
+        image: images,
+        nbrMembres: users.length > 0 ? users.length : 0,
+    );
+    allGroupe.add(groupe);
+    allGroupe = allGroupe.reversed.toList();
     notifyListeners();
   }
 

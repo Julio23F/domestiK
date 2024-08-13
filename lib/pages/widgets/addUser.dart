@@ -1,8 +1,7 @@
+import 'package:domestik/pages/widgets/groupe.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../provider/user_provider.dart'; // Correct path to UserProvider
-// Correct path to ApiResponse
-// Adjust as per your structure
 
 class AddUser extends StatefulWidget {
   const AddUser({super.key});
@@ -12,24 +11,32 @@ class AddUser extends StatefulWidget {
 }
 
 class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
-  Set<int> selectedUserIds = {};
+  List<dynamic> selectedUser = [];
+  List<Color> listColor = [
+    Color(0xffc7f4c3),
+    Color(0xffc0b5fe),
+    Color(0xfffbc86f),
+    Colors.grey,
+    Colors.orange,
+    Colors.purple,
+    Colors.brown,
+    Color(0xff51bca8),
+    Colors.red,
+
+  ];
+
   int? editingUserId;
   final TextEditingController _nameController = TextEditingController();
   bool isAdminSelected = false;
-  // String accountType = "user";
   bool isLoad = false;
+  bool isGrouping = false;
+  final nomGroupeController = TextEditingController();
 
-
-  // Obtenir le type de compte
-  // Future<void> getUserAccountType() async {
-  //   ApiResponse response = await getUserDetailSercice();
-  //   final data = jsonEncode(response.data);
-  //   final type = jsonDecode(data)["user"]["accountType"];
-  //   setState(() {
-  //     accountType = type;
-  //   });
-  //   print(accountType);
-  // }
+  @override
+  void dispose() {
+    super.dispose();
+    nomGroupeController.dispose();
+  }
 
   @override
   void initState() {
@@ -62,21 +69,60 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
       user["name"] = _nameController.text;
     });
     if (isAdminSelected) {
-      print(userId);
-
       await userProvider.changeAdmin(userId);
-    }
-    else{
+    } else {
       print("user choisi");
     }
-
     setState(() {
       isLoad = false;
     });
-
     _stopEditing();
   }
-
+  Future<void> openDialog() async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Nom du Groupe"),
+        content: TextField(
+          autofocus: true,
+          decoration: const InputDecoration(hintText: "Entrer le nom du groupe"),
+          controller: nomGroupeController,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              "Annuler",
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.surface
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              final userProvider = Provider.of<UserProvider>(context, listen: false);
+              print(selectedUser);
+              userProvider.createGroupe(selectedUser, nomGroupeController.text);
+              setState(() {
+                nomGroupeController.text = "";
+                isGrouping = false;
+                selectedUser.clear();
+              });
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              "Enregister",
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.surface
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,14 +130,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
         padding: const EdgeInsets.only(top: 8),
         child: Consumer<UserProvider>(
           builder: (context, userProvider, child) {
-            // if (userProvider.isLoading) {
-            //   return Center(
-            //     child: CircularProgressIndicator(
-            //       color: Theme.of(context).colorScheme.surface,
-            //     ),
-            //   );
-            // }
-
+            print(userProvider.allUser);
             return RefreshIndicator(
               color: Colors.grey,
               backgroundColor: Colors.white,
@@ -99,17 +138,75 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                 await userProvider.getAllUser();
                 await userProvider.getUserAccountType();
               },
-              child: ListView.builder(
-                itemCount: userProvider.allUser.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final user = userProvider.allUser[index];
-                  return _buildItem(user, userProvider, index);
-                },
+              child: ListView(
+                children: [
+
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: userProvider.allGroupe.asMap().entries.map((entry) {
+                          int index = entry.key;
+                          var user = entry.value;
+                          return _buildGroupe(user.name, user.nbrMembres, listColor[userProvider.allGroupe.length - index - 1], user.image);
+                        }).toList(),
+
+                      ),
+                    ),
+                  ),
+                  (userProvider.allUser.length >= 1) ?
+                  ListView.builder(
+                    shrinkWrap: true, // Important to allow ListView inside another ListView
+                    physics: NeverScrollableScrollPhysics(), // Disable scrolling for the inner ListView
+                    itemCount: userProvider.allUser.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final user = userProvider.allUser[index];
+                      return _buildItem(user, userProvider, index);
+                    },
+                  )
+                  :Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 12.0),
+                    child: Text(
+                        "Tous les utilisateurs sont déjà dans un groupe",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).colorScheme.surface
+                        ),
+                    ),
+                  ),
+
+                ],
               ),
             );
           },
         ),
       ),
+      bottomNavigationBar: isGrouping
+          ? Container(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  isGrouping = false;
+                });
+              },
+              child: const Text("Annuler"),
+            ),
+            ElevatedButton(
+              onPressed: (selectedUser.length >= 2) ? () {
+                openDialog();
+              } : null,
+              child: const Text("Grouper"),
+            ),
+          ],
+        ),
+      )
+          : SizedBox(),
+      resizeToAvoidBottomInset: true,
     );
   }
 
@@ -196,34 +293,44 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                 subtitle: Text(
                   '${user["email"]}',
                   style: TextStyle(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .surface
-                        .withOpacity(0.5),
-                    fontSize: 10
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surface
+                          .withOpacity(0.5),
+                      fontSize: 10
                   ),
                 ),
-                trailing: editingUserId == user["id"]
+                trailing: isGrouping
+                    ? Checkbox(
+                  value: selectedUser.contains(user),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value == true) {
+                        selectedUser.add(user);
+                      } else {
+                        selectedUser.remove(user);
+                      }
+                    });
+                  },
+                )
+                    : (editingUserId == user["id"]
                     ? _buildEditingActions(user)
                     : userProvider.accountType == "admin"
                     ? _buildPopupMenu(userProvider, user, index)
-                    : const Text(""),
+                    : const Text("")),
                 onTap: () {
-                  if(editingUserId != null){
+                  if (editingUserId != null) {
                     _stopEditing();
-                  }
-                  else{
+                  } else if (!isGrouping) {
                     _showUserProfile(user);
                   }
                 },
               ),
-
               AnimatedSize(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
-
-                child: (editingUserId == user["id"])?
-                Container(
+                child: (editingUserId == user["id"])
+                    ? Container(
                   padding: const EdgeInsets.only(bottom: 10, left: 70),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -312,7 +419,8 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                       ),
                     ],
                   ),
-                ):const SizedBox(),
+                )
+                    : const SizedBox(),
               ),
             ],
           ),
@@ -321,121 +429,17 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
     );
   }
 
-  void _showUserProfile(dynamic user) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 25,),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 2, horizontal: 2),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: const Color(0xff8463BE),
-                    width: 2.0,
-                  ),
-                  color: Theme.of(context)
-                      .colorScheme
-                      .surface
-                      .withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: ClipOval(
-                  child: (user["profil"] == null)
-                      ? SizedBox(
-                        width: 130,
-                        height: 130,
-                        child: CircleAvatar(
-                          backgroundColor: Theme.of(context).colorScheme.tertiary,
-                          child: Text(
-                        user["name"].substring(0, 1).toUpperCase(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 80
-                        ),
-                                            ),
-                                          ),
-                      ):Image.asset(
-                    user["profil"],
-                    width: 130,
-                    height: 130,
-                    fit: BoxFit.cover,
-                  ),
-                )
-              ),
-              const SizedBox(height: 20,),
-              Text(
-                  user["name"],
-                  style: TextStyle(
-                    fontSize: 19,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.surface
-                  ),
-              ),
-              Text(
-                  user["email"],
-                  style: TextStyle(
-                      fontSize: 13,
-                      color: Theme.of(context).colorScheme.surface.withOpacity(0.6)
-                  ),
-              ),
-              const SizedBox(height: 25,),
-
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   Widget _buildEditingActions(dynamic user) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        InkWell(
-          onTap: () {
-            _stopEditing();
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.red[400],
-              shape: BoxShape.circle,
-            ),
-            padding: const EdgeInsets.all(3),
-            child: const Icon(
-              Icons.close_rounded,
-              size: 20,
-              color: Colors.white,
-            ),
-          ),
+        IconButton(
+          icon: const Icon(Icons.save),
+          onPressed: () => _saveChanges(user["id"]),
         ),
-        const SizedBox(width: 13),
-        isLoad
-            ? SizedBox(
-          height: 25,
-          width: 25,
-          child: CircularProgressIndicator(color: Theme.of(context).colorScheme.surface),
-        )
-            : InkWell(
-          onTap: () {
-            _saveChanges(user["id"]);
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
-            decoration: BoxDecoration(
-              color: const Color(0xff21304f),
-              borderRadius: BorderRadius.circular(7),
-            ),
-            child: const Text(
-              'Enregistrer',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+        IconButton(
+          icon: const Icon(Icons.cancel),
+          onPressed: _stopEditing,
         ),
       ],
     );
@@ -452,23 +456,41 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
           } else if (value == "Supprimer") {
             userProvider.removeUser(index, user["id"]);
           }
+          else if (value == "Grouper") {
+            print("grouper");
+            setState(() {
+              isGrouping = true;
+            });
+          }
+
         } else {
-          _showAccessDeniedDialog();
+
         }
       },
       itemBuilder: (BuildContext context) {
         return [
-          if (user["id"] != userProvider.userId)
-          const PopupMenuItem<String>(
-            value: 'Modifier',
-            child: Row(
-              children: [
-                Icon(Icons.edit, color: Colors.black54),
-                SizedBox(width: 8),
-                Text('Modifier', style: TextStyle(color: Colors.black54)),
-              ],
+            PopupMenuItem<String>(
+              value: 'Grouper',
+              child: Row(
+                children: [
+                  Icon(Icons.group_add, color: Colors.black54),
+                  SizedBox(width: 8),
+                  Text('Grouper', style: TextStyle(color: Colors.black54)),
+                ],
+              ),
             ),
-          ),
+          if (user["id"] != userProvider.userId)
+            PopupMenuItem<String>(
+              value: 'Modifier',
+              child: Row(
+                children: [
+                  Icon(Icons.edit, color: Colors.black54),
+                  SizedBox(width: 8),
+                  Text('Modifier', style: TextStyle(color: Colors.black54)),
+                ],
+              ),
+            ),
+
           PopupMenuItem<String>(
             value: 'Désactiver',
             child: Row(
@@ -513,35 +535,157 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
     );
   }
 
-  void _showAccessDeniedDialog() {
+
+  void _showUserProfile(dynamic user) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(
-            'Accès Refusé',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: const Text(
-            "Seul l'admin de ce foyer peut accéder à cette section.",
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'Fermer',
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 25,),
+              Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 2, horizontal: 2),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: const Color(0xff8463BE),
+                      width: 2.0,
+                    ),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .surface
+                        .withOpacity(0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: ClipOval(
+                    child: (user["profil"] == null)
+                        ? SizedBox(
+                      width: 130,
+                      height: 130,
+                      child: CircleAvatar(
+                        backgroundColor: Theme.of(context).colorScheme.tertiary,
+                        child: Text(
+                          user["name"].substring(0, 1).toUpperCase(),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 80
+                          ),
+                        ),
+                      ),
+                    ):Image.asset(
+                      user["profil"],
+                      width: 130,
+                      height: 130,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+              ),
+              const SizedBox(height: 20,),
+              Text(
+                user["name"],
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
+                    fontSize: 19,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.surface
                 ),
               ),
-            ),
-          ],
+              Text(
+                user["email"],
+                style: TextStyle(
+                    fontSize: 13,
+                    color: Theme.of(context).colorScheme.surface.withOpacity(0.6)
+                ),
+              ),
+              const SizedBox(height: 25,),
+
+            ],
+          ),
         );
       },
+    );
+  }
+
+  Widget _buildGroupe(String title, int chats, Color color, List usersProfils) {
+    return Container(
+      width: 200,
+      height: 150,
+      margin: const EdgeInsets.only(right: 16),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Icon(Icons.group, color: Colors.black),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Text('$chats membres', style: TextStyle(color: Colors.black)),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                  Text(
+                    'voir plus',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  for(int i = 0; i<usersProfils.length; i++)
+                    CircleAvatar(
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
+                      radius: 12,
+                      child: ClipOval(
+                        child: Image.asset(
+                          usersProfils[i],
+                          width: 20,
+                          height: 20,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+
+                ],
+              )
+            ),
+          ),
+        ],
+      ),
     );
   }
 
