@@ -150,10 +150,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     const textColor = Color(0xff192b54);
     final nbrTache = tacheTodo != null ? jsonDecode(tacheTodo).length : 0;
-    print("tacheTodo");
-    print(tacheTodo);
-
-
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
@@ -371,7 +367,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 width: MediaQuery.of(context).size.width,
                                 padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                                 decoration: BoxDecoration(
-                                  color: (tache["user"]["id"] == provider.userId)
+                                  color: (tache["user"]["usersIdInGroupe"].contains(provider.userId))
                                       ? const Color(0xff21304f)
                                       : Theme.of(context).colorScheme.primary,
                                   borderRadius: BorderRadius.circular(10),
@@ -396,7 +392,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       children: [
                                         Text(
                                           tache["user"]["name"].toString(),
-                                          style: (tache["user"]["id"] == provider.userId)
+                                          style: (tache["user"]["usersIdInGroupe"].contains(provider.userId))
                                               ? const TextStyle(
                                             color: Colors.white,
                                             fontSize: 16,
@@ -412,7 +408,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               const EdgeInsets.only(right: 7),
                                               padding: const EdgeInsets.all(4),
                                               decoration: BoxDecoration(
-                                                color: tache["user"]["id"] == provider.userId?Colors.white.withOpacity(0.1):Colors.grey.shade400,
+                                                color: tache["user"]["usersIdInGroupe"].contains(provider.userId)?Colors.white.withOpacity(0.1):Colors.grey.shade400,
                                                 shape: BoxShape.circle,
                                               ),
                                               child: const Icon(
@@ -432,7 +428,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                 return Container(
                                                   margin: const EdgeInsets.only(right: 7),
                                                   decoration: BoxDecoration(
-                                                    color: (tache["user"]["id"] == provider.userId || Provider.of<ThemeProvider>(context).themeData == darkTheme)
+                                                    color: (tache["user"]["usersIdInGroupe"].contains(provider.userId) || Provider.of<ThemeProvider>(context).themeData == darkTheme)
                                                         ? Colors.white.withOpacity(0.1)
                                                         : Color(int.parse(tache["tache"][i].split('-')[2])).withOpacity(0.1),
                                                     borderRadius: BorderRadius.circular(5),
@@ -441,7 +437,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                   child: Text(
                                                     tache["tache"][i].split('-')[1].toString(),
                                                     style: TextStyle(
-                                                      color: (tache["user"]["id"] == provider.userId || Provider.of<ThemeProvider>(context).themeData == darkTheme) ? Colors.white : textColor,
+                                                      color: (tache["user"]["usersIdInGroupe"].contains(provider.userId) || Provider.of<ThemeProvider>(context).themeData == darkTheme) ? Colors.white : textColor,
                                                       fontSize: 9,
                                                     ),
                                                   ),
@@ -458,10 +454,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(7),
                                         border: Border.all(
-                                          color: (tache["user"]["id"] == provider.userId) ? Colors.white.withOpacity(0.15) : Colors.grey.withOpacity(0.1),
+                                          color: (tache["user"]["usersIdInGroupe"].contains(provider.userId)) ? Colors.white.withOpacity(0.15) : Colors.grey.withOpacity(0.1),
                                         ),
                                       ),
-                                      child: (tache["user"]["id"] == provider.userId)
+                                      child: (tache["user"]["usersIdInGroupe"].contains(provider.userId))
                                           ?Container(
                                           child: isLoad
                                               ? const SizedBox(

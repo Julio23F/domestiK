@@ -16,12 +16,11 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
     Color(0xffc7f4c3),
     Color(0xffc0b5fe),
     Color(0xfffbc86f),
-    Colors.grey,
-    Colors.orange,
-    Colors.purple,
-    Colors.brown,
+    Color(0xff4c5269),
+    Color(0xffd1cdb0),
+    Color(0xfff5d6ba),
     Color(0xff51bca8),
-    Colors.red,
+    Color(0xffa33668),
 
   ];
 
@@ -157,8 +156,8 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                   ),
                   (userProvider.allUser.length >= 1) ?
                   ListView.builder(
-                    shrinkWrap: true, // Important to allow ListView inside another ListView
-                    physics: NeverScrollableScrollPhysics(), // Disable scrolling for the inner ListView
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: userProvider.allUser.length,
                     itemBuilder: (BuildContext context, int index) {
                       final user = userProvider.allUser[index];
