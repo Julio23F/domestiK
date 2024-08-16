@@ -40,6 +40,8 @@ const confirmer = '$baseURL/confirmer';
 //Grouper
 const groupe = '$baseURL/createGroupe';
 const listGroupe = '$baseURL/getListGroupe';
+const remove = '$baseURL/removeFromGroupe';
+const deleteGroupe = '$baseURL/deleteGroupe';
 
 // ----- Errors -----
 const serverError = 'Server error';

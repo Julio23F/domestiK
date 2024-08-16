@@ -10,5 +10,8 @@ class Groupe {
     this.image,
     this.nbrMembres,
   });
-
+  @override
+  String toString() {
+    return 'Groupe{id: $id, name: $name}';
+  }
 }

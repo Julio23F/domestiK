@@ -339,6 +339,7 @@ class _UsergroupeState extends State<Usergroupe> with TickerProviderStateMixin {
             userProvider.removeUser(index, user["id"], "groupe");
           }
           else if (value == "Retirer") {
+            userProvider.removeFromGroupe(index, user["id"]);
 
 
           }

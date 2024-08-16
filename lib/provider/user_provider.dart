@@ -171,6 +171,22 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void removeFromGroupe(int index, int userId) async{
+    await removeFromGroupeService(userId);
+    final currentUser = allUserInGroupe[index];
+    allUser.add(currentUser);
+    allUserInGroupe.removeAt(index);
+    notifyListeners();
+  }
+  void deleteGroupe(int groupeId) async {
+    await deleteGroupeService(groupeId);
+    print(allGroupe.toList());
+
+    allGroupe.removeWhere((groupe) => groupe.id == groupeId);
+
+    notifyListeners();
+  }
+
 
   void activeOrDisable(int userId, String type) async {
     notifyListeners();

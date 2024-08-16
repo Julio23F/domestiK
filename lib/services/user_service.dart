@@ -181,7 +181,7 @@ Future<void> addUser(List<int> userIds) async {
   }
 }
 
-
+//Créer un groupe
 Future<ApiResponse> createGroupeService(String groupeName, List<int> userIds) async {
   ApiResponse apiResponse = ApiResponse();
   try {
@@ -201,8 +201,6 @@ Future<ApiResponse> createGroupeService(String groupeName, List<int> userIds) as
     final response = await request.close();
     final responseBody = await response.transform(utf8.decoder).join();
 
-    print('response.statusCode');
-    print(apiResponse.data);
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(responseBody);
@@ -220,7 +218,76 @@ Future<ApiResponse> createGroupeService(String groupeName, List<int> userIds) as
   return apiResponse;
 }
 
+// Retirer un utilisateur du groupe
+Future<ApiResponse> removeFromGroupeService(int userId) async {
+  ApiResponse apiResponse = ApiResponse();
 
+  try {
+    String token = await getToken();
+    final client = createHttpClient();
+    final request = await client.deleteUrl(Uri.parse(remove));
+    request.headers.set('Accept', 'application/json');
+    request.headers.set('Content-Type', 'application/json');
+
+    request.headers.set('Authorization', 'Bearer $token');
+    request.write(jsonEncode({"userId": userId.toString()}));
+
+    final response = await request.close();
+    final responseBody = await response.transform(utf8.decoder).join();
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(responseBody);
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
+
+Future<ApiResponse> deleteGroupeService(int groupeId) async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    String token = await getToken();
+
+    final client = createHttpClient();
+    final request = await client.deleteUrl(Uri.parse(deleteGroupe));
+    request.headers.set('Accept', 'application/json');
+    request.headers.set('Authorization', 'Bearer $token');
+    request.headers.set('Content-Type', 'application/json');
+
+    request.write(jsonEncode({"groupeId": groupeId.toString()}));
+
+    final response = await request.close();
+    final responseBody = await response.transform(utf8.decoder).join();
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(responseBody);
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+
+  return apiResponse;
+}
+
+//Obtenir la liste des groupe
 Future<ApiResponse> getListGroupeService() async {
   ApiResponse apiResponse = ApiResponse();
   try {

@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:domestik/pages/widgets/groupe.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import '../../models/api_response.dart';
 import '../../provider/user_provider.dart';
+import '../../services/user_service.dart';
 import '../userGroupe.dart'; // Correct path to UserProvider
 
 class AddUser extends StatefulWidget {
@@ -73,7 +77,19 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
   bool isLoad = false;
   bool isGrouping = false;
   final nomGroupeController = TextEditingController();
+  String accountType = "user";
 
+
+
+  //Obtenir le type de compte
+  Future<void> getUserAccountType() async {
+    ApiResponse response = await getUserDetailSercice();
+    final data = jsonEncode(response.data);
+    final type = jsonDecode(data)["user"]["accountType"];
+    setState(() {
+      accountType = type;
+    });
+  }
   @override
   void dispose() {
     super.dispose();
@@ -82,6 +98,8 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    getUserAccountType();
+
     super.initState();
     Provider.of<UserProvider>(context, listen: false).getAllUser();
     Provider.of<UserProvider>(context, listen: false).getUserAccountType();
@@ -191,7 +209,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                         children: userProvider.allGroupe.asMap().entries.map((entry) {
                           int index = entry.key;
                           var user = entry.value;
-                          return _buildGroupe(user.id, user.name, user.nbrMembres, listColor[userProvider.allGroupe.length - index - 1], user.image);
+                          return _buildGroupe(userProvider, user.id, user.name, user.nbrMembres, listColor[userProvider.allGroupe.length - index - 1], user.image);
                         }).toList(),
 
                       ),
@@ -569,16 +587,6 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                 ],
               ),
             ),
-          // PopupMenuItem<String>(
-          //   value: 'Supprimer',
-          //   child: Row(
-          //     children: [
-          //       Icon(Icons.delete, color: Colors.black54),
-          //       SizedBox(width: 8),
-          //       Text('Supprimer', style: TextStyle(color: Colors.black54)),
-          //     ],
-          //   ),
-          // ),
         ];
       },
       color: Colors.white,
@@ -662,7 +670,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildGroupe(int groupeId, String title, int chats, Color color, List usersProfils) {
+  Widget _buildGroupe(UserProvider userProvider, int groupeId, String title, int totalUsers, Color color, List usersProfils) {
     return GestureDetector(
       onTap: (){
         Navigator.push(
@@ -677,6 +685,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
         width: 200,
         height: 150,
         margin: const EdgeInsets.only(right: 16),
+        padding: EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(15),
@@ -690,11 +699,81 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                 child: Icon(Icons.group, color: Colors.black),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Text('$chats membres', style: TextStyle(color: Colors.black)),
+            Align(
+              alignment: Alignment.topRight,
+              child: PopupMenuButton<String>(
+                icon: Icon(Icons.more_vert, color: Colors.black.withOpacity(0.9)),
+                onSelected: (String result) {
+                  if(accountType == "admin") {
+                    if (result == 'delete') {
+                      print("sup");
+                      userProvider.deleteGroupe(groupeId);
+                    }
+                  }
+                  else{
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text(
+                            'Accès Refusé',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          content: const Text(
+                            "Seul l'admin de ce foyer peut accéder à cette section.",
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                'Fermer',
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.surface.withOpacity(0.5)
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+
+                      },
+                    );
+                  }
+
+                },
+                itemBuilder: (BuildContext context) => [
+                  PopupMenuItem<String>(
+                    value: 'delete',
+                    height: 35,
+                    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 3),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          right: BorderSide(
+                              color: (accountType == "user")?Colors.red:Colors.transparent,
+                              width: 2
+                          ),
+                        ),
+                      ),
+                      width: 105,
+                      child: const Row(
+                        children: [
+                          Icon(Icons.delete, color: Colors.black54),
+                          SizedBox(width: 5),
+                          Text('Supprimer', style: TextStyle(color: Colors.black54)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 4,
               ),
             ),
             Align(
@@ -713,7 +792,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                           color: Colors.black),
                     ),
                     Text(
-                      'voir plus',
+                      '$totalUsers membres',
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.black54,
