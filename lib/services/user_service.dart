@@ -76,14 +76,11 @@ Future<ApiResponse> register(String name, String email, String password) async {
         break;
       default:
         apiResponse.error = somethingWentWrong;
-        print(apiResponse.error);
         break;
     }
   } catch (e) {
     apiResponse.error = e.toString();
   }
-  print('apiResponse.error');
-  print(apiResponse.error);
   return apiResponse;
 }
 
@@ -115,7 +112,6 @@ Future<ApiResponse> getUserDetailSercice() async {
     }
   } catch (e) {
     apiResponse.error = serverError;
-    debugPrint(e.toString());
   }
   return apiResponse;
 }
@@ -125,8 +121,6 @@ Future<bool> getUserMode() async {
   ApiResponse response = await getUserDetailSercice();
   final data = jsonEncode(response.data);
   final mode = jsonDecode(data)["user"]["mode"];
-  print('mode avant');
-  print(mode);
   return (mode == 1) ? true : false;
 }
 
@@ -159,7 +153,6 @@ Future<ApiResponse> getAllUser() async {
     }
   } catch (e) {
     apiResponse.error = serverError;
-    debugPrint(e.toString());
   }
   return apiResponse;
 }
@@ -184,10 +177,80 @@ Future<void> addUser(List<int> userIds) async {
   if (response.statusCode == 200) {
     print('Utilisateurs ajoutés avec succès');
   } else {
-    print('Erreur: ${response.statusCode}');
     print('Message: ${await response.transform(utf8.decoder).join()}');
   }
 }
+
+
+Future<ApiResponse> createGroupeService(String groupeName, List<int> userIds) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await getToken();
+
+    // Création du client HTTP
+    final client = HttpClient();
+    final request = await client.postUrl(Uri.parse(groupe));
+
+    request.headers.set('Content-Type', 'application/json');
+    request.headers.set('Authorization', 'Bearer $token');
+    request.write(jsonEncode({
+      'name': groupeName,
+      'usersId': userIds,
+    }));
+
+    final response = await request.close();
+    final responseBody = await response.transform(utf8.decoder).join();
+
+    print('response.statusCode');
+    print(apiResponse.data);
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(responseBody);
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    print('Une erreur est survenue: $e');
+  }
+  return apiResponse;
+}
+
+
+Future<ApiResponse> getListGroupeService() async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await getToken();
+    final client = createHttpClient();
+    final request = await client.getUrl(Uri.parse(listGroupe));
+    request.headers.set('Content-Type', 'application/json');
+    request.headers.set('Accept', 'application/json');
+    request.headers.set('Authorization', 'Bearer $token');
+
+    final response = await request.close();
+    final responseBody = await response.transform(utf8.decoder).join();
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(responseBody);
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
+
 
 // Activer ou désactiver un utilisateur
 Future<ApiResponse> activeOrDisableService(int userId) async {
@@ -219,7 +282,6 @@ Future<ApiResponse> activeOrDisableService(int userId) async {
     }
   } catch (e) {
     apiResponse.error = serverError;
-    debugPrint(e.toString());
   }
   return apiResponse;
 }
@@ -254,7 +316,6 @@ Future<ApiResponse> changeAdminService(int userId) async {
     }
   } catch (e) {
     apiResponse.error = serverError;
-    debugPrint(e.toString());
   }
   return apiResponse;
 }
@@ -289,7 +350,6 @@ Future<ApiResponse> updateUserPreference(bool mode) async {
     }
   } catch (e) {
     apiResponse.error = serverError;
-    debugPrint(e.toString());
   }
   return apiResponse;
 }
@@ -324,7 +384,6 @@ Future<ApiResponse> updateUserService(String path) async {
     }
   } catch (e) {
     apiResponse.error = serverError;
-    debugPrint(e.toString());
   }
   return apiResponse;
 }
@@ -359,13 +418,12 @@ Future<ApiResponse> removeUserService(int userId) async {
     }
   } catch (e) {
     apiResponse.error = serverError;
-    debugPrint(e.toString());
   }
   return apiResponse;
 }
 
 // Obtenir tous les utilisateurs qui sont dans le foyer
-Future<ApiResponse> getMembre() async {
+Future<ApiResponse> getMembre(groupeId) async {
   ApiResponse apiResponse = ApiResponse();
   ApiResponse data = await getUserDetailSercice();
   final userDetail = jsonEncode(data.data);
@@ -374,11 +432,13 @@ Future<ApiResponse> getMembre() async {
     String token = await getToken();
     final client = createHttpClient();
     final String url = '$allMembre/$foyerId/allMembre';
-    final request = await client.getUrl(Uri.parse(url));
+    final request = await client.postUrl(Uri.parse(url));
     request.headers.set('Accept', 'application/json');
     request.headers.set('Content-Type', 'application/json'); // Ajout de l'en-tête
-
     request.headers.set('Authorization', 'Bearer $token');
+
+    request.write(jsonEncode({'groupeId': groupeId}));
+
 
     final response = await request.close();
     final responseBody = await response.transform(utf8.decoder).join();
@@ -396,7 +456,6 @@ Future<ApiResponse> getMembre() async {
     }
   } catch (e) {
     apiResponse.error = serverError;
-    debugPrint(e.toString());
   }
   return apiResponse;
 }

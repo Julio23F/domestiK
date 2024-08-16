@@ -41,8 +41,6 @@ class ThemeProvider with ChangeNotifier {
 
   void checkUserPrefernce() async {
     var mode = await getUserMode();
-    print("mode");
-    print(mode);
     if (mode) {
       _themeData = lightTheme;
       _switchValue = false;
@@ -54,7 +52,6 @@ class ThemeProvider with ChangeNotifier {
   }
 
   Future<void> reset() async{
-    print('Effacer Them');
     _themeData = lightTheme;
 
     notifyListeners();

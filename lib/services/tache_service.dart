@@ -140,7 +140,6 @@ Future<ApiResponse> getTache() async {
     }
   } catch (e) {
     apiResponse.error = serverError;
-    debugPrint(e.toString());
   }
 
   return apiResponse;
@@ -177,7 +176,6 @@ Future<ApiResponse> deleteTacheService(int tacheId) async {
     }
   } catch (e) {
     apiResponse.error = serverError;
-    debugPrint(e.toString());
   }
 
   return apiResponse;

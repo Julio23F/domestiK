@@ -155,7 +155,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Consumer<HistoriqueProvider>(
         builder: (context,provider, _) {
-          print(Provider.of<UserProvider>(context).foyerId);
           return RefreshIndicator(
             color: Colors.grey,
             backgroundColor: Colors.white,
@@ -420,10 +419,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             Wrap(
                                               spacing: 5,
                                               children: List.generate(tache["tache"].length, (i) {
-                                                print('Liste des taches à faire');
-                                                print(convert(tache["tache"]).isEmpty);
-                                                print(convert(tache["tache"]).contains(" "));
-                                                print(tache["tache"].isEmpty);
 
                                                 return Container(
                                                   margin: const EdgeInsets.only(right: 7),

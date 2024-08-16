@@ -6,6 +6,7 @@ import '../../services/user_service.dart';
 
 class UserProvider with ChangeNotifier {
   List<dynamic> allUser = [];
+  List<dynamic> allUserInGroupe = [];
   List<dynamic> allGroupe = [];
   bool isLoading = false;
   String _profil = "assets/images/logo.png";
@@ -28,7 +29,8 @@ class UserProvider with ChangeNotifier {
   Future<void> getAllUser() async {
     isLoading = true;
 
-    ApiResponse response = await getMembre();
+    ApiResponse response = await getMembre(null);
+
     if (response.data != null) {
       final data = jsonEncode(response.data);
       final users = jsonDecode(data)["users"];
@@ -39,34 +41,82 @@ class UserProvider with ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
+  Future<void> getAllUserInGroupe(groupeId) async {
+    isLoading = true;
+
+    ApiResponse response = await getMembre(groupeId);
+
+    if (response.data != null) {
+      final data = jsonEncode(response.data);
+      final users = jsonDecode(data)["users"];
+      allUserInGroupe.clear();
+      allUserInGroupe.addAll(users);
+    }
+
+    isLoading = false;
+    notifyListeners();
+  }
 
 
   //Ajouter des utilisateurs à partir de AllUser Page
   void addUser(List<dynamic> userIds) {
-    print(userIds);
     allUser.addAll(userIds);
     notifyListeners();
   }
-  void createGroupe(List<dynamic> users, String groupeName) {
-    Set<int> selectedUserIds = users.map((user) => user["id"] as int).toSet();
-    allUser.removeWhere((user) => selectedUserIds.contains(user["id"]));
+  Future<void> createGroupe(List<dynamic> users, String groupeName) async{
 
     List<String> images = users
         .where((user) => user["profil"] != null)
         .map((user) => user["profil"] as String)
         .toList();
 
-    Groupe groupe = Groupe(
-        name: groupeName,
-        image: images,
-        nbrMembres: users.length > 0 ? users.length : 0,
-    );
-    allGroupe.add(groupe);
-    allGroupe = allGroupe.reversed.toList();
+    Set<int> selectedUserIds = users.map((user) => user["id"] as int).toSet();
+    allUser.removeWhere((user) => selectedUserIds.contains(user["id"]));
+
+    ApiResponse response = await createGroupeService(groupeName, selectedUserIds.toList());
+    if (response.data != null) {
+      final data = jsonEncode(response.data);
+      final groupeData = jsonDecode(data);
+
+      Groupe groupe = Groupe(
+        id: groupeData['id'],
+        name: groupeData['name'] ?? 'Nom indisponible',
+        image: List<String>.from(groupeData['profil'] ?? []),
+        nbrMembres: groupeData['nbrMembres'] ?? 0,
+      );
+      allGroupe.insert(0, groupe);
+    }
+
     notifyListeners();
   }
 
-  //Mise à jour du profil
+  Future<void> getListGroupe() async {
+    try {
+      ApiResponse response = await getListGroupeService();
+      if (response.data != null) {
+        final data = jsonEncode(response.data);
+        final List<dynamic> groupesData = jsonDecode(data);
+
+        allGroupe.clear();
+        for (var groupeData in groupesData) {
+          Groupe groupe = Groupe(
+            id: groupeData['id'],
+            name: groupeData['name'] ?? 'Nom indisponible',
+            image: List<String>.from(groupeData['profil'] ?? []),
+            nbrMembres: groupeData['nbrMembres'] ?? 0,
+          );
+          allGroupe.add(groupe);
+        }
+
+        allGroupe = allGroupe.reversed.toList();
+      }
+    } catch (e) {
+      print("Erreur lors de la récupération des groupes : $e");
+    }
+  }
+
+
+
   void updateUser(String path) async{
     await updateUserService(path);
     _profil = path;
@@ -74,8 +124,6 @@ class UserProvider with ChangeNotifier {
 
   }
   Future<void> getUserDetail() async {
-    print("sans interet");
-
     ApiResponse response = await getUserDetailSercice();
     final data = jsonEncode(response.data);
     final id = jsonDecode(data)["user"]["id"];
@@ -97,39 +145,46 @@ class UserProvider with ChangeNotifier {
 
   }
   Future<void> getUserAccountType() async {
-    print("recheche2");
-
     ApiResponse response = await getUserDetailSercice();
     final data = jsonEncode(response.data);
     final type = jsonDecode(data)["user"]["accountType"];
     _accountType = type;
-    print("type");
-    print(type);
     notifyListeners();
   }
 
 
   //Changer l'admin du foyer
   Future<void> changeAdmin(int userId) async{
-    print(userId);
     await changeAdminService(userId);
     getUserAccountType();
     notifyListeners();
   }
 
-  void removeUser(int index, int userId) {
-    allUser.removeAt(index);
-    removeUserService(userId);
+  void removeUser(int index, int userId, String type) async{
+    await removeUserService(userId);
+    if(type == "groupe"){
+      allUserInGroupe.removeAt(index);
+    }
+    else{
+      allUser.removeAt(index);
+    }
     notifyListeners();
   }
 
 
-  void activeOrDisable(int userId) async {
+  void activeOrDisable(int userId, String type) async {
     notifyListeners();
-
+    print("active or");
+    print(userId);
     await activeOrDisableService(userId).then((value) {
+      final user;
+      if(type == "groupe"){
+        user = allUserInGroupe.firstWhere((u) => u["id"] == userId);
+      }
+      else{
+        user = allUser.firstWhere((u) => u["id"] == userId);
+      }
 
-      final user = allUser.firstWhere((u) => u["id"] == userId);
       user["active"] = user["active"] == 1 ? 0 : 1;
     });
 
@@ -139,7 +194,6 @@ class UserProvider with ChangeNotifier {
 
 
   Future<void> reset() async{
-    print('Effacer user');
     _profil = "assets/images/logo.png";
     _userId = null;
     notifyListeners();

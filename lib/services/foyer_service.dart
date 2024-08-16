@@ -14,6 +14,7 @@ HttpClient createHttpClient() {
 // Créer un foyer
 Future<ApiResponse> createFoyer(String name) async {
   ApiResponse apiResponse = ApiResponse();
+
   try {
     String token = await getToken();
     final client = createHttpClient();
@@ -21,12 +22,13 @@ Future<ApiResponse> createFoyer(String name) async {
     request.headers.set('Accept', 'application/json');
     request.headers.set('Authorization', 'Bearer $token');
     request.headers.set('Content-Type', 'application/json');
-
     request.write(jsonEncode({'name': name}));
 
     final response = await request.close();
     final responseBody = await response.transform(utf8.decoder).join();
-
+    print("name");
+    print(name);
+    print(response.statusCode);
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(responseBody)["message"];

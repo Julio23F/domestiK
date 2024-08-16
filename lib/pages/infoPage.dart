@@ -38,10 +38,10 @@ class _InfoPageState extends State<InfoPage> {
               Navigator.of(context).pop();
             },
             child: Text(
-                "Annuler",
-                style: TextStyle(
+              "Annuler",
+              style: TextStyle(
                   color: Theme.of(context).colorScheme.surface
-                ),
+              ),
             ),
           ),
           TextButton(
@@ -50,10 +50,10 @@ class _InfoPageState extends State<InfoPage> {
               _creatFoyer();
             },
             child: Text(
-                "Enregistrer",
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.surface
-                ),
+              "Enregistrer",
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.surface
+              ),
             ),
           ),
         ],
@@ -98,7 +98,6 @@ class _InfoPageState extends State<InfoPage> {
     const textColor = Color(0xff192b54);
 
     return Scaffold(
-      //Pour qu'il n'y pas de problème quand le clavier s'affiche
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
@@ -145,7 +144,7 @@ class _InfoPageState extends State<InfoPage> {
                   const Text(
                     'Simplifiez Votre Quotidien en Quelques Clics',
                     style: TextStyle(
-                      color: textColor,
+                      color: Colors.grey,
                     ),
                   ),
                   const SizedBox(height: 50),
@@ -153,7 +152,7 @@ class _InfoPageState extends State<InfoPage> {
                     "assets/images/logo.png",
                     width: MediaQuery.of(context).size.width * 4 / 7,
                   ),
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 55),
                   const Text(
                     'Créer un foyer',
                     style: TextStyle(
@@ -168,7 +167,7 @@ class _InfoPageState extends State<InfoPage> {
                       const Text(
                         "Ou attendez qu'on vous ajoute : ",
                         style: TextStyle(
-                          color: textColor,
+                          color: Colors.grey,
                           fontSize: 16,
                         ),
                       ),
@@ -196,87 +195,6 @@ class _InfoPageState extends State<InfoPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10,),
-                  const Text(
-                      "||",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
-                      ),
-                  ),
-                  const SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Se déconnecter : ",
-                        style: TextStyle(
-                          color: textColor,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      InkWell(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Déconnexion'),
-                                content: const Text('Voulez-vous réellement vous déconnecter ?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'Annuler',
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .surface
-                                              .withOpacity(0.5)),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async{
-
-                                      logout();
-                                      Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                            builder: (context) => const LoginPage()),
-                                            (route) => false,
-                                      );
-                                      await Provider.of<HistoriqueProvider>(context, listen: false).reset();
-                                      await Provider.of<UserProvider>(context, listen: false).reset();
-                                      await Provider.of<ThemeProvider>(context, listen: false).reset();
-
-                                    },
-                                    child: Text(
-                                      'Confirmer',
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .surface
-                                              .withOpacity(0.5)),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        child: const Text(
-                          "Déconnexion",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -287,32 +205,55 @@ class _InfoPageState extends State<InfoPage> {
             bottom: 45,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  openDialog();
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color(0xff40719D),
-                        Color(0xff40499D),
-                        Color(0xff2A3D64),
-                      ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: InkWell(
+              child: Row(
+                children: [
+                  InkWell(
                     onTap: () {
-                      openDialog();
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Déconnexion'),
+                            content: const Text('Voulez-vous réellement vous déconnecter ?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'Annuler',
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .surface
+                                          .withOpacity(0.5)),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  logout();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) => const LoginPage()),
+                                        (route) => false,
+                                  );
+                                  await Provider.of<HistoriqueProvider>(context, listen: false).reset();
+                                  await Provider.of<UserProvider>(context, listen: false).reset();
+                                  await Provider.of<ThemeProvider>(context, listen: false).reset();
+                                },
+                                child: Text(
+                                  'Confirmer',
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .surface
+                                          .withOpacity(0.5)),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -320,16 +261,54 @@ class _InfoPageState extends State<InfoPage> {
                         maxWidth: double.infinity,
                         minHeight: 50.0,
                       ),
-                      child: const Text(
-                        'Créer un foyer',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Icon(Icons.logout, color: Colors.white, size: 25,)
+                    ),
+                  ),
+                  const SizedBox(width: 10), // Add spacing between buttons
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        openDialog();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      child: Container(
+                        alignment: Alignment.center,
+                        constraints: const BoxConstraints(
+                          minHeight: 50.0,
+                        ),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color(0xff40719D),
+                              Color(0xff40499D),
+                              Color(0xff2A3D64),
+                            ],
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Text(
+                          'Créer un foyer',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           ),

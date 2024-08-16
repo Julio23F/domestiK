@@ -30,8 +30,6 @@ class HistoriqueProvider extends ChangeNotifier {
 
 
   Future<void> addHistorique(List tacheIds) async {
-
-    print(tacheIds);
     await addHistoriqueService(tacheIds);
     notifyListeners();
 
@@ -66,7 +64,6 @@ class HistoriqueProvider extends ChangeNotifier {
     _foyerName = "";
     _userEmail = "";
     _userId = 0;
-    print("effacer home");
     notifyListeners();
   }
 }

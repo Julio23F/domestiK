@@ -237,40 +237,40 @@ class _UserpageState extends State<Userpage> {
               ),
             ),
             const SizedBox(height: 20),
-            Container(
-              margin: const EdgeInsets.only(bottom: 7),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(right: 18),
-                    child: const Icon(
-                      Icons.notifications_active_outlined,
-                      size: 25,
-                      color: Color(0xff8463BE),
-                    ),
-                  ),
-                  Text(
-                    "Notification",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.surface,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const Spacer(),
-                  Container(
-                    child: const Icon(
-                      Icons.chevron_right,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   margin: const EdgeInsets.only(bottom: 7),
+            //   padding: const EdgeInsets.all(16),
+            //   decoration: BoxDecoration(
+            //     color: Theme.of(context).colorScheme.primary,
+            //     borderRadius: BorderRadius.circular(10),
+            //   ),
+            //   child: Row(
+            //     children: [
+            //       Container(
+            //         margin: const EdgeInsets.only(right: 18),
+            //         child: const Icon(
+            //           Icons.notifications_active_outlined,
+            //           size: 25,
+            //           color: Color(0xff8463BE),
+            //         ),
+            //       ),
+            //       Text(
+            //         "Notification",
+            //         style: TextStyle(
+            //           color: Theme.of(context).colorScheme.surface,
+            //           fontWeight: FontWeight.w500,
+            //         ),
+            //       ),
+            //       const Spacer(),
+            //       Container(
+            //         child: const Icon(
+            //           Icons.chevron_right,
+            //           color: Colors.grey,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
             GestureDetector(
               onTap: () {
                 Navigator.push(

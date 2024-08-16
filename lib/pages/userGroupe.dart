@@ -1,71 +1,18 @@
-import 'package:domestik/pages/widgets/groupe.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import '../../provider/user_provider.dart';
-import '../userGroupe.dart'; // Correct path to UserProvider
+import '../../provider/user_provider.dart'; // Correct path to UserProvider
 
-class AddUser extends StatefulWidget {
-  const AddUser({super.key});
+class Usergroupe extends StatefulWidget {
+  final String title;
+  final int groupeId;
+
+  const Usergroupe({super.key, required this.title, required this.groupeId});
 
   @override
-  State<AddUser> createState() => _AddUserState();
+  State<Usergroupe> createState() => _UsergroupeState();
 }
 
-class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
-  List<Color> listColor = [
-    Color(0xffc7f4c3),
-    Color(0xffc0b5fe),
-    Color(0xfffbc86f),
-    Color(0xff4c5269),
-    Color(0xffd1cdb0),
-    Color(0xfff5d6ba),
-    Color(0xff51bca8),
-    Color(0xffa33668),
-
-
-    Color(0xffc7f4c3),
-    Color(0xffc0b5fe),
-    Color(0xfffbc86f),
-    Color(0xff4c5269),
-    Color(0xffd1cdb0),
-    Color(0xfff5d6ba),
-    Color(0xff51bca8),
-    Color(0xffa33668),
-    Color(0xffc7f4c3),
-    Color(0xffc0b5fe),
-    Color(0xfffbc86f),
-    Color(0xff4c5269),
-    Color(0xffd1cdb0),
-    Color(0xfff5d6ba),
-    Color(0xff51bca8),
-    Color(0xffa33668),
-    Color(0xffc7f4c3),
-    Color(0xffc0b5fe),
-    Color(0xfffbc86f),
-    Color(0xff4c5269),
-    Color(0xffd1cdb0),
-    Color(0xfff5d6ba),
-    Color(0xff51bca8),
-    Color(0xffa33668),
-    Color(0xffc7f4c3),
-    Color(0xffc0b5fe),
-    Color(0xfffbc86f),
-    Color(0xff4c5269),
-    Color(0xffd1cdb0),
-    Color(0xfff5d6ba),
-    Color(0xff51bca8),
-    Color(0xffa33668),
-    Color(0xffc7f4c3),
-    Color(0xffc0b5fe),
-    Color(0xfffbc86f),
-    Color(0xff4c5269),
-    Color(0xffd1cdb0),
-    Color(0xfff5d6ba),
-    Color(0xff51bca8),
-    Color(0xffa33668),
-
-  ];
+class _UsergroupeState extends State<Usergroupe> with TickerProviderStateMixin {
   List<dynamic> selectedUser = [];
   int? editingUserId;
   final TextEditingController _nameController = TextEditingController();
@@ -75,17 +22,10 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
   final nomGroupeController = TextEditingController();
 
   @override
-  void dispose() {
-    super.dispose();
-    nomGroupeController.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
-    Provider.of<UserProvider>(context, listen: false).getAllUser();
+    Provider.of<UserProvider>(context, listen: false).getAllUserInGroupe(widget.groupeId);
     Provider.of<UserProvider>(context, listen: false).getUserAccountType();
-    Provider.of<UserProvider>(context, listen: false).getListGroupe();
   }
 
   void _startEditing(int userId, String initialName) {
@@ -108,7 +48,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
     });
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     setState(() {
-      final user = userProvider.allUser.firstWhere((u) => u["id"] == userId);
+      final user = userProvider.allUserInGroupe.firstWhere((u) => u["id"] == userId);
       user["name"] = _nameController.text;
     });
     if (isAdminSelected) {
@@ -121,53 +61,21 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
     });
     _stopEditing();
   }
-  Future<void> openDialog() async {
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Nom du Groupe"),
-        content: TextField(
-          autofocus: true,
-          decoration: const InputDecoration(hintText: "Entrer le nom du groupe"),
-          controller: nomGroupeController,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              "Annuler",
-              style: TextStyle(
-                  color: Theme.of(context).colorScheme.surface
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              final userProvider = Provider.of<UserProvider>(context, listen: false);
-              userProvider.createGroupe(selectedUser, nomGroupeController.text);
-              setState(() {
-                nomGroupeController.text = "";
-                isGrouping = false;
-                selectedUser.clear();
-              });
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              "Enregister",
-              style: TextStyle(
-                  color: Theme.of(context).colorScheme.surface
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          widget.title,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 25,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.only(top: 8),
         child: Consumer<UserProvider>(
@@ -177,90 +85,22 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
               color: Colors.grey,
               backgroundColor: Colors.white,
               onRefresh: () async {
-                await userProvider.getAllUser();
+                await userProvider.getAllUserInGroupe(widget.groupeId);
                 await userProvider.getUserAccountType();
-                await userProvider.getListGroupe();
               },
-              child: ListView(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: userProvider.allGroupe.asMap().entries.map((entry) {
-                          int index = entry.key;
-                          var user = entry.value;
-                          return _buildGroupe(user.id, user.name, user.nbrMembres, listColor[userProvider.allGroupe.length - index - 1], user.image);
-                        }).toList(),
-
-                      ),
-                    ),
-                  ),
-                  (userProvider.allUser.length >= 1) ?
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: userProvider.allUser.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final user = userProvider.allUser[index];
-                      return _buildItem(user, userProvider, index);
-                    },
-                  )
-                  :Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Tous les utilisateurs sont déjà dans un groupe",
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Theme.of(context).colorScheme.surface
-                          ),
-                        ),
-                        SizedBox(height: 7,),
-                        Text(
-                          "Seule les membres du foyer dans aucun groupe s'affiche ici.",
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.grey
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                ],
-              ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: userProvider.allUserInGroupe.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final user = userProvider.allUserInGroupe[index];
+                  return _buildItem(user, userProvider, index);
+                },
+              )
             );
           },
         ),
       ),
-      bottomNavigationBar: isGrouping
-          ? Container(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  isGrouping = false;
-                });
-              },
-              child: const Text("Annuler"),
-            ),
-            ElevatedButton(
-              onPressed: (selectedUser.length >= 2) ? () {
-                openDialog();
-              } : null,
-              child: const Text("Grouper"),
-            ),
-          ],
-        ),
-      )
-          : SizedBox(),
       resizeToAvoidBottomInset: true,
     );
   }
@@ -355,20 +195,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                       fontSize: 10
                   ),
                 ),
-                trailing: isGrouping
-                    ? Checkbox(
-                  value: selectedUser.contains(user),
-                  onChanged: (bool? value) {
-                    setState(() {
-                      if (value == true) {
-                        selectedUser.add(user);
-                      } else {
-                        selectedUser.remove(user);
-                      }
-                    });
-                  },
-                )
-                    : (editingUserId == user["id"]
+                trailing: (editingUserId == user["id"]
                     ? _buildEditingActions(user)
                     : userProvider.accountType == "admin"
                     ? _buildPopupMenu(userProvider, user, index)
@@ -505,34 +332,31 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
       onSelected: (String value) {
         if (userProvider.accountType == "admin") {
           if (value == "Désactiver") {
-            userProvider.activeOrDisable(user["id"], "user");
+            userProvider.activeOrDisable(user["id"], "groupe");
           } else if (value == "Modifier") {
             _startEditing(user["id"], user["name"]);
           } else if (value == "Supprimer") {
-            userProvider.removeUser(index, user["id"], "user");
+            userProvider.removeUser(index, user["id"], "groupe");
           }
-          else if (value == "Grouper") {
-            setState(() {
-              isGrouping = true;
-            });
-          }
+          else if (value == "Retirer") {
 
-        } else {
+
+          }
 
         }
       },
       itemBuilder: (BuildContext context) {
         return [
-            PopupMenuItem<String>(
-              value: 'Grouper',
-              child: Row(
-                children: [
-                  Icon(Icons.group_add, color: Colors.black54),
-                  SizedBox(width: 8),
-                  Text('Grouper', style: TextStyle(color: Colors.black54)),
-                ],
-              ),
+          PopupMenuItem<String>(
+            value: 'Retirer',
+            child: Row(
+              children: [
+                Icon(Icons.group_remove, color: Colors.black54),
+                SizedBox(width: 8),
+                Text('Retirer', style: TextStyle(color: Colors.black54)),
+              ],
             ),
+          ),
           if (user["id"] != userProvider.userId)
             PopupMenuItem<String>(
               value: 'Modifier',
@@ -662,96 +486,5 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildGroupe(int groupeId, String title, int chats, Color color, List usersProfils) {
-    return GestureDetector(
-      onTap: (){
-        Navigator.push(
-          context,
-          PageTransition(
-            type: PageTransitionType.rightToLeft,
-            child: Usergroupe(title: title,groupeId: groupeId),
-          ),
-        );
-      },
-      child: Container(
-        width: 200,
-        height: 150,
-        margin: const EdgeInsets.only(right: 16),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Icon(Icons.group, color: Colors.black),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Text('$chats membres', style: TextStyle(color: Colors.black)),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-                    Text(
-                      'voir plus',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    for(int i = 0; i<usersProfils.length; i++)
-                      CircleAvatar(
-                        backgroundColor: Theme.of(context).colorScheme.tertiary,
-                        radius: 12,
-                        child: ClipOval(
-                          child: Image.asset(
-                            usersProfils[i],
-                            width: 20,
-                            height: 20,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-
-                  ],
-                )
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
 }

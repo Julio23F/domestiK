@@ -36,6 +36,11 @@ const delete_tache = '$baseURL/deleteTache';
 const historique = '$baseURL/historique';
 const confirmer = '$baseURL/confirmer';
 
+
+//Grouper
+const groupe = '$baseURL/createGroupe';
+const listGroupe = '$baseURL/getListGroupe';
+
 // ----- Errors -----
 const serverError = 'Server error';
 const unauthorized = 'Unauthorized';

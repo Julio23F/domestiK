@@ -58,17 +58,12 @@ class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 void loadUserInfo(BuildContext context) async {
   String token = await getToken();
   int id = await getUserId();
-  // print("Token");
-  // print(token);
-  // print("Id");
-  // print(id);
+
   if (token == '') {
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false);
   } else {
     ApiResponse response = await getUserDetailSercice();
     final userDetail = jsonEncode(response.data);
-    // print("Foyer_id");
-    print(jsonDecode(userDetail)["user"]["foyer_id"]);
 
     if (response.error == null) {
       if (jsonDecode(userDetail)["user"]["foyer_id"] == null) {
