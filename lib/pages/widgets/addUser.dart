@@ -201,7 +201,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
               },
               child: ListView(
                 children: [
-                  Padding(
+                  userProvider.allGroupe.length >= 1 ?Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -214,7 +214,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
 
                       ),
                     ),
-                  ),
+                  ):SizedBox(),
                   (userProvider.allUser.length >= 1) ?
                   ListView.builder(
                     shrinkWrap: true,
