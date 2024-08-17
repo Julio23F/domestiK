@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     Provider.of<UserProvider>(context, listen: false).getUserProfil();
     Provider.of<UserProvider>(context, listen: false).getUserDetail();
 
-    Provider.of<HistoriqueProvider>(context,listen: false).getUserDetail();
+    // Provider.of<HistoriqueProvider>(context,listen: false).getUserDetail();
 
 
     _controller = AnimationController(
@@ -84,7 +84,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     DateTime now = DateTime.now();
     // String formattedDate = DateFormat('yyyy-MM-dd').format(now);
     String formattedDate = DateFormat('dd').format(now);
-
     ApiResponse response = await todoTache(date.toString());
     if (response.error == null) {
       setState(() {
@@ -114,13 +113,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         );
         _startAnimation();
       });
-    } else if (response.error == unauthorized) {
-      logout().then((value) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-              (route) => false,
-        );
-      });
+    } else if (response.error == "unauthorized") {
+      print(response.error);
+      // logout();
+      // Navigator.of(context).pushAndRemoveUntil(
+      //   MaterialPageRoute(
+      //       builder: (context) => const LoginPage()),
+      //       (route) => false,
+      // );
+      // await Provider.of<HistoriqueProvider>(context, listen: false).reset();
+      // await Provider.of<UserProvider>(context, listen: false).reset();
+      // await Provider.of<ThemeProvider>(context, listen: false).reset();
+
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -176,7 +180,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            provider.foyerName,
+                            '${provider.foyerName.toString()[0].toUpperCase()}${provider.foyerName.toString().substring(1)}',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 28,
@@ -190,7 +194,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    provider.userName,
+                                    '${provider.userName.toString()[0].toUpperCase()}${provider.userName.toString().substring(1)}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -319,6 +323,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   color: Theme.of(context).colorScheme.surface,
                                   fontSize: 11
                               ),
+                              locale: 'fr_FR',
                               onDateChange: (value) {
                                 setState(() {
                                   date = value;
@@ -352,6 +357,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                       final tache = jsonDecode(tacheTodo)[index];
+                      print("tache");
+                      print(tache);
                       return AnimatedBuilder(
                         animation: _controller,
                         builder: (context, child) {
@@ -389,15 +396,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          tache["user"]["name"].toString(),
-                                          style: (tache["user"]["usersIdInGroupe"].contains(provider.userId))
-                                              ? const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          )
-                                              : Theme.of(context).textTheme.bodyMedium,
+                                        Row(
+                                          children: [
+                                            tache["user"]["usersIdInGroupe"].length > 1?
+                                            Container(
+                                              margin: EdgeInsets.only(right: 8),
+                                              child: Icon(Icons.group,
+                                                color: (tache["user"]["usersIdInGroupe"].contains(provider.userId))
+                                                    ? Colors.white
+                                                    : Colors.grey,
+                                              ),
+                                            ):SizedBox(),
+                                            Text(
+                                              '${tache["user"]["name"].toString()[0].toUpperCase()}${tache["user"]["name"].toString().substring(1)}',
+                                              style: (tache["user"]["usersIdInGroupe"].contains(provider.userId))
+                                                  ? const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              )
+                                                  : Theme.of(context).textTheme.bodyMedium,
+                                            ),
+                                          ],
                                         ),
                                         const SizedBox(height: 5),
                                         Row(

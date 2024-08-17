@@ -50,8 +50,10 @@ class HistoriqueProvider extends ChangeNotifier {
       _userId = jsonDecode(data)["user"]["id"];
       _active = jsonDecode(data)["user"]["active"]==1?true:false;
       _accountType = jsonDecode(data)["user"]["accountType"];
-
-
+    }
+    else{
+      print('response.error');
+      print(jsonEncode(response.error));
     }
 
     notifyListeners();

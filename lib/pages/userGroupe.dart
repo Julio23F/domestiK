@@ -88,14 +88,26 @@ class _UsergroupeState extends State<Usergroupe> with TickerProviderStateMixin {
                 await userProvider.getAllUserInGroupe(widget.groupeId);
                 await userProvider.getUserAccountType();
               },
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: userProvider.allUserInGroupe.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final user = userProvider.allUserInGroupe[index];
-                  return _buildItem(user, userProvider, index);
-                },
+              child: ListView(
+                children: [
+                  userProvider.isLoading?Padding(
+                    padding: const EdgeInsets.only(top: 100.0),
+                    child: Center(
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).colorScheme.surface,
+                        )
+                    ),
+                  )
+                      :ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: userProvider.allUserInGroupe.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final user = userProvider.allUserInGroupe[index];
+                      return _buildItem(user, userProvider, index);
+                    },
+                  )
+                ],
               )
             );
           },

@@ -77,19 +77,10 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
   bool isLoad = false;
   bool isGrouping = false;
   final nomGroupeController = TextEditingController();
-  String accountType = "user";
 
 
 
-  //Obtenir le type de compte
-  Future<void> getUserAccountType() async {
-    ApiResponse response = await getUserDetailSercice();
-    final data = jsonEncode(response.data);
-    final type = jsonDecode(data)["user"]["accountType"];
-    setState(() {
-      accountType = type;
-    });
-  }
+
   @override
   void dispose() {
     super.dispose();
@@ -98,7 +89,6 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    getUserAccountType();
 
     super.initState();
     Provider.of<UserProvider>(context, listen: false).getAllUser();
@@ -267,12 +257,27 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                   isGrouping = false;
                 });
               },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.grey,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
               child: const Text("Annuler"),
             ),
+
             ElevatedButton(
               onPressed: (selectedUser.length >= 2) ? () {
                 openDialog();
               } : null,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
               child: const Text("Grouper"),
             ),
           ],
@@ -375,6 +380,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                 ),
                 trailing: isGrouping
                     ? Checkbox(
+                  checkColor: Theme.of(context).colorScheme.surface,
                   value: selectedUser.contains(user),
                   onChanged: (bool? value) {
                     setState(() {
@@ -704,7 +710,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
               child: PopupMenuButton<String>(
                 icon: Icon(Icons.more_vert, color: Colors.black.withOpacity(0.9)),
                 onSelected: (String result) {
-                  if(accountType == "admin") {
+                  if(userProvider.accountType == "admin") {
                     if (result == 'delete') {
                       print("sup");
                       userProvider.deleteGroupe(groupeId);
@@ -753,7 +759,7 @@ class _AddUserState extends State<AddUser> with TickerProviderStateMixin {
                       decoration: BoxDecoration(
                         border: Border(
                           right: BorderSide(
-                              color: (accountType == "user")?Colors.red:Colors.transparent,
+                              color: (userProvider.accountType == "user")?Colors.red:Colors.transparent,
                               width: 2
                           ),
                         ),

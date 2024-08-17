@@ -92,13 +92,12 @@ Future<ApiResponse> getUserDetailSercice() async {
     final client = createHttpClient();
     final request = await client.getUrl(Uri.parse(userURL));
     request.headers.set('Accept', 'application/json');
-    request.headers.set('Content-Type', 'application/json'); // Ajout de l'en-tête
+    request.headers.set('Content-Type', 'application/json');
 
     request.headers.set('Authorization', 'Bearer $token');
 
     final response = await request.close();
     final responseBody = await response.transform(utf8.decoder).join();
-
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(responseBody);
@@ -188,11 +187,13 @@ Future<ApiResponse> createGroupeService(String groupeName, List<int> userIds) as
     String token = await getToken();
 
     // Création du client HTTP
-    final client = HttpClient();
+    final client = createHttpClient();
     final request = await client.postUrl(Uri.parse(groupe));
 
-    request.headers.set('Content-Type', 'application/json');
+    request.headers.set('Accept', 'application/json');
     request.headers.set('Authorization', 'Bearer $token');
+    request.headers.set('Content-Type', 'application/json');
+
     request.write(jsonEncode({
       'name': groupeName,
       'usersId': userIds,

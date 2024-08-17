@@ -20,6 +20,9 @@ Future<ApiResponse> todoTache(date) async {
     String token = await getToken();
     ApiResponse data = await getUserDetailSercice();
     final userDetail = jsonEncode(data.data);
+    print('object');
+    print(userDetail);
+
     int foyerId = jsonDecode(userDetail)["user"]["foyer_id"];
 
     final uri = '$urlAllUserTache/$foyerId/todoTache';
@@ -37,6 +40,7 @@ Future<ApiResponse> todoTache(date) async {
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(responseBody);
+
         break;
       case 422:
         final errors = jsonDecode(responseBody)['errors'];

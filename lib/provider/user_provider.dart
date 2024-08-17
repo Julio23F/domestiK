@@ -126,11 +126,12 @@ class UserProvider with ChangeNotifier {
   Future<void> getUserDetail() async {
     ApiResponse response = await getUserDetailSercice();
     final data = jsonEncode(response.data);
-    final id = jsonDecode(data)["user"]["id"];
-    final foyerId = jsonDecode(data)["user"]["foyer_id"];
-    _userId = id;
-    _foyerId = foyerId;
-
+    if(response.error != null){
+      final id = jsonDecode(data)["user"]["id"];
+      final foyerId = jsonDecode(data)["user"]["foyer_id"];
+      _userId = id;
+      _foyerId = foyerId;
+    }
     notifyListeners();
   }
 
