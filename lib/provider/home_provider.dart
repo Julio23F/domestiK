@@ -44,9 +44,10 @@ class HistoriqueProvider extends ChangeNotifier {
     ApiResponse response = await getUserDetailSercice();
     if (response.data != null) {
       final data = jsonEncode(response.data);
+
       _userName = jsonDecode(data)["user"]["name"];
       _userEmail = jsonDecode(data)["user"]["email"];
-      _foyerName = jsonDecode(data)["user"]["foyer"]["name"];
+      _foyerName = jsonDecode(data)["user"]["foyer"] != null ? jsonDecode(data)["user"]["foyer"]["name"].toString() : "";
       _userId = jsonDecode(data)["user"]["id"];
       _active = jsonDecode(data)["user"]["active"]==1?true:false;
       _accountType = jsonDecode(data)["user"]["accountType"];

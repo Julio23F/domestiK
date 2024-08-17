@@ -66,7 +66,9 @@ void loadUserInfo(BuildContext context) async {
     final userDetail = jsonEncode(response.data);
 
     if (response.error == null) {
-      if (jsonDecode(userDetail)["user"]["foyer_id"] == null) {
+      print("foyer id de user");
+      print(jsonDecode(userDetail)["user"]["foyer_id"]);
+      if (jsonDecode(userDetail)["user"]["foyer_id"] == null || jsonDecode(userDetail)["user"]["foyer_id"] == 0) {
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const InfoPage()), (route) => false);
       } else {
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const Home()), (route) => false);

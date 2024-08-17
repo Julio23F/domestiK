@@ -115,15 +115,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       });
     } else if (response.error == "unauthorized") {
       print(response.error);
-      // logout();
-      // Navigator.of(context).pushAndRemoveUntil(
-      //   MaterialPageRoute(
-      //       builder: (context) => const LoginPage()),
-      //       (route) => false,
-      // );
-      // await Provider.of<HistoriqueProvider>(context, listen: false).reset();
-      // await Provider.of<UserProvider>(context, listen: false).reset();
-      // await Provider.of<ThemeProvider>(context, listen: false).reset();
+      logout();
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+            (route) => false,
+      );
+
+      await Provider.of<HistoriqueProvider>(context, listen: false).reset();
+      await Provider.of<UserProvider>(context, listen: false).reset();
+      await Provider.of<ThemeProvider>(context, listen: false).reset();
 
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -180,7 +180,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '${provider.foyerName.toString()[0].toUpperCase()}${provider.foyerName.toString().substring(1)}',
+                            (provider.foyerName.isNotEmpty)
+                                ?'${provider.foyerName.toString()[0].toUpperCase()}${provider.foyerName.toString().substring(1)}'
+                                :"",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 28,
@@ -194,7 +196,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    '${provider.userName.toString()[0].toUpperCase()}${provider.userName.toString().substring(1)}',
+                                    (provider.userName.isNotEmpty)?
+                                      '${provider.userName.toString()[0].toUpperCase()}${provider.userName.toString().substring(1)}'
+                                      :"",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -357,7 +361,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                       final tache = jsonDecode(tacheTodo)[index];
-                      print("tache");
                       print(tache);
                       return AnimatedBuilder(
                         animation: _controller,
@@ -408,7 +411,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               ),
                                             ):SizedBox(),
                                             Text(
-                                              '${tache["user"]["name"].toString()[0].toUpperCase()}${tache["user"]["name"].toString().substring(1)}',
+                                              (tache["user"]["name"].isNotEmpty)?
+                                                '${tache["user"]["name"].toString()[0].toUpperCase()}${tache["user"]["name"].toString().substring(1)}'
+                                                :'',
                                               style: (tache["user"]["usersIdInGroupe"].contains(provider.userId))
                                                   ? const TextStyle(
                                                 color: Colors.white,
