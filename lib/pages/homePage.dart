@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     Provider.of<UserProvider>(context, listen: false).getUserProfil();
     Provider.of<UserProvider>(context, listen: false).getUserDetail();
 
-    // Provider.of<HistoriqueProvider>(context,listen: false).getUserDetail();
+    Provider.of<HistoriqueProvider>(context,listen: false).getUserDetail();
 
 
     _controller = AnimationController(

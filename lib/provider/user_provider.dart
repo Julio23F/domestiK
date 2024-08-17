@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:domestik/constant.dart';
 import 'package:domestik/models/groupe.dart';
 import 'package:flutter/material.dart';
 import '../../models/api_response.dart';
@@ -213,6 +214,9 @@ class UserProvider with ChangeNotifier {
   Future<void> reset() async{
     _profil = "assets/images/logo.png";
     _userId = null;
+    allUser.clear();
+    allUserInGroupe.clear();
+    allGroupe.clear();
     notifyListeners();
   }
 }
