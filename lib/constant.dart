@@ -1,9 +1,10 @@
-
 // const baseURL = 'http://10.0.2.2:8000/api';
-// const baseURL = 'http://192.168.88.25:8000/api';
-const baseURL = 'https://domestik-api-production.up.railway.app/api';
+const baseURL = 'http://192.168.88.39:8000/api';
+// const baseURL = 'https://domestik-api-production.up.railway.app/api';
+// const baseURL = 'http://api-domestik.rf.gd/api';
 
-
+// actuelle
+// const baseURL = 'http://api-domestik.mooo.com/api';
 // User
 const loginURL = '$baseURL/login';
 const registerURL = '$baseURL/register';
@@ -36,7 +37,6 @@ const delete_tache = '$baseURL/deleteTache';
 const historique = '$baseURL/historique';
 const confirmer = '$baseURL/confirmer';
 
-
 //Grouper
 const groupe = '$baseURL/createGroupe';
 const listGroupe = '$baseURL/getListGroupe';
@@ -47,9 +47,3 @@ const deleteGroupe = '$baseURL/deleteGroupe';
 const serverError = 'Server error';
 const unauthorized = 'Unauthorized';
 const somethingWentWrong = 'Something went wrong, try again!';
-
-
-
-
-
-

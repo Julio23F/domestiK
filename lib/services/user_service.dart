@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
 import '../constant.dart';
 import '../models/api_response.dart';
 import '../models/user.dart';
@@ -17,26 +17,26 @@ HttpClient createHttpClient() {
 Future<ApiResponse> login(String email, String password) async {
   ApiResponse apiResponse = ApiResponse();
   try {
-    final client = createHttpClient();
-    final request = await client.postUrl(Uri.parse(loginURL));
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Content-Type', 'application/json'); // Ajout de l'en-tête
+    final response = await http.post(
+      Uri.parse(loginURL),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'email': email, 'password': password}),
+    );
 
-    request.write(jsonEncode({'email': email, 'password': password}));
-
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
-
+    print(response.statusCode);
     switch (response.statusCode) {
       case 200:
-        apiResponse.data = User.fromJson(jsonDecode(responseBody));
+        apiResponse.data = User.fromJson(jsonDecode(response.body));
         break;
       case 422:
-        final errors = jsonDecode(responseBody)['errors'];
+        final errors = jsonDecode(response.body)['errors'];
         apiResponse.error = errors[errors.keys.elementAt(0)][0];
         break;
       case 403:
-        apiResponse.error = jsonDecode(responseBody)['errors'];
+        apiResponse.error = jsonDecode(response.body)['errors'];
         break;
       default:
         apiResponse.error = somethingWentWrong;
@@ -52,19 +52,22 @@ Future<ApiResponse> login(String email, String password) async {
 Future<ApiResponse> register(String name, String email, String password) async {
   ApiResponse apiResponse = ApiResponse();
   try {
-    final client = createHttpClient();
-    final request = await client.postUrl(Uri.parse(registerURL));
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Content-Type', 'application/json');
-    request.write(jsonEncode({
-      'name': name,
-      'email': email,
-      'password': password,
-      'password_confirmation': password,
-    }));
+    // Envoie de la requête POST avec la bibliothèque http
+    final response = await http.post(
+      Uri.parse(registerURL),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'name': name,
+        'email': email,
+        'password': password,
+        'password_confirmation': password,
+      }),
+    );
 
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
+    final responseBody = response.body;
 
     switch (response.statusCode) {
       case 200:
@@ -89,15 +92,19 @@ Future<ApiResponse> getUserDetailSercice() async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final client = createHttpClient();
-    final request = await client.getUrl(Uri.parse(userURL));
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Content-Type', 'application/json');
 
-    request.headers.set('Authorization', 'Bearer $token');
+    // Envoie de la requête GET avec la bibliothèque http
+    final response = await http.get(
+      Uri.parse(userURL),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
 
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
+    final responseBody = response.body;
+
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(responseBody);
@@ -114,7 +121,6 @@ Future<ApiResponse> getUserDetailSercice() async {
   }
   return apiResponse;
 }
-
 // Obtenir le mode choisi par l'utilisateur
 Future<bool> getUserMode() async {
   ApiResponse response = await getUserDetailSercice();
@@ -129,15 +135,18 @@ Future<ApiResponse> getAllUser() async {
 
   try {
     String token = await getToken();
-    final client = createHttpClient();
-    final request = await client.getUrl(Uri.parse(allUser));
-    request.headers.set('Content-Type', 'application/json'); // Ajout de l'en-tête
 
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Authorization', 'Bearer $token');
+    // Envoi de la requête GET avec la bibliothèque http
+    final response = await http.get(
+      Uri.parse(allUser),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
 
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
+    final responseBody = response.body;
 
     switch (response.statusCode) {
       case 200:
@@ -153,6 +162,7 @@ Future<ApiResponse> getAllUser() async {
   } catch (e) {
     apiResponse.error = serverError;
   }
+
   return apiResponse;
 }
 
@@ -163,20 +173,24 @@ Future<void> addUser(List<int> userIds) async {
   final userDetail = jsonEncode(data.data);
   int foyerId = jsonDecode(userDetail)["user"]["foyer_id"];
 
+  // Construction de l'URL
   final String url = '$addUsers/$foyerId/addUser';
 
-  final client = createHttpClient();
-  final request = await client.postUrl(Uri.parse(url));
-  request.headers.set('Content-Type', 'application/json');
-  request.headers.set('Authorization', 'Bearer $token');
-  request.write(jsonEncode(userIds));
+  // Envoi de la requête POST avec la bibliothèque http
+  final response = await http.post(
+    Uri.parse(url),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+    body: jsonEncode(userIds),
+  );
 
-  final response = await request.close();
-
+  // Gestion de la réponse
   if (response.statusCode == 200) {
     print('Utilisateurs ajoutés avec succès');
   } else {
-    print('Message: ${await response.transform(utf8.decoder).join()}');
+    print('Message: ${response.body}');
   }
 }
 
@@ -186,35 +200,31 @@ Future<ApiResponse> createGroupeService(String groupeName, List<int> userIds) as
   try {
     String token = await getToken();
 
-    // Création du client HTTP
-    final client = createHttpClient();
-    final request = await client.postUrl(Uri.parse(groupe));
+    // Envoi de la requête POST avec la bibliothèque http
+    final response = await http.post(
+      Uri.parse(groupe),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'name': groupeName,
+        'usersId': userIds,
+      }),
+    );
 
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Authorization', 'Bearer $token');
-    request.headers.set('Content-Type', 'application/json');
-
-    request.write(jsonEncode({
-      'name': groupeName,
-      'usersId': userIds,
-    }));
-
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
-
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = jsonDecode(responseBody);
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
+    // Gestion de la réponse
+    if (response.statusCode == 200) {
+      apiResponse.data = jsonDecode(response.body);
+    } else if (response.statusCode == 401) {
+      apiResponse.error = unauthorized;
+    } else {
+      apiResponse.error = somethingWentWrong;
     }
   } catch (e) {
     print('Une erreur est survenue: $e');
+    apiResponse.error = e.toString(); // Ajout de l'erreur dans la réponse
   }
   return apiResponse;
 }
@@ -225,27 +235,25 @@ Future<ApiResponse> removeFromGroupeService(int userId) async {
 
   try {
     String token = await getToken();
-    final client = createHttpClient();
-    final request = await client.deleteUrl(Uri.parse(remove));
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Content-Type', 'application/json');
 
-    request.headers.set('Authorization', 'Bearer $token');
-    request.write(jsonEncode({"userId": userId.toString()}));
+    // Envoi de la requête DELETE avec la bibliothèque http
+    final response = await http.delete(
+      Uri.parse(remove),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({"userId": userId}), // Envoi du userId dans le corps de la requête
+    );
 
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
-
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = jsonDecode(responseBody);
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
+    // Gestion de la réponse
+    if (response.statusCode == 200) {
+      apiResponse.data = jsonDecode(response.body);
+    } else if (response.statusCode == 401) {
+      apiResponse.error = unauthorized;
+    } else {
+      apiResponse.error = somethingWentWrong;
     }
   } catch (e) {
     apiResponse.error = serverError;
@@ -259,27 +267,24 @@ Future<ApiResponse> deleteGroupeService(int groupeId) async {
   try {
     String token = await getToken();
 
-    final client = createHttpClient();
-    final request = await client.deleteUrl(Uri.parse(deleteGroupe));
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Authorization', 'Bearer $token');
-    request.headers.set('Content-Type', 'application/json');
+    // Envoi de la requête DELETE avec la bibliothèque http
+    final response = await http.delete(
+      Uri.parse(deleteGroupe),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({"groupeId": groupeId}), // Envoi du groupeId dans le corps de la requête
+    );
 
-    request.write(jsonEncode({"groupeId": groupeId.toString()}));
-
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
-
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = jsonDecode(responseBody);
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
+    // Gestion de la réponse
+    if (response.statusCode == 200) {
+      apiResponse.data = jsonDecode(response.body);
+    } else if (response.statusCode == 401) {
+      apiResponse.error = unauthorized;
+    } else {
+      apiResponse.error = somethingWentWrong;
     }
   } catch (e) {
     apiResponse.error = serverError;
@@ -293,32 +298,31 @@ Future<ApiResponse> getListGroupeService() async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final client = createHttpClient();
-    final request = await client.getUrl(Uri.parse(listGroupe));
-    request.headers.set('Content-Type', 'application/json');
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Authorization', 'Bearer $token');
 
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
+    // Envoi de la requête GET avec la bibliothèque http
+    final response = await http.get(
+      Uri.parse(listGroupe),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
 
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = jsonDecode(responseBody);
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
+    // Gestion de la réponse
+    if (response.statusCode == 200) {
+      apiResponse.data = jsonDecode(response.body);
+    } else if (response.statusCode == 401) {
+      apiResponse.error = unauthorized;
+    } else {
+      apiResponse.error = somethingWentWrong;
     }
   } catch (e) {
     apiResponse.error = serverError;
   }
+
   return apiResponse;
 }
-
 
 // Activer ou désactiver un utilisateur
 Future<ApiResponse> activeOrDisableService(int userId) async {
@@ -326,31 +330,30 @@ Future<ApiResponse> activeOrDisableService(int userId) async {
 
   try {
     String token = await getToken();
-    final client = createHttpClient();
-    final request = await client.postUrl(Uri.parse(activeOrUnable));
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Content-Type', 'application/json'); // Ajout de l'en-tête
 
-    request.headers.set('Authorization', 'Bearer $token');
-    request.write(jsonEncode({"userId": userId.toString()}));
+    // Envoi de la requête POST avec la bibliothèque http
+    final response = await http.post(
+      Uri.parse(activeOrUnable),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({"userId": userId.toString()}),
+    );
 
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
-
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = jsonDecode(responseBody);
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
+    // Gestion de la réponse
+    if (response.statusCode == 200) {
+      apiResponse.data = jsonDecode(response.body);
+    } else if (response.statusCode == 401) {
+      apiResponse.error = unauthorized;
+    } else {
+      apiResponse.error = somethingWentWrong;
     }
   } catch (e) {
     apiResponse.error = serverError;
   }
+
   return apiResponse;
 }
 
@@ -360,31 +363,30 @@ Future<ApiResponse> changeAdminService(int userId) async {
 
   try {
     String token = await getToken();
-    final client = createHttpClient();
-    final request = await client.postUrl(Uri.parse(change_admin));
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Content-Type', 'application/json'); // Ajout de l'en-tête
 
-    request.headers.set('Authorization', 'Bearer $token');
-    request.write(jsonEncode({"userId": userId.toString()}));
+    // Envoi de la requête POST avec la bibliothèque http
+    final response = await http.post(
+      Uri.parse(change_admin),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({"userId": userId.toString()}),
+    );
 
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
-
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = jsonDecode(responseBody);
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
+    // Gestion de la réponse
+    if (response.statusCode == 200) {
+      apiResponse.data = jsonDecode(response.body);
+    } else if (response.statusCode == 401) {
+      apiResponse.error = unauthorized;
+    } else {
+      apiResponse.error = somethingWentWrong;
     }
   } catch (e) {
     apiResponse.error = serverError;
   }
+
   return apiResponse;
 }
 
@@ -394,31 +396,30 @@ Future<ApiResponse> updateUserPreference(bool mode) async {
 
   try {
     String token = await getToken();
-    final client = createHttpClient();
-    final request = await client.postUrl(Uri.parse(preference));
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Content-Type', 'application/json'); // Ajout de l'en-tête
 
-    request.headers.set('Authorization', 'Bearer $token');
-    request.write(jsonEncode({"mode": mode.toString()}));
+    // Envoi de la requête POST avec la bibliothèque http
+    final response = await http.post(
+      Uri.parse(preference),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({"mode": mode.toString()}),
+    );
 
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
-
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = jsonDecode(responseBody);
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
+    // Gestion de la réponse
+    if (response.statusCode == 200) {
+      apiResponse.data = jsonDecode(response.body);
+    } else if (response.statusCode == 401) {
+      apiResponse.error = unauthorized;
+    } else {
+      apiResponse.error = somethingWentWrong;
     }
   } catch (e) {
     apiResponse.error = serverError;
   }
+
   return apiResponse;
 }
 
@@ -428,31 +429,30 @@ Future<ApiResponse> updateUserService(String path) async {
 
   try {
     String token = await getToken();
-    final client = createHttpClient();
-    final request = await client.postUrl(Uri.parse(constUpdateUser));
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Content-Type', 'application/json'); // Ajout de l'en-tête
 
-    request.headers.set('Authorization', 'Bearer $token');
-    request.write(jsonEncode({"profil": path.toString()}));
+    // Envoi de la requête POST avec la bibliothèque http
+    final response = await http.post(
+      Uri.parse(constUpdateUser),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({"profil": path}),
+    );
 
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
-
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = jsonDecode(responseBody);
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
+    // Gestion de la réponse
+    if (response.statusCode == 200) {
+      apiResponse.data = jsonDecode(response.body);
+    } else if (response.statusCode == 401) {
+      apiResponse.error = unauthorized;
+    } else {
+      apiResponse.error = somethingWentWrong;
     }
   } catch (e) {
     apiResponse.error = serverError;
   }
+
   return apiResponse;
 }
 
@@ -462,72 +462,71 @@ Future<ApiResponse> removeUserService(int userId) async {
 
   try {
     String token = await getToken();
-    final client = createHttpClient();
-    final request = await client.deleteUrl(Uri.parse(remove_user));
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Content-Type', 'application/json'); // Ajout de l'en-tête
 
-    request.headers.set('Authorization', 'Bearer $token');
-    request.write(jsonEncode({"userId": userId.toString()}));
+    // Envoi de la requête DELETE avec la bibliothèque http
+    final response = await http.delete(
+      Uri.parse(remove_user),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({"userId": userId.toString()}),
+    );
 
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
-
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = jsonDecode(responseBody);
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
+    // Gestion de la réponse
+    if (response.statusCode == 200) {
+      apiResponse.data = jsonDecode(response.body);
+    } else if (response.statusCode == 401) {
+      apiResponse.error = unauthorized;
+    } else {
+      apiResponse.error = somethingWentWrong;
     }
   } catch (e) {
     apiResponse.error = serverError;
   }
+
   return apiResponse;
 }
 
 // Obtenir tous les utilisateurs qui sont dans le foyer
 Future<ApiResponse> getMembre(groupeId) async {
   ApiResponse apiResponse = ApiResponse();
+
+  // Récupération des détails de l'utilisateur
   ApiResponse data = await getUserDetailSercice();
   final userDetail = jsonEncode(data.data);
   int foyerId = jsonDecode(userDetail)["user"]["foyer_id"];
+
   try {
     String token = await getToken();
-    final client = createHttpClient();
     final String url = '$allMembre/$foyerId/allMembre';
-    final request = await client.postUrl(Uri.parse(url));
-    request.headers.set('Accept', 'application/json');
-    request.headers.set('Content-Type', 'application/json'); // Ajout de l'en-tête
-    request.headers.set('Authorization', 'Bearer $token');
 
-    request.write(jsonEncode({'groupeId': groupeId}));
+    // Envoi de la requête POST avec la bibliothèque http
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({'groupeId': groupeId}),
+    );
 
-
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
-
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = jsonDecode(responseBody);
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
+    // Gestion de la réponse
+    if (response.statusCode == 200) {
+      apiResponse.data = jsonDecode(response.body);
+    } else if (response.statusCode == 401) {
+      apiResponse.error = unauthorized;
+    } else {
+      apiResponse.error = somethingWentWrong;
     }
   } catch (e) {
     apiResponse.error = serverError;
   }
+
   return apiResponse;
 }
-
 // Obtenir le token
 Future<String> getToken() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
