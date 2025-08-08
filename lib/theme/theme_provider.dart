@@ -5,20 +5,21 @@ import 'package:flutter/material.dart';
 import '../services/user_service.dart';
 
 class ThemeProvider with ChangeNotifier {
-  ThemeData _themeData = darkTheme;  // Par défaut thème sombre
-  bool _switchValue = true;           // Switch activé = thème sombre
+  ThemeData _themeData = lightTheme;
+  bool _switchValue = false;
 
-  // Pour charger le thème préféré de l'utilisateur durant l'initialisation de l'application
+  //Pour charger le thème préféré de l'utilisateur durant l'initialisation de l'application
   ThemeProvider() {
     checkUserPrefernce();
   }
-
   ThemeData get themeData => _themeData;
 
   set themeData(ThemeData themeData) {
     _themeData = themeData;
+
     notifyListeners();
   }
+  // getUserMode();
 
   bool get switchValue => _switchValue;
 
@@ -35,11 +36,7 @@ class ThemeProvider with ChangeNotifier {
 
   void checkUserPrefernce() async {
     var mode = await getUserMode();
-    if (mode == null) {
-      // Si pas de préférence, mettre thème sombre par défaut
-      _themeData = darkTheme;
-      _switchValue = true;
-    } else if (mode) {
+    if (mode) {
       _themeData = lightTheme;
       _switchValue = false;
     } else {
@@ -50,8 +47,8 @@ class ThemeProvider with ChangeNotifier {
   }
 
   Future<void> reset() async {
-    _themeData = darkTheme; // reset vers thème sombre
-    _switchValue = true;
+    _themeData = lightTheme;
+
     notifyListeners();
   }
 }
