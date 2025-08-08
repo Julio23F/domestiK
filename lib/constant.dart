@@ -1,11 +1,15 @@
 // const baseURL = 'http://10.0.2.2:8000/api';
-const baseURL = 'http://192.168.88.39:8000/api';
+// const baseURL = 'http://192.168.88.39:8000/api';
 // const baseURL = 'https://domestik-api-production.up.railway.app/api';
 // const baseURL = 'http://api-domestik.rf.gd/api';
 
 // actuelle
 // const baseURL = 'http://api-domestik.mooo.com/api';
 // User
+
+// Il devrais durer jusqu'au 8 Octorbre 2025
+const baseURL ='https://api-domestik-p4oe3.sevalla.app/api';
+
 const loginURL = '$baseURL/login';
 const registerURL = '$baseURL/register';
 const logoutURL = '$baseURL/logout';
