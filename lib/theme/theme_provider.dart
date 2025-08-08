@@ -1,4 +1,3 @@
-
 import 'package:domestik/theme/dark_theme.dart';
 import 'package:domestik/theme/light_theme.dart';
 import 'package:flutter/material.dart';
@@ -6,29 +5,24 @@ import 'package:flutter/material.dart';
 import '../services/user_service.dart';
 
 class ThemeProvider with ChangeNotifier {
-  ThemeData _themeData = lightTheme;
-  bool _switchValue = false;
+  ThemeData _themeData = darkTheme;  // Par défaut thème sombre
+  bool _switchValue = true;           // Switch activé = thème sombre
 
-  //Pour charger le thème préféré de l'utilisateur durant l'initialisation de l'application
+  // Pour charger le thème préféré de l'utilisateur durant l'initialisation de l'application
   ThemeProvider() {
     checkUserPrefernce();
   }
+
   ThemeData get themeData => _themeData;
 
   set themeData(ThemeData themeData) {
     _themeData = themeData;
-
     notifyListeners();
   }
-  // getUserMode();
 
   bool get switchValue => _switchValue;
 
-
-
-
-  void updateSwitchValue(bool newValue) async{
-
+  void updateSwitchValue(bool newValue) async {
     _switchValue = newValue;
     if (newValue) {
       _themeData = darkTheme;
@@ -41,7 +35,11 @@ class ThemeProvider with ChangeNotifier {
 
   void checkUserPrefernce() async {
     var mode = await getUserMode();
-    if (mode) {
+    if (mode == null) {
+      // Si pas de préférence, mettre thème sombre par défaut
+      _themeData = darkTheme;
+      _switchValue = true;
+    } else if (mode) {
       _themeData = lightTheme;
       _switchValue = false;
     } else {
@@ -51,9 +49,9 @@ class ThemeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> reset() async{
-    _themeData = lightTheme;
-
+  Future<void> reset() async {
+    _themeData = darkTheme; // reset vers thème sombre
+    _switchValue = true;
     notifyListeners();
   }
 }
